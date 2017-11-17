@@ -1,0 +1,42 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "type": "array",
+  "$id": "http://example.com/example.json",
+  "items": {
+    "type": "object",
+    "$id": "http://example.com/example.json/items",
+    "properties": {
+      "phone": {
+        "type": "string",
+        "$id": "http://example.com/example.json/items/properties/phone",
+        "title": "The Phone Schema.",
+        "description": "An explanation about the purpose of this instance.",
+        "default": "",
+        "examples": [
+          "345345"
+        ]
+      },
+      "firstname": {
+        "type": "string",
+        "$id": "http://example.com/example.json/items/properties/firstname",
+        "title": "The Firstname Schema.",
+        "description": "An explanation about the purpose of this instance.",
+        "default": "",
+        "examples": [
+          "ipsum"
+        ]
+      },
+      "lastname": {
+        "type": "string",
+        "$id": "http://example.com/example.json/items/properties/lastname",
+        "title": "The Lastname Schema.",
+        "description": "An explanation about the purpose of this instance.",
+        "default": "",
+        "examples": [
+          "ipsum"
+        ]
+      }
+    }
+  }
+}
