@@ -68,7 +68,6 @@ const onRequestFailed = (exception) => {
 
     //sender.setState({error: 'error'});
     store.dispatch(alarmActions.update(messages));
-
     clearSession();
     throw exception;
 };
@@ -90,6 +89,24 @@ export const refreshToken = () => {
     return api.refresh(session.tokens.refresh)
         .then(onRequestSuccess)
         .catch(onRequestFailed);
+};
+
+export const verifyToken = () => {
+    const session = store.getState().session;
+
+    if (!session.tokens.access.value) {
+        return Promise.reject();
+    }
+
+    return api.verify(session.tokens.access.value)
+        .then((response)=> console.log('verified!'))
+        .catch((error) => {
+            const messages = [];
+            messages.push(JSON.stringify(error.response.data));
+            store.dispatch(alarmActions.update(messages));
+            clearSession();
+            throw error;
+        });
 };
 
 

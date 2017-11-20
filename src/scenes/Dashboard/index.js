@@ -1,11 +1,36 @@
 import React, {Component} from 'react'
 import {PageHeader} from "react-bootstrap";
 import StatWidget from "../../components/widgets/StatWidget";
+import {attributes, user_bins} from "../../services/business";
 
 //TODO add some cool charts
 
 class Dashboard extends Component {
+
     render() {
+        // prepera business model
+        // load attributes for searching
+        attributes();
+        user_bins();
+
+
+        return (
+            <div>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <PageHeader>Dashboard</PageHeader>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-3 col-md-6">
+                        Dashboard content
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    render1() {
         return (
             <div>
                 <div className="row">

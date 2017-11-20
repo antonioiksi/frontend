@@ -36,8 +36,6 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        if(this.props.userId)
-            return (<Redirect to="/dashboard/"/>);
         //console.log(this.props.errors);
         //console.log('kuku ' + JSON.stringify( this.props.errors));
 
@@ -49,7 +47,7 @@ class LoginForm extends React.Component {
                 {
                     this.props.errors && this.props.errors.length >0 ? (
                         this.props.errors.map((item, index) =>
-                            <Panel header="Error" bsStyle="danger" eventKey={index}>{item}</Panel>)
+                            <Panel header="Error" bsStyle="danger" eventKey={index} key={index}>{item}</Panel>)
                     ) : ('')
                 }
 
@@ -88,13 +86,13 @@ class LoginForm extends React.Component {
     }
 }
 
-
+/*
 const mapStateToProps = function(store) {
     return {
         userId: store.session.user.id,
         errors: store.alarms.messages,
     };
-};
+};*/
 
 /*
 const mapDispatchToProps = function(dispatch) {
@@ -103,7 +101,8 @@ const mapDispatchToProps = function(dispatch) {
     };
 };*/
 
-export default connect(mapStateToProps)(LoginForm);
+export default LoginForm;
+//export default connect(mapStateToProps)(LoginForm);
 //export default connect(mapStateToProps,mapDispatchToProps)(LoginForm);
 
 //export default LoginForm;

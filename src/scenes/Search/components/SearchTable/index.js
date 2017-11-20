@@ -33,40 +33,23 @@ class SearchTable extends React.Component {
 
         return (
             <div>
-                <h1>Search Table</h1>
-                {
-                    this.props.loading ? (
-                        <ScaleLoader
-                            color={'#36D7B7'}
-                            loading={this.props.loading}
-                        />
-
-                    ) : (
-                        <Panel header="Результат" bsStyle="info">
-                            {/*
-                            <ReactJson src={this.props.jsonData}  />
-                            */}
-                            <Table striped bordered condensed hover>
-                                <thead>
-                                    <th>ID</th>
-                                    <th>Index</th>
-                                    <th>Type</th>
-                                    <th>Source</th>
-                                </thead>
-                                <tbody>
-                                    {
-                                        data_arr.map((row, index) =>
-                                            <Row row={row} />
-                                        )
-                                    }
-                                </tbody>
-                            </Table>
-                        </Panel>
-
-
-                    )
-
-                }
+                <Table striped bordered condensed hover>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Index</th>
+                        <th>Type</th>
+                        <th>Source</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        data_arr.map((row, index) =>
+                                <Row row={row} key={index} />
+                        )
+                    }
+                    </tbody>
+                </Table>
             </div>
         )
     }

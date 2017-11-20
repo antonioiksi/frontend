@@ -1,7 +1,7 @@
 import React from 'react'
 import {Route} from 'react-router-dom'
 import {Header} from "../Header";
-import {AuthRequired} from "../../auth/AuthRequired";
+import AuthRequired from "../../auth/AuthRequired";
 
 
 export const BackofficeRoute =  ({component:Component, ...rest}) => {

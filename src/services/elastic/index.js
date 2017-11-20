@@ -3,6 +3,9 @@ import {validToken} from "../../components/auth";
 import {SESSION_JWTOKEN} from "../../components/auth";
 import {BUSINESS_SERVER_URL} from "../constants";
 import {prepare_q1} from "./queries";
+import store from '../../store';
+import {verifyToken} from "../session";
+import {user_bins} from "../business";
 
 
 
@@ -48,7 +51,9 @@ export function search_simple( sender, jsonQuery)
 
 export function search_drill( sender, jsonQuery)
 {
-    let token = sessionStorage.getItem(SESSION_JWTOKEN);
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
 
     if(!token) {
         sender.setState({error:'SESSION_JWTOKEN is empty'});
@@ -60,9 +65,9 @@ export function search_drill( sender, jsonQuery)
             }
         }
 
-        console.log(config);
-        console.log(prepare_q1( jsonQuery));
-        axios.post(BUSINESS_SERVER_URL+'/elastic-bins/drill-search/', prepare_q1( jsonQuery), config)
+        //console.log(config);
+        //console.log(prepare_q1( jsonQuery));
+        axios.post(BUSINESS_SERVER_URL+'/elastic-bin/drill-search/', prepare_q1( jsonQuery), config)
             .then(({data}) => {
                 sender.setState({result: data, loading:false});
             })
@@ -81,6 +86,7 @@ export function search_drill( sender, jsonQuery)
             response => (sender.setState({user_info:response.data})),
             err => (sender.setState({error:err.message}))
         );*/
+
     }
 }
 

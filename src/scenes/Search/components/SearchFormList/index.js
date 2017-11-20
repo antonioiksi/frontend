@@ -60,9 +60,11 @@ class SearchFormList extends React.Component {
         });
     }
 
+
     removeFormValue(indexForm, removeId) {
         console.log("removeFormValue - indexForm"+indexForm+" removeId"+removeId);
     }
+
 
     handleLoadFormsValues(event) {
         this.props.loadFormsValues(this.state.formsValues);
@@ -72,9 +74,13 @@ class SearchFormList extends React.Component {
     render() {
         return(
             <div>
-                <h1>SearchFormList</h1>
-                <Button  bsStyle="primary" onClick={() => this.handleAddForm()}>Add form</Button>
-                <div>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <h2>SearchFormList</h2>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
                     {
 
                         this.state.formsValues.map((values, i) =>
@@ -87,18 +93,24 @@ class SearchFormList extends React.Component {
                             />
                         )
                     }
+                    </div>
                 </div>
-
-                <Button  bsStyle="warning" bsSize="large" onClick={() => this.handleLoadFormsValues()}>Load forms values</Button>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <Button  bsStyle="primary" bsSize="small" onClick={() => this.handleAddForm()}>Add new form</Button> <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleLoadFormsValues()}>Load forms values</Button>
+                    </div>
+                </div>
             </div>
         )
     }
 }
+
 
 SearchFormList.PropTypes = {
     attrTypes: PropTypes.array.isRequired,
     formsValuesProp: PropTypes.array.isRequired,
     loadFormsValues: PropTypes.func,
 };
+
 
 export default SearchFormList;

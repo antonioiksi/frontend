@@ -3,7 +3,7 @@ import ReactJson from 'react-json-view'
 
 import SearchResult from "./components/SearchResult";
 import SearchFileUpload from "./components/SearchFileUpload";
-import {Panel, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button} from "react-bootstrap";
+import {Panel, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, PageHeader} from "react-bootstrap";
 
 import SearchFormList from "./components/SearchFormList";
 import {attributes} from "../../services/business";
@@ -11,6 +11,7 @@ import {attributes} from "../../services/business";
 import {search_drill, search_simple} from "../../services/elastic/index";
 import SearchTable from "./components/SearchTable/index";
 import {multifield_search_match} from "../../services/business_model_f/index";
+import {connect} from "react-redux";
 
 const initQueryValues = [
     {
@@ -28,7 +29,6 @@ class Search extends Component {
         this.state={
             loading:false,
             error:'',
-            attrTypes:[],
             searchType:SEARCH_TYPES.FORM,
             multiQuery:initQueryValues,
             result:[]
@@ -39,9 +39,6 @@ class Search extends Component {
         this.loadQuery = this.loadQuery.bind(this);
     }
 
-    componentDidMount() {
-        attributes(this);
-    }
 
     loadQuery(query) {
         this.setState({
@@ -144,48 +141,73 @@ class Search extends Component {
 
         return (
             <div>
-                <h1>Search</h1>
-                {this.state.error!==''?(
-                    <Panel header="Ошибка" bsStyle="danger">
-                        {this.state.error}
-                    </Panel>):('')}
+                <div className="row">
+                    <div className="col-lg-12">
+                        <PageHeader>Search</PageHeader>
+                    </div>
+                </div>
 
-                <ButtonToolbar>
-                    <ToggleButtonGroup type="radio" name="options" defaultValue={this.state.searchType}>
-                        <ToggleButton value={SEARCH_TYPES.FORM} onClick={()=>this.setState({searchType:SEARCH_TYPES.FORM})}>Form</ToggleButton>
-                        <ToggleButton value={SEARCH_TYPES.FILE} onClick={()=>this.setState({searchType:SEARCH_TYPES.FILE})}>FILE</ToggleButton>
-                    </ToggleButtonGroup>
-                </ButtonToolbar>
-                {
-                    this.state.searchType === SEARCH_TYPES.FORM ? (
+                <div className="row">
+                    <div className="col-lg-12">
+                        {this.state.error!==''?(<Panel header="Ошибка" bsStyle="danger">
+                            {this.state.error}
+                        </Panel>):('')}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <ButtonToolbar>
+                            <ToggleButtonGroup type="radio" name="options" defaultValue={this.state.searchType}>
+                                <ToggleButton value={SEARCH_TYPES.FORM} onClick={()=>this.setState({searchType:SEARCH_TYPES.FORM})}>Form</ToggleButton>
+                                <ToggleButton value={SEARCH_TYPES.FILE} onClick={()=>this.setState({searchType:SEARCH_TYPES.FILE})}>FILE</ToggleButton>
+                            </ToggleButtonGroup>
+                        </ButtonToolbar>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
+                        {
+                            this.state.searchType === SEARCH_TYPES.FORM ? (
 
-                        <SearchFormList attrTypes={this.state.attrTypes}
-                                        formsValuesProp={formsValues}
-                                        loadFormsValues={this.loadFormsValues.bind(this)}
-                        />
+                                <SearchFormList attrTypes={this.props.attrTypes}
+                                                formsValuesProp={formsValues}
+                                                loadFormsValues={this.loadFormsValues.bind(this)}
+                                />
 
-                    ) : (
-                        <SearchFileUpload loadQuery={this.loadQuery}
+                            ) : (
+                                <SearchFileUpload loadQuery={this.loadQuery}
 
-                        />
-                    )
-                }
+                                />
+                            )
+                        }
+                    </div>
+                </div>
+                <br/>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <Panel header="Запрос" bsStyle="success">
+                            <ReactJson src={this.state.multiQuery} />
+                        </Panel>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleDrillSearch()}>Search</Button>
+                    </div>
+                </div>
+                <SearchResult jsonData={this.state.result} loading={this.state.loading}/>
 
-                <Panel header="Запрос" bsStyle="success">
-                    <ReactJson src={this.state.multiQuery} />
-                </Panel>
-                <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleSearch()}>Search</Button>
-                <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleSimpleSearch()}>SimpleSearch</Button>
-                <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleDrillSearch()}>DrillSearch</Button>
-                {
-                    /*
-                    <SearchResult jsonQuery={this.state.multiQuery} jsonData={this.state.result} loading={this.state.loading}/>
-                    */
-                }
-                <SearchTable jsonQuery={this.state.multiQuery} jsonData={this.state.result} loading={this.state.loading}/>
             </div>
         )
     }
 }
 
-export default Search
+
+const mapStateToProps = function(store) {
+    return {
+        attrTypes: store.business.attributes,
+    };
+};
+
+
+export default connect(mapStateToProps)(Search)
