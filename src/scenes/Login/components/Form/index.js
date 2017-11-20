@@ -6,6 +6,7 @@ import {obtain_jwt} from "../../../../services/auth";
 import {login} from "../../../../services/session";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
+import {strings} from "../../../../localization";
 
 
 class LoginForm extends React.Component {
@@ -53,11 +54,11 @@ class LoginForm extends React.Component {
 
                 <FormGroup controlId="formHorizontalEmail">
                     <Col componentClass={ControlLabel} sm={2}>
-                        Username
+                        {strings.username}
                     </Col>
                     <Col sm={10}>
                         <FormControl type="text"
-                                     placeholder="username"
+                                     placeholder={strings.username}
                                      onChange={this.handleChange}
                                      name="username"
                                      value={username}
@@ -67,17 +68,17 @@ class LoginForm extends React.Component {
 
                 <FormGroup controlId="formHorizontalPassword">
                     <Col componentClass={ControlLabel} sm={2}>
-                        Password
+                        {strings.password}
                     </Col>
                     <Col sm={10}>
-                        <FormControl type="password" placeholder="password" name="password" value={password} onChange={this.handleChange} />
+                        <FormControl type="password" placeholder={strings.password} name="password" value={password} onChange={this.handleChange} />
                     </Col>
                 </FormGroup>
 
                 <FormGroup>
                     <Col smOffset={2} sm={10}>
                         <Button type="submit" name="Hi" onClick={this.handleSubmit}>
-                            Sign in
+                            {strings.SignIn}
                         </Button>
                     </Col>
                 </FormGroup>

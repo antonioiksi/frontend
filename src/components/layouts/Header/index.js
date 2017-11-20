@@ -6,6 +6,7 @@ import {MenuItem, Navbar, NavDropdown, ProgressBar} from "react-bootstrap";
 import {Brand} from 'react-bootstrap/lib/Navbar';
 import $ from "jquery";
 import Sidebar from "../Sidebar";
+import {strings} from "../../../localization";
 
 const logo = require('./logo.png');
 
@@ -29,14 +30,14 @@ export const Header = () => {
 
                     <NavDropdown title={<i className="fa fa-user fa-fw"></i> } id = 'navDropdown4'>
                         <MenuItem eventKey="1" href = '/userprofile/'>
-                            <span> <i className="fa fa-user fa-fw"></i> User Profile </span>
+                            <span> <i className="fa fa-user fa-fw"></i> {strings.UserProfile} </span>
                         </MenuItem>
                         <MenuItem eventKey="2" href = '/settings/'>
-                            <span><i className="fa fa-gear fa-fw" ></i> Settings </span>
+                            <span><i className="fa fa-gear fa-fw" ></i> {strings.Settings} </span>
                         </MenuItem>
                         <MenuItem divider />
                         <MenuItem eventKey = "4" href = '/logout/'>
-                            <span> <i className = "fa fa-sign-out fa-fw" /> Logout </span>
+                            <span> <i className = "fa fa-sign-out fa-fw" /> {strings.Logout} </span>
                         </MenuItem>
                     </NavDropdown>
 

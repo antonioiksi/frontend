@@ -7,6 +7,7 @@ import {
     ScaleLoader
 } from "react-spinners";
 import SearchTable from "../SearchTable";
+import {strings} from "../../../../localization";
 
 const VIEW_MODES = {TABLE:'table', JSON:'json'};
 
@@ -29,12 +30,12 @@ class SearchResult extends React.Component {
 
         return (
             <div>
-                <h1>Search Result</h1>
+                <h1>{strings.SearchResult}</h1>
                 <div className="row">
                     <div className="col-lg-12">
                         <ButtonToolbar>
                             <ToggleButtonGroup type="radio" name="options" defaultValue={this.state.view_mode}>
-                                <ToggleButton value={VIEW_MODES.TABLE} onClick={()=>this.setState({view_mode:VIEW_MODES.TABLE})}>Table</ToggleButton>
+                                <ToggleButton value={VIEW_MODES.TABLE} onClick={()=>this.setState({view_mode:VIEW_MODES.TABLE})}>{strings.Table}</ToggleButton>
                                 <ToggleButton value={VIEW_MODES.JSON} onClick={()=>this.setState({view_mode:VIEW_MODES.JSON})}>JSON</ToggleButton>
                             </ToggleButtonGroup>
                         </ButtonToolbar>
@@ -42,7 +43,7 @@ class SearchResult extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Panel header="Результат" bsStyle="info">
+                        <Panel header={strings.Result} bsStyle="info">
                             {
                                 this.state.view_mode == VIEW_MODES.TABLE ? (
                                     <SearchTable jsonData={this.props.jsonData}/>

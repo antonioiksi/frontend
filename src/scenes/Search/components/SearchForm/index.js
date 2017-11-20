@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {Form, FormGroup, FormControl, ControlLabel, Button, Table, Panel, Col} from 'react-bootstrap';
 import SearchFormEditTable from "../SearchFormEditTable";
+import {strings} from "../../../../localization";
 
 
 //const AttrTypes = [{name:'phone',title:'Телефон'},{name:'firstname', title:'Имя'}];
@@ -65,7 +66,7 @@ class SearchForm extends React.Component {
             <div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <h3>Search Form #{this.props.index+1} (<Button  bsStyle="danger" bsSize="small" onClick={() => this.handleRemoveForm()}>Remove form</Button>)</h3>
+                        <h3>{strings.SearchForm} #{this.props.index+1} (<Button  bsStyle="danger" bsSize="small" onClick={() => this.handleRemoveForm()}>{strings.RemoveForm}</Button>)</h3>
                     </div>
                 </div>
                 <div className="row">
@@ -81,8 +82,8 @@ class SearchForm extends React.Component {
                         <Form horizontal>
                             <Col sm={5} >
                                 <FormGroup controlId="formControlsSelect">
-                                    <ControlLabel>Attribute Name</ControlLabel>
-                                    <FormControl type="text" placeholder="name" name="selectTextValue" value={this.state.form.selectTextValue} onChange={this.handleChange.bind(this)}/>
+                                    <ControlLabel>{strings.AttributeName}</ControlLabel>
+                                    <FormControl type="text" placeholder={strings.AttributeName} name="selectTextValue" value={this.state.form.selectTextValue} onChange={this.handleChange.bind(this)}/>
                                     <FormControl componentClass="select" placeholder="select" name="selectValue" onChange={this.handleSelectChange.bind(this)}>
                                         <option>-</option>
                                         {AttrTypes.map((attr) =>
@@ -95,14 +96,14 @@ class SearchForm extends React.Component {
                             </Col>
                             <Col sm={6} smOffset={1} >
                                 <FormGroup controlId="formControlsText">
-                                    <ControlLabel>Value</ControlLabel>
-                                    <FormControl type="text" placeholder="value" name="textValue" onChange={this.handleChange.bind(this)}/>
+                                    <ControlLabel>{strings.Value}</ControlLabel>
+                                    <FormControl type="text" placeholder={strings.Value} name="textValue" onChange={this.handleChange.bind(this)}/>
                                 </FormGroup>
                             </Col>
-                            <Col sm={1} smOffset={10}>
+                            <Col sm={2} smOffset={7}>
                                 <FormGroup>
                                     <Button type="submit" bsSize="small" name="Add" onClick={this.handleAddFormValue.bind(this)}>
-                                        Add attribute
+                                        {strings.AddAttribute}
                                     </Button>
                                 </FormGroup>
                             </Col>
@@ -113,8 +114,8 @@ class SearchForm extends React.Component {
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Name</th>
-                                <th>Value</th>
+                                <th>{strings.Name}</th>
+                                <th>{strings.Value}</th>
                                 <th></th>
                             </tr>
                             </thead>

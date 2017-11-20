@@ -4,6 +4,7 @@ import {Button} from "react-bootstrap";
 
 import SearchForm from "../SearchForm";
 import SearchTable from "../SearchTable";
+import {strings} from "../../../../localization";
 
 
 
@@ -76,7 +77,7 @@ class SearchFormList extends React.Component {
             <div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <h2>SearchFormList</h2>
+                        <h2>{strings.SearchFormList}</h2>
                     </div>
                 </div>
                 <div className="row">
@@ -97,7 +98,7 @@ class SearchFormList extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Button  bsStyle="primary" bsSize="small" onClick={() => this.handleAddForm()}>Add new form</Button> <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleLoadFormsValues()}>Load forms values</Button>
+                        <Button  bsStyle="primary" bsSize="small" onClick={() => this.handleAddForm()}>{strings.AddNewForm}</Button> <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleLoadFormsValues()}>{strings.LoadFormsValues}</Button>
                     </div>
                 </div>
             </div>

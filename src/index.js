@@ -34,6 +34,8 @@ import Bins from "./scenes/Bins";
 //import {loadState, saveState} from './localStorage';
 
 
+
+
 //TODO add loading and keepeng auth token, don't forget abandon free access in DajngoServer
 /*
 persistedState = loadState();

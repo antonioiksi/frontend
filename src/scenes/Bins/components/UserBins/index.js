@@ -4,6 +4,7 @@ import {Button, Table} from "react-bootstrap";
 import {bin_items, item_load, bin_reset, item_delete} from "../../../../services/business";
 import ReactJson from 'react-json-view'
 import {user_bins} from "../../../../services/business";
+import {strings} from "../../../../localization";
 
 
 class UserBins extends React.Component {
@@ -68,8 +69,8 @@ class UserBins extends React.Component {
                             <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Name</th>
-                                <th>Count items</th>
+                                <th>{strings.Name}</th>
+                                <th>{strings.Count}</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -81,8 +82,8 @@ class UserBins extends React.Component {
                                         <td>{value.name}</td>
                                         <td>{value.items_count}</td>
                                         <td>
-                                            <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleReset(value.id)}>Reset</Button>
-                                            <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleLoad(value.id)}>Load</Button>
+                                            <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleReset(value.id)}>{strings.Reset}</Button>&#160;
+                                            <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleLoad(value.id)}>{strings.Load}</Button>
                                         </td>
                                     </tr>
                                 )
@@ -110,8 +111,8 @@ class UserBins extends React.Component {
                                         <td>{value.id}</td>
                                         <td>{value.url}</td>
                                         <td>
-                                            <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleItemDelete(value.id)}>Delete</Button>
-                                            <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleItemLoad(value.id)}>Load</Button>
+                                            <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleItemDelete(value.id)}>{strings.Delete}</Button>&#160;
+                                            <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleItemLoad(value.id)}>{strings.Load}</Button>
                                         </td>
                                     </tr>
                                 )

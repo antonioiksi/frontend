@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {Validator} from 'jsonschema';
 import Schema from './schema.json';
 import Test from './test.json';
+import {strings} from "../../../../localization";
 
 function FieldGroup({ id, label, help, ...props }) {
 
@@ -78,7 +79,7 @@ class SearchFileUpload extends React.Component {
         const data = this.state.data;
         return(
             <div>
-                <h1>SearchFileUpload</h1>
+                <h1>{strings.FileUpload}</h1>
                 <FieldGroup
                     id="formControlsFile"
                     type="file"

@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {PageHeader} from "react-bootstrap";
 import StatWidget from "../../components/widgets/StatWidget";
 import UserBins from "./components/UserBins";
+import {strings} from "../../localization";
 
 //TODO add some cool charts
 
@@ -11,7 +12,7 @@ class Bins extends Component {
             <div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <PageHeader>Bins</PageHeader>
+                        <PageHeader>{strings.bins}</PageHeader>
                     </div>
                 </div>
                 <div className="row">

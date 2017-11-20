@@ -3,6 +3,7 @@ import './sidebar.css';
 import classNames from 'classnames';
 
 import {OfficeMenu} from '../../menu/OfficeMenu';
+import {strings} from "../../../localization";
 
 class Sidebar extends React.Component {
 
@@ -34,17 +35,17 @@ class Sidebar extends React.Component {
                     </li>
                     <li>
                         <a href="/dashboard/">
-                            <i className="fa fa-dashboard fa-fw" /> &nbsp;Dashboard
+                            <i className="fa fa-dashboard fa-fw" /> &nbsp;{strings.dashboard}
                         </a>
                     </li>
                     <li>
                         <a href="/search/" >
-                            <i className="fa fa-search fa-fw" /> &nbsp;Search
+                            <i className="fa fa-search fa-fw" /> &nbsp;{strings.search}
                         </a>
                     </li>
                     <li>
                         <a href="/bins/" >
-                            <i className="fa fa-table fa-fw" /> &nbsp;Bins
+                            <i className="fa fa-table fa-fw" /> &nbsp;{strings.bins}
                         </a>
                     </li>
                 </ul>

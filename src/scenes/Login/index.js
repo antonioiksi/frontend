@@ -6,6 +6,7 @@ import {isAuth} from "../../components/auth";
 import {Redirect} from "react-router-dom";
 import {Panel} from "react-bootstrap";
 import {connect} from "react-redux";
+import {strings} from "../../localization";
 
 class Login extends Component {
 
@@ -24,11 +25,11 @@ class Login extends Component {
         return (
             <div className="col-md-4 col-md-offset-4">
                 <div className="text-center">
-                    <h1 className="login-brand-text">Frontend Admin</h1>
+                    <h1 className="login-brand-text">Frontend</h1>
                     {/*<h3 className="text-muted">Created by <a href="http://startreact.com">StartReact.com</a> team</h3>*/}
                 </div>
 
-                <Panel header={<h3>Please Sign In</h3>} className="login-panel">
+                <Panel header={<h3>{strings.PleaseSignIn}</h3>} className="login-panel">
                     <div><Form errors={this.props.errors}/></div>
                 </Panel>
 

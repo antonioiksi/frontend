@@ -12,6 +12,7 @@ import {search_drill, search_simple} from "../../services/elastic/index";
 import SearchTable from "./components/SearchTable/index";
 import {multifield_search_match} from "../../services/business_model_f/index";
 import {connect} from "react-redux";
+import {strings} from "../../localization";
 
 const initQueryValues = [
     {
@@ -143,7 +144,7 @@ class Search extends Component {
             <div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <PageHeader>Search</PageHeader>
+                        <PageHeader>{strings.search}</PageHeader>
                     </div>
                 </div>
 
@@ -158,8 +159,8 @@ class Search extends Component {
                     <div className="col-lg-12">
                         <ButtonToolbar>
                             <ToggleButtonGroup type="radio" name="options" defaultValue={this.state.searchType}>
-                                <ToggleButton value={SEARCH_TYPES.FORM} onClick={()=>this.setState({searchType:SEARCH_TYPES.FORM})}>Form</ToggleButton>
-                                <ToggleButton value={SEARCH_TYPES.FILE} onClick={()=>this.setState({searchType:SEARCH_TYPES.FILE})}>FILE</ToggleButton>
+                                <ToggleButton value={SEARCH_TYPES.FORM} onClick={()=>this.setState({searchType:SEARCH_TYPES.FORM})}>{strings.Form}</ToggleButton>
+                                <ToggleButton value={SEARCH_TYPES.FILE} onClick={()=>this.setState({searchType:SEARCH_TYPES.FILE})}>{strings.File}</ToggleButton>
                             </ToggleButtonGroup>
                         </ButtonToolbar>
                     </div>
@@ -185,14 +186,14 @@ class Search extends Component {
                 <br/>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Panel header="Запрос" bsStyle="success">
+                        <Panel header={strings.Query} bsStyle="success">
                             <ReactJson src={this.state.multiQuery} />
                         </Panel>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleDrillSearch()}>Search</Button>
+                        <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleDrillSearch()}>{strings.search}</Button>
                     </div>
                 </div>
                 <SearchResult jsonData={this.state.result} loading={this.state.loading}/>
