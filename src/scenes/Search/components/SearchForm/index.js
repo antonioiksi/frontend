@@ -134,7 +134,6 @@ class SearchForm extends React.Component {
                             }
                             </tbody>
                         </Table>
-                        <SearchFormEditTable/>
                     </div>
                 </div>
             </div>

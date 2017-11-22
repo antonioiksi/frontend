@@ -1,3 +1,27 @@
+/*
+{
+    "query":{
+        "bool":{
+            "should":[
+                {
+                    "query_string":{
+                        "default_field":"*speaker*",
+                        "query":"king"
+                    }
+                },
+                {
+                    "query_string":{
+                        "default_field":"*play_name*",
+                        "query":"Henry"
+                    }
+                }
+            ]
+        }
+    }
+}
+
+*/
+
 const q1_body = {
     query: {
         bool: {
@@ -14,26 +38,30 @@ const q1_item =
     }
 
 export function prepare_q1( jsonQuery) {
+    let queryItems = [];
 
-    const queryItems = [];
-    jsonQuery.forEach(
-        function (query) {
-            const values = [];
-            Object.keys(query).forEach(
-                function(key) {
-                    const item = Object.assign({},q1_item);
-                    item.query_string.default_field = "*"+key+"*";
-                    item.query_string.query = query[key];
-                    //{"name":key, "value":query[key]};
-                    values.push(item);
-                }
-            );
+    Object.keys(jsonQuery).forEach(
+        function(key) {
+            let values = {};
+            let item = {};
+            item.default_field = "*"+key+"*";
+            item.query = jsonQuery[key];
+            values.query_string = item;
             queryItems.push(values);
         }
     );
-    const queryBody = Object.assign({}, q1_body);
+
+    //let queryBody = Object.assign({}, q1_body);
+    let queryBody = {
+        query: {
+            bool: {
+                should: []
+            }
+        }
+    };
+
     queryBody.query.bool.should = queryItems;
-    console.log(queryBody);
+    //console.log(queryBody);
     return queryBody;
 
 }

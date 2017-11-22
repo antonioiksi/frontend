@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {connect} from "react-redux";
 import {Panel} from "react-bootstrap";
 import {attributes} from "../../services/business/index";
+import Visjs from "./components/visjs/index";
 
 class Welcome extends Component {
 
@@ -11,8 +12,6 @@ class Welcome extends Component {
 
 
     render() {
-
-        //let test = "s";
 
         return (
             <div>
@@ -30,6 +29,9 @@ class Welcome extends Component {
                             <Panel header="Error" bsStyle="danger" eventKey={index}>{JSON.stringify(item)}</Panel>)
                     ) : ('')
                 }
+
+                <div id='mynetwork'>VisJS</div>
+                <Visjs/>
 
             </div>
         )

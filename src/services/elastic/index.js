@@ -49,8 +49,10 @@ export function search_simple( sender, jsonQuery)
 }
 
 
-export function search_drill( sender, jsonQuery)
+export function search_drill( sender, jsonQuery, index)
 {
+
+
     verifyToken();
     const session = store.getState().session;
     let token = session.tokens.access.value;
@@ -64,15 +66,42 @@ export function search_drill( sender, jsonQuery)
                 'Authorization': 'Bearer ' + token
             }
         }
-
+        const i = index;
         //console.log(config);
         //console.log(prepare_q1( jsonQuery));
-        axios.post(BUSINESS_SERVER_URL+'/elastic-bin/drill-search/', prepare_q1( jsonQuery), config)
+        let q1 = prepare_q1( jsonQuery)
+
+        axios.post(BUSINESS_SERVER_URL+'/elastic-bin/drill-search/', q1, config)
             .then(({data}) => {
-                sender.setState({result: data, loading:false});
+                console.log('axios' + index + JSON.stringify(jsonQuery));
+                console.log('axios' + index + JSON.stringify(q1));
+                //console.log('axios'+i);
+                sender.setState( prevState => ({
+                        multiResult: {
+                            ...prevState.multiResult,
+                            [i] : {
+                                loading:false,
+                                result:data,
+                                esQuery: q1,
+                            }
+                        }
+                    }));
+
+                //sender.setState({result: data, esQuery: q1, loading:false});
             })
             .catch( ( err ) => {
-                sender.setState({result:[], error: err.message, loading:false});
+                sender.setState( prevState => ({
+                    multiResult: {
+                        ...prevState.multiResult,
+                        [i] : {
+                            error: JSON.stringify(err),
+                            loading:false,
+                            result:[],
+                            esQuery: q1,
+                        }
+                    }
+                }));
+                //sender.setState({result:[], esQuery:q1,  error: err.message, loading:false});
             });
 
         /*
@@ -88,5 +117,27 @@ export function search_drill( sender, jsonQuery)
         );*/
 
     }
+}
+
+
+export function alias_list(sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/elastic/alias-list/', config)
+        .then(({data}) => {
+                sender.setState( { aliases: data});
+            })
+            .catch( ( err ) => {
+                sender.setState( { aliases: {}, error: JSON.stringify(err)});
+            });
+
 }
 

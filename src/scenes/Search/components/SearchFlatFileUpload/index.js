@@ -7,6 +7,21 @@ import Schema from './schema.json';
 import Test from './test.json';
 import {strings} from "../../../../localization";
 
+
+function PrepareJSON(content) {
+    let arr = content.split("\n");
+
+    let phoneArr = [];
+    arr.forEach(function(phone) {
+        let phoneJson = {};
+        if(phone.length>0) {
+            phoneJson.phone = phone;
+            phoneArr.push(phoneJson);
+        }
+    });
+    return phoneArr;
+}
+
 function FieldGroup({ id, label, help, ...props }) {
         return (
             <FormGroup controlId={id}>
@@ -17,20 +32,17 @@ function FieldGroup({ id, label, help, ...props }) {
         );
 }
 
-const FILE_TYPES = {JSON:'json',FLAT:'flat',};
-
-class SearchFileUpload extends React.Component {
+class SearchFlatFileUpload extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            fileType: FILE_TYPES.JSON,
             data: null
-
         };
         this.handleFileSelect = this.handleFileSelect.bind(this);
     }
 
     displayData(content) {
+
         //var data = require('./test.json');
         //alert(JSON.stringify(Test));
 
@@ -41,7 +53,6 @@ class SearchFileUpload extends React.Component {
         var schema = {"type": "number"};
         console.log(v.validate(Test, Schema));
 
-        //TODO сделать преобразование из плоского файла в JSON
         /*
         fetch('./test.json',{
                 headers: {
@@ -56,10 +67,13 @@ class SearchFileUpload extends React.Component {
             })
         */
         //this.setState({data: data});
+        let json = [];
+        try {
+            json = PrepareJSON(content)
+        } catch(err) {
+        }
 
-
-
-        this.props.loadQuery(JSON.parse(content));
+        this.props.loadQuery( json);
     }
 
 
@@ -88,7 +102,7 @@ class SearchFileUpload extends React.Component {
                     type="file"
                     label="File"
                     help="Example block-level help text here."
-                    accept=".json"
+                    accept=".txt"
                     onChange={this.handleFileSelect}
                 />
                 { data && <p> {data} </p> }
@@ -99,8 +113,8 @@ class SearchFileUpload extends React.Component {
     }
 }
 
-SearchFileUpload.PropTypes = {
+SearchFlatFileUpload.PropTypes = {
     loadQuery: PropTypes.func.isRequired,
 };
 
-export default SearchFileUpload;
+export default SearchFlatFileUpload;

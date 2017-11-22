@@ -14,10 +14,9 @@ const Row = (props) => {
             <td>{props.row._id}</td>
             <td>{props.row._index}</td>
             <td>{props.row._type}</td>
-            <td>{JSON.stringify(props.row._source, null, 2)}</td>
         </tr>,
         <tr>
-            <td colSpan="4">{JSON.stringify(props.row._source, null, 2)}</td>
+            <td colSpan="3">{JSON.stringify(props.row._source, null, 2)}</td>
         </tr>
     ];
 }
@@ -39,13 +38,12 @@ class SearchTable extends React.Component {
                         <th>ID</th>
                         <th>Index</th>
                         <th>Type</th>
-                        <th>Source</th>
                     </tr>
                     </thead>
                     <tbody>
                     {
                         data_arr.map((row, index) =>
-                                <Row row={row} key={index} />
+                            <Row row={row} key={index} />
                         )
                     }
                     </tbody>

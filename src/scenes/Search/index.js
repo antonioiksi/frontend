@@ -8,11 +8,13 @@ import {Panel, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, PageHeade
 import SearchFormList from "./components/SearchFormList";
 import {attributes} from "../../services/business";
 
-import {search_drill, search_simple} from "../../services/elastic/index";
+import {alias_list, search_drill, search_simple} from "../../services/elastic";
 import SearchTable from "./components/SearchTable/index";
 import {multifield_search_match} from "../../services/business_model_f/index";
 import {connect} from "react-redux";
 import {strings} from "../../localization";
+import SearchResultArray from "./components/SearchResultArray/index";
+import SearchFlatFileUpload from "./components/SearchFlatFileUpload/index";
 
 const initQueryValues = [
     {
@@ -22,7 +24,7 @@ const initQueryValues = [
 ]
 
 
-const SEARCH_TYPES = {FORM:'form',FILE:'file'};
+const SEARCH_TYPES = {FORM:'form', FILE:'file', FLAT_FILE:'flat_file',};
 
 class Search extends Component {
     constructor(props) {
@@ -32,7 +34,10 @@ class Search extends Component {
             error:'',
             searchType:SEARCH_TYPES.FORM,
             multiQuery:initQueryValues,
-            result:[]
+            esQuery: {},
+            result:[],
+            multiResult:{},
+            aliases: {},
         };
 
         this.addValue = this.addValue.bind(this);
@@ -40,6 +45,9 @@ class Search extends Component {
         this.loadQuery = this.loadQuery.bind(this);
     }
 
+    componentWillMount() {
+        alias_list(this);
+    }
 
     loadQuery(query) {
         this.setState({
@@ -85,16 +93,75 @@ class Search extends Component {
             search_simple(this, jsonQuery);
         });
     }
+
     handleDrillSearch() {
+
+        const that = this;
+
         //event.preventDefault();
         //const that = this;
-        let jsonQuery = this.state.multiQuery;
+        //let jsonQuery = this.state.multiQuery;
+        /*
+        let multiQuery = this.state.multiQuery;
+        const multiResultNEW = {};
+        for(index=0, index < multiQuery.length, ++index) {
+            multiResultNEW[index] = {
+                loading:true,
+                result:[],
+                jsonQuery: jsonQuery,
+            }
+        }
+        */
+
+
+        this.state.multiQuery.forEach(function(jsonQuery, index) {
+            console.log('forEach' + index + JSON.stringify(jsonQuery));
+            /*
+            newElement = {
+                loading:true,
+                result:[],
+                jsonQuery: jsonQuery,
+            }
+            this.setState({
+                multiResult: [...this.state.multiResult, newElement]
+            })},
+            () => {
+                search_drill(this, jsonQuery, index);
+            });*/
+
+
+            let key = index;
+            that.setState( prevState => ({
+                multiResult: {
+                    ...prevState.multiResult,
+                    [key] : {
+                        loading:true,
+                        result:[],
+                        jsonQuery: jsonQuery,
+                    }
+                }
+            }),
+                    () => {
+                search_drill(that, jsonQuery, key);
+                    }
+
+
+                );
+
+
+            //that.setState({multiResult},
+            //    () => {
+                    //search_drill(that, jsonQuery, key);
+            //    });
+
+        });
+
         //this.setState({
         //    result: this.state.query.slice(0),
         //});
-        this.setState({loading: true},() => {
-            search_drill(this, jsonQuery);
-        });
+        //this.setState({loading: true},() => {
+        //    search_drill(this, jsonQuery);
+        //});
     }
 
     loadFormsValues(formsValues) {
@@ -137,7 +204,7 @@ class Search extends Component {
                 formsValues.push(values);
             }
         );
-        console.log(formsValues);
+        //console.log(formsValues);
 
 
         return (
@@ -161,6 +228,7 @@ class Search extends Component {
                             <ToggleButtonGroup type="radio" name="options" defaultValue={this.state.searchType}>
                                 <ToggleButton value={SEARCH_TYPES.FORM} onClick={()=>this.setState({searchType:SEARCH_TYPES.FORM})}>{strings.Form}</ToggleButton>
                                 <ToggleButton value={SEARCH_TYPES.FILE} onClick={()=>this.setState({searchType:SEARCH_TYPES.FILE})}>{strings.File}</ToggleButton>
+                                <ToggleButton value={SEARCH_TYPES.FLAT_FILE} onClick={()=>this.setState({searchType:SEARCH_TYPES.FLAT_FILE})}>{strings.FlatFile}</ToggleButton>
                             </ToggleButtonGroup>
                         </ButtonToolbar>
                     </div>
@@ -168,18 +236,14 @@ class Search extends Component {
                 <div className="row">
                     <div className="col-lg-12">
                         {
-                            this.state.searchType === SEARCH_TYPES.FORM ? (
-
+                            this.state.searchType === SEARCH_TYPES.FORM &&
                                 <SearchFormList attrTypes={this.props.attrTypes}
                                                 formsValuesProp={formsValues}
-                                                loadFormsValues={this.loadFormsValues.bind(this)}
-                                />
-
-                            ) : (
-                                <SearchFileUpload loadQuery={this.loadQuery}
-
-                                />
-                            )
+                                                loadFormsValues={this.loadFormsValues.bind(this)} />
+                            || this.state.searchType === SEARCH_TYPES.FILE &&
+                                <SearchFileUpload loadQuery={this.loadQuery} />
+                            || this.state.searchType === SEARCH_TYPES.FLAT_FILE &&
+                                <SearchFlatFileUpload loadQuery={this.loadQuery} />
                         }
                     </div>
                 </div>
@@ -196,7 +260,9 @@ class Search extends Component {
                         <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleDrillSearch()}>{strings.search}</Button>
                     </div>
                 </div>
-                <SearchResult jsonData={this.state.result} loading={this.state.loading}/>
+
+                <SearchResultArray multiResult={this.state.multiResult} aliases={this.state.aliases} />
+
 
             </div>
         )

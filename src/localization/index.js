@@ -22,6 +22,7 @@ export const strings = new LocalizedStrings({
         Value: "Value",
         AttributeName: "Attribute name",
         SearchResult : "Search Result",
+        SearchResultArray: "Search results",
         UserProfile : "User Profile",
         Settings : "Settings",
         Logout : "Logout",
@@ -33,6 +34,9 @@ export const strings = new LocalizedStrings({
         Table: "Table",
         Result: "Result",
         FileUpload: "FileUpload",
+        ShowQuery: "Show Query",
+        FlatFile: "Flat file",
+        PrettyTable: "Pretty table",
     },
     ru: {
         PleaseSignIn: "Вход в систему",
@@ -55,10 +59,11 @@ export const strings = new LocalizedStrings({
         Value: "Значение",
         AttributeName: "Имя атрибута",
         SearchResult : "Результат поиска",
+        SearchResultArray: "Результаты поиска",
         UserProfile : "Профиль",
         Settings : "Настройки",
         Logout : "Выход",
-        Reset : "Обновить",
+        Reset : "Очистить",
         Load : "Загрузить",
         Delete : "Удалить",
         Count: "Количество",
@@ -66,6 +71,9 @@ export const strings = new LocalizedStrings({
         Table: "Таблица",
         Result: "Результат",
         FileUpload: "Загрузить файл",
+        ShowQuery: "Показать запрос",
+        FlatFile: "Плоский файл",
+        PrettyTable: "Таблица (Имя/Значения)",
     }
 });
 

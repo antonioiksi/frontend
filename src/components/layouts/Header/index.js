@@ -8,7 +8,8 @@ import $ from "jquery";
 import Sidebar from "../Sidebar";
 import {strings} from "../../../localization";
 
-const logo = require('./logo.png');
+import logo from './logo.svg';
+//const logo = require('./logo.svg');
 
 export const Header = () => {
     return(
@@ -16,7 +17,7 @@ export const Header = () => {
             <Navbar fluid={true}  style={ {margin: 0} }>
                 <Brand>
             <span>
-              <img src={logo} alt="Start React" title="Start React" />
+                <img src={logo} className="App-logo" alt="Frontend" title="Frontend" />
               <span>&nbsp;Frontend</span>
                 <button type="button" className="navbar-toggle" onClick={() => {toggleMenu();}} style={{position: 'absolute', right: 0, top: 0}}>
                   <span className="sr-only">Toggle navigation</span>

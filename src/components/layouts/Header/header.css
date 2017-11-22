@@ -25,6 +25,22 @@
   max-width: var(--max-content-width);
 }
 
+.App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    height: 80px;
+}
+
+
+@keyframes App-logo-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
+
+
+
+
 .brand {
   color: color(var(--brand-color) lightness(+10%));
   text-decoration: none;
@@ -34,6 +50,7 @@
 .brandTxt {
   margin-left: 10px;
 }
+
 
 .nav {
   float: right;
