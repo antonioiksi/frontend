@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PageHeader} from "react-bootstrap";
 import StatWidget from "../../components/widgets/StatWidget";
-import {attributes, user_bins} from "../../services/business";
+import {attributes, user_bins, query_templates} from "../../services/business";
 import {strings} from "../../localization/index";
 
 //TODO add some cool charts
@@ -13,6 +13,7 @@ class Dashboard extends Component {
         // load attributes for searching
         attributes();
         user_bins();
+        query_templates();
         //setLanguage(languageCode) - to force manually a particular language
         //getLanguage() - to get the current displayed language
         //getInterfaceLanguage() - to get the current device interface language

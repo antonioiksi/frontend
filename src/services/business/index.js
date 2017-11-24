@@ -14,6 +14,7 @@ const endPoints = {
     item: '/bin/item/',
     bin_reset: '/bin/reset/',
     item_delete: '/bin/item/delete/',
+    query_templates: '/elastic/query-template/list/',
 };
 
 
@@ -22,6 +23,18 @@ export function attributes()
     axios.get(BUSINESS_SERVER_URL + endPoints.attributes)
         .then(({data}) => {
             store.dispatch(businessActions.attributes(data));
+        })
+        .catch( ( err ) => {
+            store.dispatch(alarmsActions.update([err.message]));
+        });
+}
+
+
+export function query_templates()
+{
+    axios.get(BUSINESS_SERVER_URL + endPoints.query_templates)
+        .then(({data}) => {
+            store.dispatch(businessActions.query_templates(data));
         })
         .catch( ( err ) => {
             store.dispatch(alarmsActions.update([err.message]));

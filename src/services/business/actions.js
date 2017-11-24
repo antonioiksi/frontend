@@ -13,3 +13,8 @@ export const user_bins = user_bins => ({
 });
 
 
+export const query_templates = query_templates => ({
+    type: actionTypes.BUSINESS_GET_QUERY_TEMPLATES,
+    query_templates,
+});
+

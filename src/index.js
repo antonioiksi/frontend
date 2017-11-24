@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import {BrowserRouter, Switch, Route, Link, Redirect} from 'react-router-dom'
 import { Provider } from 'react-redux';
@@ -11,7 +10,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import 'font-awesome/css/font-awesome.css';
 
-// react-bootstrap-table
 import 'react-bootstrap-table/dist/react-bootstrap-table.min';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 

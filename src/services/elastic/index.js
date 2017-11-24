@@ -10,46 +10,92 @@ import {user_bins} from "../business";
 
 
 
-export function search_simple( sender, jsonQuery)
+export function search_simple( sender, esQuery, cancelToken)
 {
-    let token = sessionStorage.getItem(SESSION_JWTOKEN);
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
 
-    if(!token) {
-        sender.setState({error:'SESSION_JWTOKEN is empty'});
+
+    let source = axios.CancelToken.source();
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        },
+        cancelToken: source.token,
+        //cancelToken: cancelToken,
+        timeout: 300 * 1000, //number millisec, = 5 min
     }
-    else {
-        let config = {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        }
 
-        console.log(config);
-        console.log(prepare_q1( jsonQuery));
-        axios.post(BUSINESS_SERVER_URL+'/elastic/simple-search/', prepare_q1( jsonQuery), config)
-            .then(({data}) => {
-                sender.setState({result: data, loading:false});
-            })
-            .catch( ( err ) => {
-                sender.setState({error: err.message,loading:false});
+
+    axios.post(BUSINESS_SERVER_URL+'/elastic-bin/simple-search/', esQuery, config)
+        .then(({data}) => {
+            //console.log('axios' + index + JSON.stringify(jsonQuery));
+            //console.log('axios' + index + JSON.stringify(q1));
+            //console.log('axios'+i);
+            sender.setState({
+                loading: false,
+                result: data,
             });
+            /*
+            sender.setState( prevState => ({
+                multiResult: {
+                    ...prevState.multiResult,
+                    [index] : {
+                        loading:false,
+                        result:data,
+                        esQuery: esQuery,
+                    }
+                }
+            }));*/
+        })
+        .catch( ( thrown ) => {
 
-        /*
-        const request = axios({
-            method: 'GET',
-            url: AUTH_SERVER_URL+'/api/business/user-info/',
-            headers: {'Authorization':'Bearer '+token}
+            if (axios.isCancel(thrown)) {
+                //console.log('axios was canceled ' + index);
+                //console.log('Request canceled', thrown.message);
+
+                sender.setState({
+                    loading: false,
+                });
+
+                /*
+                sender.setState( prevState => ({
+                    multiResult: {
+                        ...prevState.multiResult,
+                        [index] : {
+                            loading:false,
+                            result:[],
+                            esQuery: esQuery,
+                        }
+                    }
+                }));*/
+            }
+            else {
+                // handle error
+                sender.setState({
+                    loading: false,
+                    error: JSON.stringify(thrown),
+                });
+
+                /*
+                sender.setState( prevState => ({
+                    multiResult: {
+                        ...prevState.multiResult,
+                        [index] : {
+                            error: JSON.stringify(thrown),
+                            loading:false,
+                            result:[],
+                            esQuery: esQuery,
+                        }
+                    }
+                }));*/
+            }
         });
-
-        request.then(
-            response => (sender.setState({user_info:response.data})),
-            err => (sender.setState({error:err.message}))
-        );*/
-    }
+    return source;
 }
 
-
-export function search_drill( sender, jsonQuery, index)
+export function search_drill( sender, esQuery, index)
 {
 
 
@@ -57,66 +103,54 @@ export function search_drill( sender, jsonQuery, index)
     const session = store.getState().session;
     let token = session.tokens.access.value;
 
-    if(!token) {
-        sender.setState({error:'SESSION_JWTOKEN is empty'});
-    }
-    else {
-        let config = {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
         }
-        const i = index;
-        //console.log(config);
-        //console.log(prepare_q1( jsonQuery));
-        let q1 = prepare_q1( jsonQuery)
+    }
 
-        axios.post(BUSINESS_SERVER_URL+'/elastic-bin/drill-search/', q1, config)
-            .then(({data}) => {
-                console.log('axios' + index + JSON.stringify(jsonQuery));
-                console.log('axios' + index + JSON.stringify(q1));
-                //console.log('axios'+i);
-                sender.setState( prevState => ({
-                        multiResult: {
-                            ...prevState.multiResult,
-                            [i] : {
-                                loading:false,
-                                result:data,
-                                esQuery: q1,
-                            }
-                        }
-                    }));
-
-                //sender.setState({result: data, esQuery: q1, loading:false});
-            })
-            .catch( ( err ) => {
-                sender.setState( prevState => ({
-                    multiResult: {
-                        ...prevState.multiResult,
-                        [i] : {
-                            error: JSON.stringify(err),
-                            loading:false,
-                            result:[],
-                            esQuery: q1,
-                        }
+    axios.post(BUSINESS_SERVER_URL+'/elastic-bin/drill-search/', esQuery, config)
+        .then(({data}) => {
+            //console.log('axios' + index + JSON.stringify(jsonQuery));
+            //console.log('axios' + index + JSON.stringify(q1));
+            //console.log('axios'+i);
+            sender.setState( prevState => ({
+                multiResult: {
+                    ...prevState.multiResult,
+                    [index] : {
+                        loading:false,
+                        result:data,
+                        esQuery: esQuery,
                     }
-                }));
-                //sender.setState({result:[], esQuery:q1,  error: err.message, loading:false});
-            });
-
-        /*
-        const request = axios({
-            method: 'GET',
-            url: AUTH_SERVER_URL+'/api/business/user-info/',
-            headers: {'Authorization':'Bearer '+token}
+                }
+            }));
+        })
+        .catch( ( err ) => {
+            sender.setState( prevState => ({
+                multiResult: {
+                    ...prevState.multiResult,
+                    [index] : {
+                        error: JSON.stringify(err),
+                        loading:false,
+                        result:[],
+                        esQuery: esQuery,
+                    }
+                }
+            }));
+            //sender.setState({result:[], esQuery:q1,  error: err.message, loading:false});
         });
 
-        request.then(
-            response => (sender.setState({user_info:response.data})),
-            err => (sender.setState({error:err.message}))
-        );*/
+    /*
+       const request = axios({
+           method: 'GET',
+           url: AUTH_SERVER_URL+'/api/business/user-info/',
+           headers: {'Authorization':'Bearer '+token}
+       });
 
-    }
+       request.then(
+           response => (sender.setState({user_info:response.data})),
+           err => (sender.setState({error:err.message}))
+       );*/
 }
 
 

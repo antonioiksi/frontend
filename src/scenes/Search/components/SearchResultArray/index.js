@@ -2,15 +2,27 @@ import React from 'react';
 import SearchResult from "../SearchResult";
 import PropTypes from 'prop-types'
 import {strings} from "../../../../localization";
+import {Button} from "react-bootstrap";
 
 class SearchResultArray extends React.Component {
     constructor(props) {
         super(props);
+        this.children = [];
+        this.runAllQueries = this.runAllQueries.bind(this);
+    }
+
+    runAllQueries() {
+        //alert("runAllQueries");
+        this.children.forEach((child, index) => {
+                child.runQuery();
+            }
+        );
     }
 
     render() {
         const objMultiResult = this.props.multiResult;
         const numberResult = Object.keys(objMultiResult);
+        //const axiosSource = null;
 
         if (Object.keys(objMultiResult).length===0)
             return <div></div>
@@ -18,13 +30,16 @@ class SearchResultArray extends React.Component {
         return (
             <div>
                 <h1>{strings.SearchResultArray}</h1>
+                <Button  bsStyle="success" bsSize="small" onClick={() => this.runAllQueries()}>{strings.RunAllQueries}</Button>&#160;
                 {
-                    Object.keys(objMultiResult).map(key =>
-                        <SearchResult  key={key}
-                                       jsonData={objMultiResult[key].result}
-                                       loading={objMultiResult[key].loading}
-                                       esQuery={objMultiResult[key].esQuery}
+                    Object.keys(objMultiResult).map(index =>
+                        <SearchResult  key={index}
+                                       index={index}
+                                       jsonData={objMultiResult[index].result}
+                                       loading={objMultiResult[index].loading}
+                                       esQuery={objMultiResult[index].esQuery}
                                        aliases={this.props.aliases}
+                                       onRef={ref => (this.children.push( ref))}
                         />
                     )
                 }

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import ReactJson from 'react-json-view'
 import {
-    Button, ButtonToolbar, Modal, OverlayTrigger, Panel, Popover, ToggleButton,
+    Button, ButtonToolbar, ControlLabel, FormControl, FormGroup, Modal, OverlayTrigger, Panel, Popover, ToggleButton,
     ToggleButtonGroup, Tooltip
 } from "react-bootstrap";
 import {
@@ -12,28 +12,109 @@ import {
 import SearchTable from "../SearchTable";
 import {strings} from "../../../../localization";
 import SearchTableExport from "../SearchTableExport";
+import {search_axios_sources} from "../../index";
+import {search_simple} from "../../../../services/elastic/index";
+
 
 const VIEW_MODES = {TABLE:'table', TABLE_EXPORT: 'table_export', JSON:'json', };
 
 
+function prettyPrint(ugly) {
+    //var ugly = document.getElementById('myTextArea').value;
+    var obj = JSON.parse(ugly);
+    var pretty = JSON.stringify(obj, undefined, 4);
+    document.getElementById('myTextArea').value = pretty;
+}
+
 class SearchResult extends React.Component {
+    axios_source = null;
+
     constructor(props) {
         super(props);
+
+        //console.log('this.props.key:'+this.props.index);
+
         this.state = {
             view_mode : VIEW_MODES.TABLE,
-            showModal: false,
+            error:'',
+            loading:false,
+            showQueryModal: false,
+            editQueryModal: false,
+            textAreaValue: JSON.stringify(props.esQuery, undefined, 4),
+
+            esQuery: props.esQuery,
+            result:[],
         }
-        this.closeShowModal = this.closeShowModal.bind(this);
+
+        this.openShowQueryModal = this.openShowQueryModal.bind(this);
+        this.closeShowQueryModal = this.closeShowQueryModal.bind(this);
+        this.openEditQueryModal = this.openEditQueryModal.bind(this);
+        this.closeEditQueryModal = this.closeEditQueryModal.bind(this);
+        this.changeTextArea = this.changeTextArea.bind(this);
+        this.runQuery = this.runQuery.bind(this);
+        this.cancelQuery = this.cancelQuery.bind(this);
     }
 
-    handleShowModal() {
-        this.setState({showModal:true});
+    componentDidMount() {
+        this.props.onRef(this)
+    }
+    componentWillUnmount() {
+        this.props.onRef(undefined)
+    }
+    method() {
+        window.alert('do stuff'+ this.props.index);
+    }
+    openShowQueryModal() {
+        this.setState({showQueryModal:true});
     }
 
-    closeShowModal() {
-        this.setState({showModal:false});
+    closeShowQueryModal() {
+        this.setState({showQueryModal:false});
     }
 
+    openEditQueryModal() {
+        this.setState({editQueryModal:true});
+    }
+
+    closeEditQueryModal() {
+        try {
+            const temp = JSON.parse(this.state.textAreaValue);
+            this.setState({
+                esQuery: temp,
+                editQueryModal:false
+            })
+        }
+        catch (err) {
+            alert('error: ' + err.message);
+        }
+    }
+
+    changeTextArea(event) {
+        event.preventDefault();
+        const value = event.target.value;
+        //alert(value);
+        this.setState({
+            textAreaValue: value,
+        })
+
+    }
+
+    runQuery() {
+        const that = this;
+        this.setState({
+                loading:true,
+                result:[],
+            },
+            () => {
+                this.axios_source = search_simple(that, this.state.esQuery);
+            }
+
+        );
+    }
+
+    cancelQuery() {
+        this.axios_source.cancel('Operation canceled by the user.');
+    }
 
     render() {
         //if(this.props.loading)
@@ -48,7 +129,7 @@ class SearchResult extends React.Component {
                 <div className="row">
                     <div className="col-lg-6">
                         {
-                            this.props.loading ?
+                            this.state.loading ?
                                 (
                                     <ButtonToolbar>
                                         <ToggleButtonGroup type="radio" name="options" defaultValue={this.state.view_mode}>
@@ -69,38 +150,58 @@ class SearchResult extends React.Component {
                         }
                     </div>
                     <div className="col-lg-6">
-                        <Button  bsStyle="primary" bsSize="small" onClick={() => this.handleShowModal()}>{strings.ShowQuery}</Button>
-                        <Modal show={this.state.showModal} onHide={this.closeShowModal}>
+                        <Button  bsStyle="success" bsSize="small" onClick={() => this.runQuery()}>{strings.RunQuery}</Button>&#160;
+                        <Button  bsStyle="primary" bsSize="small" onClick={() => this.openShowQueryModal()}>{strings.ShowQuery}</Button>&#160;
+                        <Button  bsStyle="warning" bsSize="small" onClick={() => this.openEditQueryModal()}>{strings.EditQuery}</Button>&#160;
+                        <Button  bsStyle="danger" bsSize="small" onClick={() => this.cancelQuery()}>{strings.CancelQuery}</Button>
+                        <Modal show={this.state.showQueryModal} onHide={this.closeShowQueryModal}>
                             <Modal.Header closeButton>
                                 <Modal.Title>{strings.ShowQuery}</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <ReactJson src={this.props.esQuery}  />
+                                <ReactJson src={this.state.esQuery}  />
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button onClick={this.closeShowModal}>Close</Button>
+                                <Button onClick={this.closeShowQueryModal}>Close</Button>
+                            </Modal.Footer>
+                        </Modal>
+                        <Modal show={this.state.editQueryModal} onHide={this.closeEditQueryModal}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>{strings.ShowQuery}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <FormGroup>
+                                    <FormControl
+                                        style={{height: '300px'}}
+                                        componentClass="textarea"
+                                        value={this.state.textAreaValue}
+                                        onChange={this.changeTextArea}
+                                    />
+                                </FormGroup>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button onClick={this.closeEditQueryModal}>Close</Button>
                             </Modal.Footer>
                         </Modal>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Panel header={strings.Result} bsStyle="info">
+                        <Panel header={strings.Result+' #'+this.props.index} bsStyle="info">
                             {
-                                this.props.loading ?
+                                this.state.loading ?
                                     (
                                         <ScaleLoader
                                             color={'#36D7B7'}
-                                            loading={this.props.loading}
+                                            loading={this.state.loading}
                                         />
                                     ) : (
                                         this.state.view_mode == VIEW_MODES.TABLE &&
-                                        <SearchTable jsonData={this.props.jsonData}/>
+                                        <SearchTable jsonData={this.state.result}/>
                                         || this.state.view_mode == VIEW_MODES.TABLE_EXPORT &&
-                                        <SearchTableExport jsonData={this.props.jsonData} aliases={this.props.aliases}/>
-                                        || <ReactJson src={this.props.jsonData}  />
+                                        <SearchTableExport jsonData={this.state.result} aliases={this.props.aliases}/>
+                                        || <ReactJson src={this.state.result}  />
                                     )
-
                             }
                         </Panel>
                     </div>
@@ -111,9 +212,11 @@ class SearchResult extends React.Component {
 }
 
 SearchResult.PropTypes = {
-    jsonData: PropTypes.array,
-    loading: PropTypes.boolean,
+    forceRun: PropTypes.boolean,
+    index: PropTypes.number,
     esQuery: PropTypes.object,
+    //jsonData: PropTypes.array,
+    //loading: PropTypes.boolean,
     aliases: PropTypes.object,
 };
 

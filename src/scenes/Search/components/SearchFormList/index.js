@@ -23,8 +23,8 @@ class SearchFormList extends React.Component {
     }
 
     changeFormValues(indexForm, newValues) {
-        console.log("changeFormValues="+indexForm);
-        console.log(newValues);
+        //console.log("changeFormValues="+indexForm);
+        //console.log(newValues);
 
         const newFormsValues = [
             ...this.state.formsValues.slice(0, indexForm),

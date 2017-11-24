@@ -1,9 +1,15 @@
 import React, {Component} from 'react'
 import ReactJson from 'react-json-view'
+import PropTypes from 'prop-types'
+
+import {CancelToken} from 'axios';
 
 import SearchResult from "./components/SearchResult";
 import SearchFileUpload from "./components/SearchFileUpload";
-import {Panel, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, PageHeader} from "react-bootstrap";
+import {
+    Panel, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, PageHeader, Modal,
+    FormGroup, FormControl
+} from "react-bootstrap";
 
 import SearchFormList from "./components/SearchFormList";
 import {attributes} from "../../services/business";
@@ -15,18 +21,24 @@ import {connect} from "react-redux";
 import {strings} from "../../localization";
 import SearchResultArray from "./components/SearchResultArray/index";
 import SearchFlatFileUpload from "./components/SearchFlatFileUpload/index";
+import {prepare_q1, prepare_q2} from "../../services/elastic/queries";
+import DownloadLink from "../../../node_modules/react-download-link/download-link";
 
 const initQueryValues = [
     {
         "speaker":"king",
-        "play_name":"Henry"
+        "play_name":"Henry",
+        "text_entry":"walls table",
     }
 ]
 
 
 const SEARCH_TYPES = {FORM:'form', FILE:'file', FLAT_FILE:'flat_file',};
 
+export const search_axios_sources = [];
+
 class Search extends Component {
+
     constructor(props) {
         super(props);
         this.state={
@@ -34,15 +46,24 @@ class Search extends Component {
             error:'',
             searchType:SEARCH_TYPES.FORM,
             multiQuery:initQueryValues,
+            multiEsQuery:[],
+            //multiQueryTemplate:initQueryTemplate,
             esQuery: {},
             result:[],
             multiResult:{},
             aliases: {},
+            showModal: false,
+            textAreaValue: '',
         };
 
         this.addValue = this.addValue.bind(this);
         this.removeValue = this.removeValue.bind(this);
         this.loadQuery = this.loadQuery.bind(this);
+
+
+        this.handleChangeTextArea = this.handleChangeTextArea.bind(this);
+        this.closeShowModal = this.closeShowModal.bind(this);
+
     }
 
     componentWillMount() {
@@ -55,8 +76,49 @@ class Search extends Component {
         });
     }
 
-    addValue(name,value) {
+    loadEsQuery() {
+        const multiEsQuery = [];
+        this.state.multiQuery.forEach(function(jsonQuery, index) {
+            //console.log('forEach' + index + JSON.stringify(jsonQuery));
+            let esQ = prepare_q2(jsonQuery)
+            multiEsQuery.push(esQ);
+        });
+        this.setState({
+            multiEsQuery: multiEsQuery,
+            textAreaValue : JSON.stringify(multiEsQuery, undefined, 4),
+        });
+    }
 
+    handleShowModal() {
+        this.setState({showModal:true});
+    }
+
+    closeShowModal() {
+        try {
+            const temp = JSON.parse(this.state.textAreaValue);
+            this.setState({
+                multiEsQuery: temp,
+                showModal:false
+            })
+
+        }
+        catch (err) {
+            alert('error: ' + err.message);
+        }
+    }
+
+    handleChangeTextArea(event) {
+        event.preventDefault();
+        const value = event.target.value;
+        //alert(value);
+        this.setState({
+            textAreaValue: value,
+        })
+
+    }
+
+
+    addValue(name,value) {
         this.setState({
             multiQuery: [...this.state.multiQuery, {name:name, value: value}]
         });
@@ -70,98 +132,33 @@ class Search extends Component {
         });
     }
 
+
     handleSearch() {
-        //event.preventDefault();
-        //const that = this;
-        let jsonQuery = this.state.multiQuery;
-        //this.setState({
-        //    result: this.state.query.slice(0),
-        //});
-        this.setState({loading: true},() => {
-            multifield_search_match(this, jsonQuery);
-        });
-    }
-
-    handleSimpleSearch() {
-        //event.preventDefault();
-        //const that = this;
-        let jsonQuery = this.state.multiQuery;
-        //this.setState({
-        //    result: this.state.query.slice(0),
-        //});
-        this.setState({loading: true},() => {
-            search_simple(this, jsonQuery);
-        });
-    }
-
-    handleDrillSearch() {
-
         const that = this;
 
-        //event.preventDefault();
-        //const that = this;
-        //let jsonQuery = this.state.multiQuery;
-        /*
-        let multiQuery = this.state.multiQuery;
-        const multiResultNEW = {};
-        for(index=0, index < multiQuery.length, ++index) {
-            multiResultNEW[index] = {
-                loading:true,
-                result:[],
-                jsonQuery: jsonQuery,
-            }
-        }
-        */
+        this.state.multiEsQuery.forEach(function(jsonEsQuery, index) {
 
-
-        this.state.multiQuery.forEach(function(jsonQuery, index) {
-            console.log('forEach' + index + JSON.stringify(jsonQuery));
-            /*
-            newElement = {
-                loading:true,
-                result:[],
-                jsonQuery: jsonQuery,
-            }
-            this.setState({
-                multiResult: [...this.state.multiResult, newElement]
-            })},
-            () => {
-                search_drill(this, jsonQuery, index);
-            });*/
-
-
-            let key = index;
             that.setState( prevState => ({
                 multiResult: {
                     ...prevState.multiResult,
-                    [key] : {
-                        loading:true,
+                    [index] : {
+                        //loading:true,
                         result:[],
-                        jsonQuery: jsonQuery,
+                        esQuery: jsonEsQuery,
                     }
                 }
             }),
-                    () => {
-                search_drill(that, jsonQuery, key);
-                    }
-
-
-                );
-
-
-            //that.setState({multiResult},
-            //    () => {
-                    //search_drill(that, jsonQuery, key);
-            //    });
-
+                /*
+                () => {
+                    let cancel = null;
+                    let cancelToken = new CancelToken(function executor(c) {
+                        cancel = c;
+                    });
+                    //search_simple(that, esQ, key, cancelToken);
+                    //search_axios_sources.push(cancel);
+                }*/
+            );
         });
-
-        //this.setState({
-        //    result: this.state.query.slice(0),
-        //});
-        //this.setState({loading: true},() => {
-        //    search_drill(this, jsonQuery);
-        //});
     }
 
     loadFormsValues(formsValues) {
@@ -214,7 +211,6 @@ class Search extends Component {
                         <PageHeader>{strings.search}</PageHeader>
                     </div>
                 </div>
-
                 <div className="row">
                     <div className="col-lg-12">
                         {this.state.error!==''?(<Panel header="Ошибка" bsStyle="danger">
@@ -257,17 +253,49 @@ class Search extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleDrillSearch()}>{strings.search}</Button>
+                        <Panel header={strings.Query} bsStyle="success">
+                            <Button  bsStyle="primary" bsSize="small" onClick={() => this.loadEsQuery()}>LoadEsQuery</Button>
+                            <Button  bsStyle="primary" bsSize="small" onClick={() => this.handleShowModal()}>{strings.ShowQuery}</Button>&#160;
+                            <DownloadLink
+                                filename="query.json"
+                                label={strings.DownloadQuery}
+                                exportFile={() => JSON.stringify( this.state.multiEsQuery, undefined, 4)} />
+                            <Modal show={this.state.showModal} onHide={this.closeShowModal}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>{strings.ShowQuery}</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <FormGroup>
+                                        <FormControl
+                                            style={{height: '200px'}}
+                                            componentClass="textarea"
+                                            value={this.state.textAreaValue}
+                                            onChange={this.handleChangeTextArea}
+                                        />
+                                    </FormGroup>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button onClick={this.closeShowModal}>Close</Button>
+                                </Modal.Footer>
+                            </Modal>
+                            <ReactJson src={this.state.multiEsQuery} />
+                        </Panel>
                     </div>
                 </div>
-
+                <div className="row">
+                    <div className="col-lg-12">
+                        <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleSearch()}>{strings.StartSearch}</Button>
+                    </div>
+                </div>
                 <SearchResultArray multiResult={this.state.multiResult} aliases={this.state.aliases} />
-
-
             </div>
         )
     }
 }
+
+//Search.PropTypes = {
+//    axios_sources: PropTypes.array,
+//}
 
 
 const mapStateToProps = function(store) {

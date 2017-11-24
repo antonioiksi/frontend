@@ -96,7 +96,7 @@ class SearchFlatFileUpload extends React.Component {
         const data = this.state.data;
         return(
             <div>
-                <h1>{strings.FileUpload}</h1>
+                <h1>{strings.FlatFileUpload}</h1>
                 <FieldGroup
                     id="formControlsFile"
                     type="file"

@@ -43,7 +43,7 @@ class SearchTable extends React.Component {
                     <tbody>
                     {
                         data_arr.map((row, index) =>
-                            <Row row={row} key={index} />
+                            <Row key={index} row={row} />
                         )
                     }
                     </tbody>
@@ -51,7 +51,6 @@ class SearchTable extends React.Component {
             </div>
         )
     }
-
 }
 
 SearchTable.PropTypes = {
