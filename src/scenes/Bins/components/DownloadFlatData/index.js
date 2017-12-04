@@ -8,7 +8,7 @@ class DownloadFlatData extends React.Component {
 
     render() {
 
-        const data = dataToFlat( this.props.binItemData.data);
+        const data = dataToFlat( this.props.binItem_data.data);
         const csv = json2csv(data);
         return(
             <div>

@@ -46,6 +46,8 @@ export const strings = new LocalizedStrings({
         DownloadQuery: "Download query",
         DownloadMappedQuery: "Download mapped query",
         RunAllQueries: "Run all queries",
+        Active: "Active",
+        Activate: "Activate",
     },
     ru: {
         PleaseSignIn: "Вход в систему",
@@ -92,6 +94,8 @@ export const strings = new LocalizedStrings({
         DownloadQuery: "Скачать запрос",
         DownloadMappedQuery: "Скачать связанные запросы",
         RunAllQueries: "Запустить все запросы",
+        Active: "Активная",
+        Activate: "Активировать",
     }
 });
 

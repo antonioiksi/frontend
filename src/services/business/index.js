@@ -10,6 +10,7 @@ import {verifyToken} from "../session";
 const endPoints = {
     attributes: '/attribute/list/',
     user_bins: '/bin/list/',
+    bin_activate: '/bin/activate/',
     bin_items: '/bin/item/list/',
     item: '/bin/item/',
     bin_reset: '/bin/reset/',
@@ -75,6 +76,27 @@ export function user_bins()
         );*/
 }
 
+export function bin_activate(sender, bin_name)
+{
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL + endPoints.bin_activate + bin_name, config)
+        .then(({data}) => {
+            store.dispatch(businessActions.user_bins(data));
+        })
+        .catch( ( err ) => {
+            //sender.setState();
+            store.dispatch(alarmsActions.update([err.message]));
+        });
+}
 
 export function bin_items(sender, bin_pk)
 {
