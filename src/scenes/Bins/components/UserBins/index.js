@@ -5,6 +5,7 @@ import {bin_items, item_load, bin_reset, item_delete} from "../../../../services
 import ReactJson from 'react-json-view'
 import {user_bins} from "../../../../services/business";
 import {strings} from "../../../../localization";
+import DownloadFlatData from "../DownloadFlatData/index";
 
 
 class UserBins extends React.Component {
@@ -123,6 +124,7 @@ class UserBins extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
+                        <DownloadFlatData binItemData={this.state.item}/>
                         <ReactJson src={this.state.item}  />
                     </div>
                 </div>

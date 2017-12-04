@@ -44,6 +44,7 @@ export const strings = new LocalizedStrings({
         EditQuery: "Edit query",
         CancelQuery: "Cancel query",
         DownloadQuery: "Download query",
+        DownloadMappedQuery: "Download mapped query",
         RunAllQueries: "Run all queries",
     },
     ru: {
@@ -89,6 +90,7 @@ export const strings = new LocalizedStrings({
         EditQuery: "Edit query",
         CancelQuery: "Cancel query",
         DownloadQuery: "Скачать запрос",
+        DownloadMappedQuery: "Скачать связанные запросы",
         RunAllQueries: "Запустить все запросы",
     }
 });

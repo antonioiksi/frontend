@@ -1,4 +1,5 @@
 import format from 'string-format';
+import store from "../../store";
 
 
 const query_body = {
@@ -14,7 +15,7 @@ const query_body = {
         }
     }
 }
-const query_string = {
+const query_string_default = {
     default: {
         query_string: {
             default_field: "*{0}*",
@@ -75,15 +76,22 @@ export function prepare_q2( jsonQuery) {
 
     let queryItems = [];
 
+    const settings = store.getState().settings;
+
+    let query_string = settings.field_query_string.setting;
+    if (!query_string)
+        query_string = query_string_default;
+
+
     Object.keys(jsonQuery).forEach((key) => {
         let value = jsonQuery[key];
         fields.push("*"+key+"*");
 
         var queryString = null;
-        if (key.includes("speaker")) {
+        if (key.indexOf("phone")>-1) {
             queryString=JSON.parse(JSON.stringify(query_string.phone));
 
-        } else if (key.includes("text_entry")) {
+        } else if (key.indexOf("address")>-1) {
             queryString=JSON.parse(JSON.stringify(query_string.address));
 
             //TODO using regexp to add '+' for every word in string

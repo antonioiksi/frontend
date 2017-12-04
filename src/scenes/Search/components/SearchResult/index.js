@@ -123,6 +123,9 @@ class SearchResult extends React.Component {
         //        loading={this.props.loading}
         //    />)
         //alert('render');
+        const data = this.state.result;
+        const data_ = data.data;
+        const mapping = data.mapping;
 
         return (
             <div>

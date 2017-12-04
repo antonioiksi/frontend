@@ -3,11 +3,15 @@ import {connect} from "react-redux";
 import {Panel} from "react-bootstrap";
 import {attributes} from "../../services/business/index";
 import Visjs from "./components/visjs/index";
+import Redirect from "react-router-dom/es/Redirect";
+import store from "../../store";
+import * as alarmActions from "../../services/alarms/actions";
 
 class Welcome extends Component {
 
     componentWillMount() {
         attributes();
+        store.dispatch(alarmActions.update([]));
     }
 
 

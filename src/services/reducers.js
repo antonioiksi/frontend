@@ -4,6 +4,7 @@ import { combineReducers } from 'redux';
 import { reducer as sessionReducer } from './session/reducer';
 import { reducer as alarmsReducer } from './alarms/reducer';
 import { reducer as businessReducer } from './business/reducer';
+import { reducer as settingsReduser } from './settings/reducer';
 //import logReducer from './log-reducer';
 //import userReducer from './user-reducer';
 
@@ -12,6 +13,7 @@ const reducers = combineReducers({
     session: sessionReducer,
     alarms: alarmsReducer,
     business: businessReducer,
+    settings: settingsReduser,
 });
 
 export default reducers;

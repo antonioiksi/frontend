@@ -28,11 +28,13 @@ export function search_simple( sender, esQuery, cancelToken)
     }
 
 
-    axios.post(BUSINESS_SERVER_URL+'/elastic-bin/simple-search/', esQuery, config)
-        .then(({data}) => {
+    axios.post(BUSINESS_SERVER_URL+'/elastic-bin/mapped-search/', esQuery, config)
+        .then((response) => {
             //console.log('axios' + index + JSON.stringify(jsonQuery));
             //console.log('axios' + index + JSON.stringify(q1));
             //console.log('axios'+i);
+            let data = response.data;
+            //let map = response.mapping;
             sender.setState({
                 loading: false,
                 result: data,
