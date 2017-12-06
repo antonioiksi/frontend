@@ -29,6 +29,7 @@ import store from './store'
 import UserProfile from "./scenes/UserProfile";
 import Settings from "./scenes/Settings";
 import Bins from "./scenes/Bins";
+import GraphBuilder from "./scenes/GraphBuilder";
 //import {loadState, saveState} from './localStorage';
 
 
@@ -86,6 +87,8 @@ ReactDOM.render(
                         <BackofficeRoute exact path="/settings/" component={Settings}/>
                         <BackofficeRoute exact path="/search/" component={Search}/>
                         <BackofficeRoute exact path="/bins/" component={Bins}/>
+                        <BackofficeRoute exact path="/graph-builder/" component={GraphBuilder}/>
+
                         <Route render={()=>(<Redirect to="/"/>)}/>
                     </Switch>
                 </div>

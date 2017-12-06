@@ -48,6 +48,11 @@ class Sidebar extends React.Component {
                             <i className="fa fa-table fa-fw" /> &nbsp;{strings.bins}
                         </a>
                     </li>
+                    <li>
+                        <a href="/graph-builder/" >
+                            <i className="fa fa-users fa-fw" /> &nbsp;{strings.GraphBuilder}
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

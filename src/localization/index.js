@@ -48,6 +48,7 @@ export const strings = new LocalizedStrings({
         RunAllQueries: "Run all queries",
         Active: "Active",
         Activate: "Activate",
+        GraphBuilder: "GraphBuilder",
     },
     ru: {
         PleaseSignIn: "Вход в систему",
@@ -96,6 +97,7 @@ export const strings = new LocalizedStrings({
         RunAllQueries: "Запустить все запросы",
         Active: "Активная",
         Activate: "Активировать",
+        GraphBuilder: "Работа с графами",
     }
 });
 
