@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from "react-redux";
 import {Button, Table} from "react-bootstrap";
-import {bin_items, item_load, bin_reset, item_delete} from "../../../../services/business";
+import {bin_items, item_load, bin_reset, item_delete, bin_to_graph} from "../../../../services/business";
 import ReactJson from 'react-json-view'
 import {user_bins, bin_activate} from "../../../../services/business";
 import {strings} from "../../../../localization";
@@ -47,6 +47,10 @@ class UserBins extends React.Component {
         bin_activate(this, bin_pk)
     }
 
+    loadToGraph(bin_pk) {
+        bin_to_graph(bin_pk);
+    }
+
     handleItemLoad(item_pk) {
         //console.log('item_pk' + item_pk);
         item_load(this, item_pk);
@@ -90,7 +94,8 @@ class UserBins extends React.Component {
                                         <td>
                                             <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleReset(value.id)}>{strings.Reset}</Button>&#160;
                                             <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleLoad(value.id)}>{strings.Load}</Button>&#160;
-                                            <Button  bsStyle="success" bsSize="small" onClick={() => this.handleActivate(value.name)}>{strings.Activate}</Button>
+                                            <Button  bsStyle="success" bsSize="small" onClick={() => this.handleActivate(value.name)}>{strings.Activate}</Button>&#160;
+                                            <Button  bsStyle="primary" bsSize="small" onClick={() => this.loadToGraph(value.id)}>{strings.Load} for graph</Button>
                                         </td>
                                     </tr>
                                 )

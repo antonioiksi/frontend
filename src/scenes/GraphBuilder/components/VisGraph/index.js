@@ -5,6 +5,7 @@ import * as vis from "vis/index-network";
 import 'vis/dist/vis-network.min.css';
 import './style.css';
 import * as _ from "lodash";
+import DownloadLink from "../../../../../node_modules/react-download-link/download-link";
 
 
 var optionsFA = {
@@ -84,12 +85,17 @@ var edges = [{
 edges = [];
 
 
+
 class VisGraph extends Component {
 
     constructor(props) {
         super(props)
 
+
+
     }
+
+
 
     render() {
         const nds = this.props.Nodes;
@@ -100,7 +106,20 @@ class VisGraph extends Component {
                 nodes: this.props.Nodes,
                 edges: this.props.Edges,
             };
-            const network = new vis.Network(containerFA, dataFA, optionsFA);
+
+
+            const Groups = {};
+            this.props.NodeTypes.forEach(type =>{
+                Groups[type.name] = type.drawing.json;
+            });
+
+
+            const options = {
+                groups: Groups,
+            };
+
+            const network = new vis.Network(containerFA, dataFA, options);
+
             network.on("click", function (params) {
                 params.event = "[original event]";
 
@@ -112,16 +131,24 @@ class VisGraph extends Component {
                 alert(JSON.stringify(params, null, 4));
 
             });
+
+            network.on("afterDrawing", function (ctx) {
+                var dataURL = ctx.canvas.toDataURL();
+                //document.getElementById('canvasImg').src = dataURL;
+                //document.getElementById('aaa').exportFile = dataURL;
+                //<img id="canvasImg" alt="Right click to save me!"/>
+
+            });
         }
 
         return (
             <div>
                 <div className="row">
-                    <div className="col-lg-10">
+                    <div className="col-lg-8">
                         <div id="mynetworkFA"/>
 
                     </div>
-                    <div className="col-lg-2">
+                    <div className="col-lg-4">
                         <pre id="eventSpan"></pre>
                     </div>
                 </div>
@@ -134,6 +161,7 @@ class VisGraph extends Component {
 VisGraph.PropTypes = {
     Nodes: PropTypes.array,
     Edges: PropTypes.array,
+    NodeTypes: PropTypes.array,
 }
 
 export default VisGraph

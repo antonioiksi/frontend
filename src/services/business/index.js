@@ -16,6 +16,7 @@ const endPoints = {
     bin_reset: '/bin/reset/',
     item_delete: '/bin/item/delete/',
     query_templates: '/elastic/query-template/list/',
+    bin_to_graph: '/bin-graph/load/',
 };
 
 
@@ -186,4 +187,28 @@ export function item_delete(sender, bin_pk, item_id)
             store.dispatch(alarmsActions.update([err.message]));
         });
     item_load(sender, bin_pk);
+}
+
+
+
+export function bin_to_graph(bin_pk)
+{
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL + endPoints.bin_to_graph + bin_pk, config)
+        .then(({data}) => {
+            //store.dispatch(businessActions.user_bins(data));
+        })
+        .catch( ( err ) => {
+            //sender.setState();
+            store.dispatch(alarmsActions.update([err.message]));
+        });
 }

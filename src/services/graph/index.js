@@ -18,7 +18,7 @@ export function objects_by_name( object, sender) {
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL+'/graph/objects-by-name/'+object, config)
+    axios.get(BUSINESS_SERVER_URL+'/graph/data-by-object-name/'+object, config)
         .then((response) => {
             sender.setState({
                 loading: false,

@@ -1,0 +1,122 @@
+[
+  {
+    "DateTime": "02.07.2010 12:00:37",
+    "NumberPhoneA": "internet.mts.ru",
+    "NumberPhoneB": "Вх. GPRS",
+    "Service": "Вх. GPRS",
+    "Duration": "3600",
+    "NumberBaseStation": "20240-75",
+    "Address": "г. Нальчик, ул. Мальбахова, 117; Азимут 160 град.",
+    "IP":"172.28.206.33"
+  },
+  {
+    "DateTime": "02.07.2010 12:00:42",
+    "NumberPhoneA": "internet.mts.ru",
+    "NumberPhoneB": "",
+    "Service": "Исх. GPRS",
+    "Duration": "3600",
+    "NumberBaseStation": "20240-75",
+    "Address": "г. Нальчик, ул. Мальбахова, 117; Азимут 160 град.",
+    "IP":"172.28.206.31"
+  },
+  {
+    "DateTime": "02.07.2010 12:00:42",
+    "NumberPhoneA": "singleapn",
+    "NumberPhoneB": "",
+    "Service": "Исх. GPRS",
+    "Duration": "3600",
+    "NumberBaseStation": "20240-124",
+    "Address": "г. Нальчик, ул. Гагарина, 126; Азимут 100 град.",
+    "IP":"172.22.3.206"
+  },
+  {
+    "DateTime": "02.07.2010 12:00:44",
+    "NumberPhoneA": "singleapn",
+    "NumberPhoneB": "",
+    "Service": "Вх. GPRS",
+    "Duration": "3600",
+    "NumberBaseStation": "20240-124",
+    "Address": "г. Нальчик, ул. Гагарина, 126; Азимут 100 град.",
+    "IP":"172.22.3.203"
+  },
+  {
+    "DateTime": "02.07.2010 12:00:46",
+    "NumberPhoneA": "7988720666",
+    "NumberPhoneB": "79889265555",
+    "Service": "Вх. звонок",
+    "Duration": "95",
+    "NumberBaseStation": "20240-46",
+    "Address": "г. Нальчик, ул. Прохладненское шоссе, з-д ИсКож; Азимут 240 град.",
+    "IP":""
+  },
+  {
+    "DateTime": "02.07.2010 12:00:48",
+    "NumberPhoneA": "7988720666",
+    "NumberPhoneB": "79889265555",
+    "Service": "Исх. звонок",
+    "Duration": "118",
+    "NumberBaseStation": "20240-74",
+    "Address": "г. Нальчик, ул. Мальбахова, 117; Азимут 40 град.",
+    "IP":""
+  },
+  {
+    "DateTime": "02.07.2010 12:00:49",
+    "NumberPhoneA": "",
+    "NumberPhoneB": "79889265555",
+    "Service": "Вх. звонок",
+    "Duration": "199",
+    "NumberBaseStation": "",
+    "Address": "",
+    "IP":""
+  },
+  {
+    "DateTime": "02.07.2010 12:00:50",
+    "NumberPhoneA": "79887292222",
+    "NumberPhoneB": "79889265555",
+    "Service": "Вх. SMS",
+    "Duration": "1",
+    "NumberBaseStation": "20240-74",
+    "Address": "г. Нальчик, ул. Мальбахова, 117; Азимут 40 град.",
+    "IP":""
+  },
+  {
+    "DateTime": "02.07.2010 12:00:52",
+    "NumberPhoneA": "79889254444",
+    "NumberPhoneB": "79889265555",
+    "Service": "Исх. SMS",
+    "Duration": "1",
+    "NumberBaseStation": "20240-166",
+    "Address": "г. Нальчик, ул. Мусукаева, 1; Азимут 270 град.",
+    "IP":""
+  },
+  {
+    "DateTime": "02.07.2010 12:00:55",
+    "NumberPhoneA": "79889222222",
+    "NumberPhoneB": "79889265555",
+    "Service": "Исх. SMS",
+    "Duration": "1",
+    "NumberBaseStation": "20240-536",
+    "Address": "Республика Кабардино-Балкария, Чегемский р-н, г. Чегем, ул. Урожайная, 55; Азимут 220 град.",
+    "IP":""
+  },
+  {
+    "DateTime": "02.07.2010 12:00:55",
+    "NumberPhoneA": "internet.mts.ru",
+    "NumberPhoneB": "",
+    "Service": "Исх. GPRS",
+    "Duration": "40",
+    "NumberBaseStation": "20240-126",
+    "Address": "г. Нальчик, ул. Гагарина, 126; Азимут 320 град.",
+    "IP":"172.28.248.31"
+  },
+  {
+    "DateTime": "02.07.2010 12:00:55",
+    "NumberPhoneA": "internet.mts.ru",
+    "NumberPhoneB": "",
+    "Service": "Вх. GPRS",
+    "Duration": "40",
+    "NumberBaseStation": "20240-126",
+    "Address": "г. Нальчик, ул. Гагарина, 126; Азимут 320 град.",
+    "IP":"172.28.248.36"
+  }
+]
