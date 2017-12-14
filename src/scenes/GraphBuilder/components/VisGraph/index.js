@@ -90,12 +90,7 @@ class VisGraph extends Component {
 
     constructor(props) {
         super(props)
-
-
-
     }
-
-
 
     render() {
         const nds = this.props.Nodes;
@@ -132,7 +127,7 @@ class VisGraph extends Component {
             });
 
             network.on("afterDrawing", function (ctx) {
-                var dataURL = ctx.canvas.toDataURL();
+                //var dataURL = ctx.canvas.toDataURL();
                 //document.getElementById('canvasImg').src = dataURL;
                 //document.getElementById('aaa').exportFile = dataURL;
                 //<img id="canvasImg" alt="Right click to save me!"/>

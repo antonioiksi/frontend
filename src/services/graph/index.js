@@ -22,7 +22,7 @@ export function graph_nodes_by_models( model_names_array, sender) {
         .then((response) => {
             sender.setState({
                 loading: false,
-                nodes: response.data,
+                nodes: sender.state.nodes.concat(response.data),
             });
         })
         .catch( ( thrown ) => {
@@ -79,7 +79,7 @@ export function graph_relation_list( sender) {
         .then((response) => {
             sender.setState({
                 loading: false,
-                relation: response.data,
+                graph_relation: response.data,
             });
         })
         .catch( ( thrown ) => {

@@ -16,18 +16,18 @@ class GraphBuilder extends Component {
     constructor(props) {
         super(props)
 
-        this.handleSelect = this.handleSelect.bind(this);
 
         this.state = {
             graph_model: [],
-            relation: [],
+            graph_relation: [],
             nodes: [],
             edges: [],
             mode: '1',
         }
 
-        this.loadObjects = this.loadObjects.bind(this);
-        this.buildEdges = this.buildEdges.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
+        this.addNodes = this.addNodes.bind(this);
+        this.addRelations = this.addRelations.bind(this);
     }
 
     componentWillMount() {
@@ -35,26 +35,22 @@ class GraphBuilder extends Component {
         graph_relation_list(this);
     }
 
-    handleSelect(eventKey) {
-        //event.preventDefault();
-        this.setState({mode:eventKey});
-        //alert(`selected ${eventKey}`);
-    }
-
-    clearGraph() {
-        this.setState({nodes:[]});
-    }
-
-    loadObjects() {
+    addNodes(model_names) {
         //graph_nodes_by_models(['phoneA','phoneB'], this);
-        graph_nodes_by_models(['person'], this);
+        //graph_nodes_by_models(['person'], this);
 
+        graph_nodes_by_models(model_names, this);
+        /*
+        this.setState({
+           nodes: [...this.state.nodes, nodes]
+
+        });*/
     }
 
-
-    buildEdges() {
-        //const rel = this.state.relation[0];
-        const rel = this.state.relation[2];
+    addRelations(relation_names) {
+        const rel_name = relation_names[0];
+        const rel = _.find(this.state.graph_relation, {name: rel_name});
+        //const rel = this.state.relation[2];
 
         let temp_edges = [];
         for(let i1=0; i1 <  this.state.nodes.length; i1++) {
@@ -77,7 +73,14 @@ class GraphBuilder extends Component {
                         //console.log(str)
                         temp_edges.push({
                             from: node1.id,
-                            to: node2.id
+                            to: node2.id,
+                            label: rel.name,
+                            width: 2,
+                            length: 400,
+                            color:{color:'rgba(30,30,30,0.2)', highlight:'blue'},
+                            color:{color:'#ff0000', opacity:0.3, highlight: '#00ff00'},
+
+                            /*color: 'red' - doesnot work */
                         })
                     }
                 }
@@ -85,9 +88,30 @@ class GraphBuilder extends Component {
         }
 
         this.setState({
-            edges: temp_edges,
+            edges: this.state.edges.concat(temp_edges),
         });
     }
+
+    clearNodes() {
+        this.setState({
+            nodes: [],
+        });
+    }
+
+
+    /**
+     * Select tabs item
+     * @param eventKey
+     */
+    handleSelect(eventKey) {
+        //event.preventDefault();
+        this.setState({mode:eventKey});
+        //alert(`selected ${eventKey}`);
+    }
+
+
+
+
 
     /*
     placeToGraphObjects(object_name) {
@@ -224,15 +248,13 @@ class GraphBuilder extends Component {
                         <PageHeader>{strings.GraphBuilder}</PageHeader>
                     </div>
                 </div>
-                <NodesLoader/>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Button  bsStyle="warning" bsSize="small" onClick={() => this.clearGraph()}>Clear</Button>
-                        <Button  bsStyle="warning" bsSize="small" onClick={this.loadObjects}>Load test nodes</Button>
-                        <Button  bsStyle="warning" bsSize="small" onClick={this.buildEdges}>Build edges</Button>
-
+                        <Button  bsStyle="warning" bsSize="small" onClick={() => this.clearNodes()}>Clear</Button>
                     </div>
                 </div>
+                <NodesLoader addNodes={this.addNodes} addRelations={this.addRelations}/>
+
                 <div className="row">
                     <div className="col-lg-12">
                         <Nav bsStyle="tabs" justified activeKey={this.state.mode} onSelect={this.handleSelect}>
