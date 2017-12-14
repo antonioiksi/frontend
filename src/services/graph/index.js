@@ -138,7 +138,7 @@ export function graph_clear(graph_pk, sender) {
         .then((response) => {
             sender.setState({
                 loading: false,
-                message: 'ok'
+                message: JSON.stringify(response.data),
             });
         })
         .catch( ( thrown ) => {

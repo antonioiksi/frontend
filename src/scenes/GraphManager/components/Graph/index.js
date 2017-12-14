@@ -8,6 +8,7 @@ class Graph extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            message: '',
             graph_list:[],
             error:'',
             form: {
@@ -36,7 +37,7 @@ class Graph extends React.Component {
     }
 
     resetGraph(graph) {
-        let answer = window.confirm('Вы уверены что хотите очистить все данные из графа '+graph.name+' ?');
+        let answer = window.confirm('Вы уверены что хотите очистить все данные из графа ' + graph.name + ' ?');
         if(answer) {
             graph_clear(graph.id, this);
         }
@@ -59,6 +60,11 @@ class Graph extends React.Component {
                         <h3>{strings.Graph}</h3>
                     </div>
                 </div>
+                {this.state.message!=='' ? (<div className="row">
+                    <div className="col-lg-12">
+                        {this.state.message}
+                    </div>
+                </div>):('')}
                 <div className="row">
                     <div className="col-lg-4">
                         <Form horizontal>
@@ -82,7 +88,7 @@ class Graph extends React.Component {
                             <tr>
                                 <th>#</th>
                                 <th>{strings.Name}</th>
-                                <th>&#160;</th>
+                                <th>{strings.Rows}</th>
                                 <th>&#160;</th>
                             </tr>
                             </thead>
@@ -92,7 +98,7 @@ class Graph extends React.Component {
                                     <tr key={i}>
                                         <td>{i+1}</td>
                                         <td>{value.name}</td>
-                                        <td>&#160;</td>
+                                        <td>{value.graphdata_count}</td>
                                         <td>
                                             <Button  bsStyle="danger" bsSize="small" onClick={() => this.resetGraph(value)}>{strings.Reset}</Button>&#160;
                                             <Button  bsStyle="danger" bsSize="small" onClick={() => this.removeGraph(value)}>{strings.Remove}</Button>&#160;

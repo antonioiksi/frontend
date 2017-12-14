@@ -63,6 +63,7 @@ export const strings = new LocalizedStrings({
         FieldsTo: "FieldsTo",
         Fields: "Fields",
         Drawing: "Drawing",
+        Rows: "Rows",
     },
     ru: {
         PleaseSignIn: "Вход в систему",
@@ -126,6 +127,8 @@ export const strings = new LocalizedStrings({
         FieldsTo: "Поля конца",
         Fields: "Поля",
         Drawing: "Прорисовка",
+        Rows: "Кол-во записей",
+
     }
 });
 
