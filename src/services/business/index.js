@@ -191,7 +191,7 @@ export function item_delete(sender, bin_pk, item_id)
 
 
 
-export function bin_to_graph(bin_pk)
+export function bin_to_graph(bin_pk, graph_pk, sender)
 {
     verifyToken();
     const session = store.getState().session;
@@ -203,9 +203,10 @@ export function bin_to_graph(bin_pk)
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL + endPoints.bin_to_graph + bin_pk, config)
+    axios.get(BUSINESS_SERVER_URL + '/bin-graph/load/' + bin_pk + '/' + graph_pk, config)
         .then(({data}) => {
             //store.dispatch(businessActions.user_bins(data));
+            sender.setState({message: data});
         })
         .catch( ( err ) => {
             //sender.setState();

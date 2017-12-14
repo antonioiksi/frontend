@@ -2,6 +2,9 @@ import React from 'react';
 import {Button, PageHeader, Table} from "react-bootstrap";
 import {strings} from "../../localization";
 import {graph_list} from "../../services/graph";
+import Graph from "./components/Graph/index";
+import GraphModel from "./components/GraphModel/index";
+import GraphRelation from "./components/GraphRelation/index";
 
 class GraphManager extends React.Component {
     constructor(props) {
@@ -29,7 +32,9 @@ class GraphManager extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        dd
+                        <Graph/>
+                        <GraphModel/>
+                        <GraphRelation/>
                     </div>
                 </div>
             </div>

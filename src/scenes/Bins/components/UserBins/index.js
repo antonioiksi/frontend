@@ -1,11 +1,12 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {Button, Table} from "react-bootstrap";
+import {Button, FormControl, Table} from "react-bootstrap";
 import {bin_items, item_load, bin_reset, item_delete, bin_to_graph} from "../../../../services/business";
 import ReactJson from 'react-json-view'
 import {user_bins, bin_activate} from "../../../../services/business";
 import {strings} from "../../../../localization";
 import DownloadFlatData from "../DownloadFlatData/index";
+import {graph_list} from "../../../../services/graph/index";
 
 
 class UserBins extends React.Component {
@@ -14,18 +15,28 @@ class UserBins extends React.Component {
         super(props);
 
         this.state = {
+            message: '',
             bin_items : [],
             bin_pk: null,
             item : {},
+            graph_list: [],
+            form: {
+                selectGraph:'',
+            },
+
         }
     }
 
     componentWillMount() {
         user_bins();
+        graph_list(this);
     }
 
     handleReset(bin_pk) {
-        bin_reset(bin_pk);
+        let answer = window.confirm('Вы уверены что хотите очистить корзинку с ID '+bin_pk +' ?');
+        if(answer) {
+            bin_reset(bin_pk);
+        }
         /*this.setState({
                 values: this.state.values.filter((_,i) => i !== removeId)
             },
@@ -47,9 +58,6 @@ class UserBins extends React.Component {
         bin_activate(this, bin_pk)
     }
 
-    loadToGraph(bin_pk) {
-        bin_to_graph(bin_pk);
-    }
 
     handleItemLoad(item_pk) {
         //console.log('item_pk' + item_pk);
@@ -62,15 +70,43 @@ class UserBins extends React.Component {
     }
 
     handleItemDelete(item_pk) {
+
         item_delete(this, this.state.bin_pk, item_pk);
     }
+
+
+    selectGraph(event) {
+        let fieldName = event.target.name;
+        let fleldVal = event.target.value;
+
+        this.setState({form: {...this.state.form, [fieldName]: fleldVal, selectTextValue: fleldVal}});
+        //alert(fleldVal);
+    }
+
+    loadToGraph(bin_pk) {
+        let graph_pk = this.state.form.selectGraph;
+        if(graph_pk==='') {
+            alert('Необходимо выбрать Graph');
+        }
+        else {
+
+            bin_to_graph(bin_pk, graph_pk, this);
+        }
+    }
+
 
     render() {
 
         console.log(this.props.user_bins);
+        const graph_list = this.state.graph_list;
 
         return(
             <div>
+                {this.state.message!=='' ? (<div className="row">
+                    <div className="col-lg-12">
+                    {this.state.message}
+                    </div>
+                </div>):('')}
                 <div className="row">
                     <div className="col-lg-12">
                         <Table striped bordered condensed hover>
@@ -89,7 +125,7 @@ class UserBins extends React.Component {
                                     <tr key={i}>
                                         <td>{i+1}</td>
                                         <td>{value.name}</td>
-                                        <td>{value.active ? <i class="fa fa-check-square-o" aria-hidden="true"></i> : ''}</td>
+                                        <td>{value.active ? <i className="fa fa-check-square-o" aria-hidden="true"></i> : ''}</td>
                                         <td>{value.items_count}</td>
                                         <td>
                                             <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleReset(value.id)}>{strings.Reset}</Button>&#160;
@@ -102,6 +138,16 @@ class UserBins extends React.Component {
                             }
                             </tbody>
                         </Table>
+
+                        <FormControl componentClass="select" name="selectGraph" onChange={this.selectGraph.bind(this)}>
+                            <option>-</option>
+                            {graph_list.map((attr) =>
+                                <option key={attr.name} value={attr.id}>
+                                    {attr.name}
+                                </option>
+                            )}
+                        </FormControl>
+                        <br/><br/><br/>
                     </div>
                 </div>
                 <div className="row">

@@ -49,23 +49,13 @@ class Sidebar extends React.Component {
                         </a>
                     </li>
                     <li>
-                        <a href="/graph-builder/" >
-                            <i className="fa fa-users fa-fw" /> &nbsp;{strings.GraphBuilder}
-                        </a>
-                    </li>
-                    <li>
                         <a href="/graph-manager/" >
                             <i className="fa fa-users fa-fw" /> &nbsp;{strings.GraphManager}
                         </a>
                     </li>
                     <li>
-                        <a href="/graph-model/" >
-                            <i className="fa fa-users fa-fw" /> &nbsp;{strings.GraphModel}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/graph-relation/" >
-                            <i className="fa fa-users fa-fw" /> &nbsp;{strings.GraphRelation}
+                        <a href="/graph-builder/" >
+                            <i className="fa fa-users fa-fw" /> &nbsp;{strings.GraphBuilder}
                         </a>
                     </li>
                 </ul>

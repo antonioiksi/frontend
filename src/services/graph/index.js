@@ -7,7 +7,7 @@ import * as alarmActions from "../alarms/actions";
 
 
 
-export function graph_nodes_by_models( model_names_array, sender) {
+export function graph_nodes_by_models(graph_name, model_names_array, sender) {
     verifyToken();
     const session = store.getState().session;
     let token = session.tokens.access.value;
@@ -18,7 +18,7 @@ export function graph_nodes_by_models( model_names_array, sender) {
         }
     }
 
-    axios.post(BUSINESS_SERVER_URL+'/graph/node/get/billing/', model_names_array, config)
+    axios.post(BUSINESS_SERVER_URL+'/graph/node/get/'+graph_name+'/', model_names_array, config)
         .then((response) => {
             sender.setState({
                 loading: false,
@@ -105,7 +105,7 @@ export function graph_list( sender) {
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL+'/graph/viewset/', config)
+    axios.get(BUSINESS_SERVER_URL+'/graph/graph/', config)
         .then((response) => {
             sender.setState({
                 loading: false,
@@ -121,3 +121,90 @@ export function graph_list( sender) {
             });
         });
 }
+
+
+export function graph_clear(graph_pk, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/graph/clear/'+graph_pk, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                message: 'ok'
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+
+export function graph_remove(graph_pk, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.delete(BUSINESS_SERVER_URL+'/graph/graph/'+graph_pk, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                graph_list: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+export function graph_create(graph_data, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.post(BUSINESS_SERVER_URL+'/graph/graph/', graph_data, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                graph_list: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+

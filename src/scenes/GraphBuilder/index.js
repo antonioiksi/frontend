@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
-import {Button, Nav, NavItem, PageHeader} from "react-bootstrap";
+import {Button, ControlLabel, FormControl, Nav, NavItem, PageHeader} from "react-bootstrap";
 import VisGraph from "./components/VisGraph";
 import {strings} from "../../localization/index";
 import {graph_model_list} from "../../services/graph";
 import * as _ from "lodash";
 import ReactJson from 'react-json-view'
 import './style.css';
-import {graph_nodes_by_models, graph_relation_list} from "../../services/graph/index";
+import {graph_list, graph_nodes_by_models, graph_relation_list} from "../../services/graph/index";
 import NodesLoader from "./components/NodesLoader";
 
 //TODO add some cool charts
@@ -18,6 +18,8 @@ class GraphBuilder extends Component {
 
 
         this.state = {
+            graph_name: '-',
+            graph_list: [],
             graph_model: [],
             graph_relation: [],
             nodes: [],
@@ -31,15 +33,35 @@ class GraphBuilder extends Component {
     }
 
     componentWillMount() {
+        graph_list(this);
         graph_model_list(this);
         graph_relation_list(this);
+    }
+
+    selectGraph(event) {
+        //let fieldName = event.target.name;
+        let fleldVal = event.target.value;
+
+        this.setState({graph_name: fleldVal});
+        //alert(fleldVal);
     }
 
     addNodes(model_names) {
         //graph_nodes_by_models(['phoneA','phoneB'], this);
         //graph_nodes_by_models(['person'], this);
+        const graph_name = this.state.graph_name;
+        if(graph_name==='-') {
+            alert('Необходимо выбрать Graph');
+        }
+        else {
+            if(model_names.length===0) {
+                alert('Необходимо определить хотя бы одну модель');
+            } else {
+                graph_nodes_by_models(graph_name, model_names, this);
+            }
 
-        graph_nodes_by_models(model_names, this);
+        }
+
         /*
         this.setState({
            nodes: [...this.state.nodes, nodes]
@@ -48,6 +70,14 @@ class GraphBuilder extends Component {
     }
 
     addRelations(relation_names) {
+        if(relation_names.length===0) {
+            alert("Необходимо выбрать связь, но не более одной!")
+            return;
+        } else if (relation_names.length>1) {
+            alert("Нельзя загружать одновременно более одной связи!")
+            return;
+        }
+
         const rel_name = relation_names[0];
         const rel = _.find(this.state.graph_relation, {name: rel_name});
         //const rel = this.state.relation[2];
@@ -240,12 +270,28 @@ class GraphBuilder extends Component {
     }
     */
     render() {
-
+        const graph_list = this.state.graph_list;
         return (
             <div>
                 <div className="row">
                     <div className="col-lg-12">
                         <PageHeader>{strings.GraphBuilder}</PageHeader>
+                    </div>
+                </div>
+
+
+                <div className="row">
+                    <div className="col-lg-12">
+                        <ControlLabel>{strings.Graph}</ControlLabel>
+                        <FormControl componentClass="select" name="selectGraph" onChange={this.selectGraph.bind(this)}>
+                            <option>-</option>
+                            {graph_list.map((attr) =>
+                                <option key={attr.name} value={attr.name}>
+                                    {attr.name} ({attr.graphdata_count}rows)
+                                </option>
+                            )}
+                        </FormControl>
+                        <br/>
                     </div>
                 </div>
                 <div className="row">
