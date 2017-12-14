@@ -558,3 +558,8 @@ table.dataTable thead .sorting:after {
     border-left-width: 0;
   }
 }
+
+
+.box-gallery .box-panel {
+  z-index: 0;
+}

@@ -27,7 +27,7 @@ class Welcome extends Component {
         //store.dispatch()
 
         return (
-            <div className="container">
+            <div className="container welcome">
                 <div className="row">
                     <div className="col-lg-12 text-center">
                         <h1>Welcome</h1>

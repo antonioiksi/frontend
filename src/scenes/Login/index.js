@@ -7,6 +7,7 @@ import {Redirect} from "react-router-dom";
 import {Panel} from "react-bootstrap";
 import {connect} from "react-redux";
 import {strings} from "../../localization";
+import './style.css';
 
 class Login extends Component {
 
@@ -23,7 +24,7 @@ class Login extends Component {
             return <Redirect to="/dashboard/"/>;
 
         return (
-            <div className="col-md-4 col-md-offset-4">
+            <div className="col-md-4 col-md-offset-4 login-form">
                 <div className="text-center">
                     <h1 className="login-brand-text">Frontend</h1>
                     {/*<h3 className="text-muted">Created by <a href="http://startreact.com">StartReact.com</a> team</h3>*/}

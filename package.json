@@ -17,6 +17,7 @@
     "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",
     "react": "^16.0.0",
+    "react-background-slideshow": "^1.0.1",
     "react-bootstrap": "^0.31.5",
     "react-bootstrap-table": "^4.1.1",
     "react-dom": "^16.0.0",
