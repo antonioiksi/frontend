@@ -7,8 +7,8 @@ import reducers from './services/reducers';
 const middleware = applyMiddleware(thunk);
 
 const enhancer = compose(
-    middleware, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-    /* [middlewares] */,
+    middleware, //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    /* [middlewares] */
     persistState(/*paths, config*/),
 )
 

@@ -4,6 +4,7 @@ import StatWidget from "../../components/widgets/StatWidget";
 import {attributes, user_bins, query_templates} from "../../services/business";
 import {strings} from "../../localization/index";
 import {load_settings} from "../../services/settings/index";
+import ESInfo from "./components/ESInfo/index";
 
 //TODO add some cool charts
 
@@ -30,7 +31,7 @@ class Dashboard extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-3 col-md-6">
-                        Dashboard content
+                        <ESInfo/>
                     </div>
                 </div>
             </div>

@@ -16,19 +16,16 @@ class Settings extends Component {
                         <PageHeader>Settings</PageHeader>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-lg-12 col-md-12">
                         {
                             Object.keys(settings).map(setting_name =>
-                                <div key={setting_name}>
-                                    <h3>{settings[setting_name].title} - {settings[setting_name].name}</h3>
-                                    <SettingsItem name={setting_name} value={settings[setting_name].setting}/>
+                                <div className="row" key={setting_name}>
+                                    <div className="col-lg-12 col-md-12">
+                                        <h3>{settings[setting_name].title} - {settings[setting_name].name}</h3>
+                                        <SettingsItem name={setting_name} value={settings[setting_name].setting}/>
+                                    </div>
                                 </div>
-
                             )
                         }
-                    </div>
-                </div>
             </div>
         )
     }

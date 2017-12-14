@@ -30,6 +30,9 @@ import UserProfile from "./scenes/UserProfile";
 import Settings from "./scenes/Settings";
 import Bins from "./scenes/Bins";
 import GraphBuilder from "./scenes/GraphBuilder";
+import GraphManager from "./scenes/GraphManager";
+import GraphModel from "./scenes/GraphManager/components/GraphModel/index";
+import GraphRelation from "./scenes/GraphManager/components/GraphRelation/index";
 //import {loadState, saveState} from './localStorage';
 
 
@@ -73,7 +76,6 @@ store.subscribe(() => {
 */
 
 ReactDOM.render(
-
     <Provider store={store}>
             <BrowserRouter>
                 <div>
@@ -88,6 +90,9 @@ ReactDOM.render(
                         <BackofficeRoute exact path="/search/" component={Search}/>
                         <BackofficeRoute exact path="/bins/" component={Bins}/>
                         <BackofficeRoute exact path="/graph-builder/" component={GraphBuilder}/>
+                        <BackofficeRoute exact path="/graph-manager/" component={GraphManager}/>
+                        <BackofficeRoute exact path="/graph-model/" component={GraphModel}/>
+                        <BackofficeRoute exact path="/graph-relation/" component={GraphRelation}/>
 
                         <Route render={()=>(<Redirect to="/"/>)}/>
                     </Switch>

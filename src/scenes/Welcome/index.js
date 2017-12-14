@@ -6,37 +6,44 @@ import Visjs from "./components/visjs/index";
 import Redirect from "react-router-dom/es/Redirect";
 import store from "../../store";
 import * as alarmActions from "../../services/alarms/actions";
+import './style.css';
+import TestBackendServer from "./components/TestBackendServer/index";
 
 class Welcome extends Component {
-
-    componentWillMount() {
-        attributes();
-        store.dispatch(alarmActions.update([]));
+    constructor(props) {
+        super(props);
     }
 
+    componentWillMount() {
+        //attributes();
+        let querystring = this.props.location.search;
+        //if(querystring.indexOf('clear')>0) {
+        store.dispatch(alarmActions.update([]));
+        //}
+    }
 
     render() {
 
+        //store.dispatch()
+
         return (
-            <div>
-                <h1>Welcome</h1>
-                <p>Welcome content</p>
-                {
-                    this.props.errors && this.props.errors.length >0 ? (
-                        this.props.errors.map((item, index) =>
-                            <Panel header="Error" bsStyle="danger" eventKey={index}>{item}</Panel>)
-                    ) : ('')
-                }
-                {
-                    this.props.attributes && this.props.attributes.length >0 ? (
-                        this.props.attributes.map((item, index) =>
-                            <Panel header="Error" bsStyle="danger" eventKey={index}>{JSON.stringify(item)}</Panel>)
-                    ) : ('')
-                }
-
-                <div id='mynetwork'>VisJS</div>
-                <Visjs/>
-
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-12 text-center">
+                        <h1>Welcome</h1>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12 text-center">
+                    {
+                        this.props.errors && this.props.errors.length >0 ? (
+                            this.props.errors.map((item, index) =>
+                                <Panel key={index} header="Error" bsStyle="danger" eventKey={index}>{item}</Panel>)
+                        ) : ('')
+                    }
+                    </div>
+                </div>
+                <TestBackendServer/>
             </div>
         )
     }

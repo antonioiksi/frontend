@@ -49,6 +49,9 @@ export const strings = new LocalizedStrings({
         Active: "Active",
         Activate: "Activate",
         GraphBuilder: "GraphBuilder",
+        GraphManager: "GraphManager",
+        GraphModel: "GraphModel",
+        GraphRelation: "GraphRelation",
     },
     ru: {
         PleaseSignIn: "Вход в систему",
@@ -98,6 +101,9 @@ export const strings = new LocalizedStrings({
         Active: "Активная",
         Activate: "Активировать",
         GraphBuilder: "Работа с графами",
+        GraphManager: "GraphManager",
+        GraphModel: "GraphModel",
+        GraphRelation: "GraphRelation",
     }
 });
 

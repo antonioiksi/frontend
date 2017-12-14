@@ -107,12 +107,11 @@ class VisGraph extends Component {
                 edges: this.props.Edges,
             };
 
-
             const Groups = {};
             this.props.NodeTypes.forEach(type =>{
-                Groups[type.name] = type.drawing.json;
+                if(type.drawing!==null)
+                    Groups[type.name] = type.drawing.json;
             });
-
 
             const options = {
                 groups: Groups,
@@ -128,7 +127,7 @@ class VisGraph extends Component {
                         JSON.stringify(_.findLast(nds, {'id': params.nodes[0]}), null, 4);
                 }
 
-                alert(JSON.stringify(params, null, 4));
+                //alert(JSON.stringify(params, null, 4));
 
             });
 

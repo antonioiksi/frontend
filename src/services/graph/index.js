@@ -7,7 +7,7 @@ import * as alarmActions from "../alarms/actions";
 
 
 
-export function objects_by_name( object, sender) {
+export function graph_nodes_by_models( model_names_array, sender) {
     verifyToken();
     const session = store.getState().session;
     let token = session.tokens.access.value;
@@ -18,11 +18,11 @@ export function objects_by_name( object, sender) {
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL+'/graph/data-by-object-name/'+object, config)
+    axios.post(BUSINESS_SERVER_URL+'/graph/node/get/billing/', model_names_array, config)
         .then((response) => {
             sender.setState({
                 loading: false,
-                [object]: response.data,
+                nodes: response.data,
             });
         })
         .catch( ( thrown ) => {
@@ -35,7 +35,7 @@ export function objects_by_name( object, sender) {
         });
 }
 
-export function graph_object_list( sender) {
+export function graph_model_list( sender) {
     verifyToken();
     const session = store.getState().session;
     let token = session.tokens.access.value;
@@ -46,11 +46,70 @@ export function graph_object_list( sender) {
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL+'/graph/object/', config)
+    axios.get(BUSINESS_SERVER_URL+'/graph/model/', config)
         .then((response) => {
             sender.setState({
                 loading: false,
-                graph_object: response.data,
+                graph_model: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+
+export function graph_relation_list( sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/graph/relation/', config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                relation: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+
+
+export function graph_list( sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/graph/viewset/', config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                graph_list: response.data,
             });
         })
         .catch( ( thrown ) => {

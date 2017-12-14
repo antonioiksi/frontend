@@ -1,0 +1,23 @@
+.picture {
+    height: 100px;
+}
+.arrow {
+    height: 50px;
+    margin-top: 20px;
+}
+
+.laptop {
+    color: #3f903f;
+}
+
+.fa-ban {
+    color: #d9534f;
+}
+
+.fa-check-circle {
+    color: #5cb85c;
+}
+
+fa-question-circle {
+    color: #3f903f;
+}
