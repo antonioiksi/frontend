@@ -1,16 +1,16 @@
 import React from 'react';
 import MultiSelectField from './components/MultiSelectModel';
-import {graph_model_list} from "../../../../services/graph";
+import {model_list} from "../../../../services/graph";
 import {Button} from "react-bootstrap";
-import {graph_relation_list} from "../../../../services/graph/index";
+import {relation_list} from "../../../../services/graph/index";
 import PropTypes from 'prop-types';
 
 class NodesLoader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            graph_model:[],
-            graph_relation:[],
+            model_list:[],
+            relation_list:[],
             selected_model_names: [],
             selected_relation_names: [],
         }
@@ -21,8 +21,8 @@ class NodesLoader extends React.Component {
     }
 
     componentWillMount() {
-        graph_model_list(this);
-        graph_relation_list(this);
+        model_list(this);
+        relation_list(this);
     }
 
     selectModels(models) {
@@ -47,7 +47,7 @@ class NodesLoader extends React.Component {
 
     render() {
         const model_options = [];
-        this.state.graph_model.map((item) => {
+        this.state.model_list.map((item) => {
             let new_item = {
                 label: item.name,
                 value: item.name,
@@ -55,7 +55,7 @@ class NodesLoader extends React.Component {
             model_options.push(new_item);
         });
         const relation_options = [];
-        this.state.graph_relation.map((item) => {
+        this.state.relation_list.map((item) => {
             let new_item = {
                 label: item.name,
                 value: item.name,

@@ -64,6 +64,11 @@ export const strings = new LocalizedStrings({
         Fields: "Fields",
         Drawing: "Drawing",
         Rows: "Rows",
+        FillName: "Fill name",
+        FillFields: "Fill fields",
+        FillGraph: "Fill graph",
+        FillDrawing: "Fill drawing",
+        LoadCsv: "Load csv file",
     },
     ru: {
         PleaseSignIn: "Вход в систему",
@@ -126,9 +131,13 @@ export const strings = new LocalizedStrings({
         FieldsFrom: "Поля начала",
         FieldsTo: "Поля конца",
         Fields: "Поля",
-        Drawing: "Прорисовка",
+        Drawing: "Стиль отображения",
         Rows: "Кол-во записей",
-
+        FillName: "Укажите название",
+        FillFields: "Укажите поля",
+        FillGraph: "Выберите граф",
+        FillDrawing: "Выберите стиль отображения",
+        LoadCsv: "Загрузить csv файл",
     }
 });
 

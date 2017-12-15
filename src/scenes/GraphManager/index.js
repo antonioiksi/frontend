@@ -33,8 +33,8 @@ class GraphManager extends React.Component {
                 <div className="row">
                     <div className="col-lg-12">
                         <Graph/>
-                        <GraphModel/>
-                        <GraphRelation/>
+                        <GraphModel graph_list={this.state.graph_list}/>
+                        <GraphRelation graph_list={this.state.graph_list}/>
                     </div>
                 </div>
             </div>

@@ -1,23 +1,29 @@
 import React from 'react';
 import {strings} from "../../../../localization/index";
 import {PageHeader, Table} from "react-bootstrap";
-import {graph_relation_list} from "../../../../services/graph/index";
+import {relation_list, relation_create} from "../../../../services/graph/index";
+import GraphRelationForm from "./components/GraphRelationForm/index";
+import PropTypes from 'prop-types';
 
 class GraphRelation extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            graph_relation: [],
+            relation_list: [],
         }
     }
 
     componentWillMount() {
-        graph_relation_list(this);
+        relation_list(this);
+    }
+
+    createRelation(relation_data) {
+        relation_create(relation_data, this);
     }
 
     render() {
-        const graph_relation = this.state.graph_relation;
+        const relation_list = this.state.relation_list;
         return (
             <div>
                 <div className="row">
@@ -26,7 +32,10 @@ class GraphRelation extends React.Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-lg-12">
+                    <div className="col-lg-4">
+                        <GraphRelationForm graph_list={this.props.graph_list} createRelationFunction={this.createRelation.bind(this)}/>
+                    </div>
+                    <div className="col-lg-8">
                         <Table striped bordered condensed hover>
                             <thead>
                             <tr>
@@ -38,7 +47,7 @@ class GraphRelation extends React.Component {
                             </thead>
                             <tbody>
                             {
-                                graph_relation.map((value, i) =>
+                                relation_list.map((value, i) =>
                                     <tr key={i}>
                                         <td>{i+1}</td>
                                         <td>{value.name}</td>
@@ -48,11 +57,16 @@ class GraphRelation extends React.Component {
                                 )
                             }
                             </tbody>
-                        </Table>                    </div>
+                        </Table>
+                    </div>
                 </div>
             </div>
         )
     }
+}
+
+GraphRelation.PropTypes = {
+    graph_list: PropTypes.array,
 }
 
 export default GraphRelation;

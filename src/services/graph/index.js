@@ -35,7 +35,7 @@ export function graph_nodes_by_models(graph_name, model_names_array, sender) {
         });
 }
 
-export function graph_model_list( sender) {
+export function model_list(sender) {
     verifyToken();
     const session = store.getState().session;
     let token = session.tokens.access.value;
@@ -50,7 +50,7 @@ export function graph_model_list( sender) {
         .then((response) => {
             sender.setState({
                 loading: false,
-                graph_model: response.data,
+                model_list: response.data,
             });
         })
         .catch( ( thrown ) => {
@@ -64,7 +64,7 @@ export function graph_model_list( sender) {
 }
 
 
-export function graph_relation_list( sender) {
+export function relation_list(sender) {
     verifyToken();
     const session = store.getState().session;
     let token = session.tokens.access.value;
@@ -79,7 +79,7 @@ export function graph_relation_list( sender) {
         .then((response) => {
             sender.setState({
                 loading: false,
-                graph_relation: response.data,
+                relation_list: response.data,
             });
         })
         .catch( ( thrown ) => {
@@ -207,4 +207,125 @@ export function graph_create(graph_data, sender) {
             });
         });
 }
+
+export function drawing_list( sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/graph/drawing/', config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                drawing_list: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+
+export function model_create(model_data, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.post(BUSINESS_SERVER_URL+'/graph/model/', model_data, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                model_list: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+                error: JSON.stringify(thrown)
+            });
+        });
+}
+
+
+export function relation_create(relation_data, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.post(BUSINESS_SERVER_URL+'/graph/relation/', relation_data, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                relation_list: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+                error: JSON.stringify(thrown)
+            });
+        });
+}
+
+
+export function load_graph_data(graph_name, data_json, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.post(BUSINESS_SERVER_URL+'/graph/load-data/'+graph_name, data_json, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                message: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+                error: JSON.stringify(thrown)
+            });
+        });
+}
+
+
+
 

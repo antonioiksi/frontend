@@ -2,11 +2,11 @@ import React, {Component} from 'react'
 import {Button, ControlLabel, FormControl, Nav, NavItem, PageHeader} from "react-bootstrap";
 import VisGraph from "./components/VisGraph";
 import {strings} from "../../localization/index";
-import {graph_model_list} from "../../services/graph";
+import {model_list} from "../../services/graph";
 import * as _ from "lodash";
 import ReactJson from 'react-json-view'
 import './style.css';
-import {graph_list, graph_nodes_by_models, graph_relation_list} from "../../services/graph/index";
+import {graph_list, graph_nodes_by_models, relation_list} from "../../services/graph/index";
 import NodesLoader from "./components/NodesLoader";
 
 //TODO add some cool charts
@@ -20,11 +20,12 @@ class GraphBuilder extends Component {
         this.state = {
             graph_name: '-',
             graph_list: [],
-            graph_model: [],
-            graph_relation: [],
+            model_list: [],
+            relation_list: [],
             nodes: [],
             edges: [],
             mode: '1',
+            duration: '',
         }
 
         this.handleSelect = this.handleSelect.bind(this);
@@ -34,8 +35,8 @@ class GraphBuilder extends Component {
 
     componentWillMount() {
         graph_list(this);
-        graph_model_list(this);
-        graph_relation_list(this);
+        model_list(this);
+        relation_list(this);
     }
 
     selectGraph(event) {
@@ -70,6 +71,8 @@ class GraphBuilder extends Component {
     }
 
     addRelations(relation_names) {
+        const t0 = window.performance.now();
+
         if(relation_names.length===0) {
             alert("Необходимо выбрать связь, но не более одной!")
             return;
@@ -79,7 +82,7 @@ class GraphBuilder extends Component {
         }
 
         const rel_name = relation_names[0];
-        const rel = _.find(this.state.graph_relation, {name: rel_name});
+        const rel = _.find(this.state.relation_list, {name: rel_name});
         //const rel = this.state.relation[2];
 
         let temp_edges = [];
@@ -116,9 +119,12 @@ class GraphBuilder extends Component {
                 }
             }
         }
+        const t1 = performance.now();
+        //console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
 
         this.setState({
             edges: this.state.edges.concat(temp_edges),
+            duration: t1 - t0,
         });
     }
 
@@ -150,8 +156,8 @@ class GraphBuilder extends Component {
             let item = _.clone( el);
             item.id = object_name+'_'+el._id;
 
-            //let graph_model = _.filter(this.state.graph_model, { 'name': object_name,});
-            let graph_object = _.findLast(this.state.graph_model, { 'name': object_name,});
+            //let model_list = _.filter(this.state.model_list, { 'name': object_name,});
+            let graph_object = _.findLast(this.state.model_list, { 'name': object_name,});
 
             //TODO add another fields for label
             let label_field = graph_object.fields[0];
@@ -174,11 +180,11 @@ class GraphBuilder extends Component {
     placeStrictEdges() {
         let temp_edges = [];
 
-        this.state.graph_model.forEach(graph_object => {
+        this.state.model_list.forEach(graph_object => {
 
             let graph_object_name = graph_object.name;
 
-            this.state.graph_model.forEach(graph_object_ => {
+            this.state.model_list.forEach(graph_object_ => {
                 let graph_object_name_ = graph_object_.name;
                 if(graph_object_name!==graph_object_name_) {
 
@@ -233,11 +239,11 @@ class GraphBuilder extends Component {
     placeFieldsEdges() {
         let temp_edges = [];
 
-        this.state.graph_model.forEach(graph_object => {
+        this.state.model_list.forEach(graph_object => {
 
             let graph_object_name = graph_object.name;
 
-            this.state.graph_model.forEach(graph_object_ => {
+            this.state.model_list.forEach(graph_object_ => {
                 let graph_object_name_ = graph_object_.name;
                 if(graph_object_name!==graph_object_name_) {
 
@@ -275,7 +281,7 @@ class GraphBuilder extends Component {
             <div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <PageHeader>{strings.GraphBuilder}</PageHeader>
+                        <PageHeader>{strings.GraphBuilder} {this.state.duration}</PageHeader>
                     </div>
                 </div>
 
@@ -310,7 +316,7 @@ class GraphBuilder extends Component {
                         <div>
                         {
                             this.state.mode==='1' ? (
-                                <VisGraph Nodes={this.state.nodes} Edges={this.state.edges} NodeTypes={this.state.graph_model} />
+                                <VisGraph Nodes={this.state.nodes} Edges={this.state.edges} NodeTypes={this.state.model_list} />
                             ) : (
                                 <ReactJson src={this.state.nodes} />
                             )
