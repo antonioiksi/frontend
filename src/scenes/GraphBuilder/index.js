@@ -6,7 +6,11 @@ import {model_list} from "../../services/graph";
 import * as _ from "lodash";
 import ReactJson from 'react-json-view'
 import './style.css';
-import {graph_list, graph_nodes_by_models, relation_list} from "../../services/graph/index";
+import {
+    edge_add, edge_list,
+    edge_remove_all, graph_list, node_add, node_list, node_remove_all, node_save,
+    relation_list
+} from "../../services/graph/index";
 import NodesLoader from "./components/NodesLoader";
 
 //TODO add some cool charts
@@ -16,9 +20,8 @@ class GraphBuilder extends Component {
     constructor(props) {
         super(props)
 
-
         this.state = {
-            graph_name: '-',
+            graph_id: '0',
             graph_list: [],
             model_list: [],
             relation_list: [],
@@ -29,38 +32,47 @@ class GraphBuilder extends Component {
         }
 
         this.handleSelect = this.handleSelect.bind(this);
-        this.addNodes = this.addNodes.bind(this);
         this.addRelations = this.addRelations.bind(this);
+
+        this.removeAllNodes = this.removeAllNodes.bind(this);
+        this.addNodes = this.addNodes.bind(this);
+        this.redrawNodes = this.redrawNodes.bind(this);
+
+        this.removeAllEdges = this.removeAllEdges.bind(this)
+        this.addEdges = this.addEdges.bind(this);
+        this.redrawEdges = this.redrawEdges.bind(this)
     }
 
     componentWillMount() {
         graph_list(this);
-        model_list(this);
-        relation_list(this);
     }
 
     selectGraph(event) {
         //let fieldName = event.target.name;
         let fleldVal = event.target.value;
 
-        this.setState({graph_name: fleldVal});
-        //alert(fleldVal);
+        const that = this;
+        this.setState({graph_id: fleldVal},
+            () => {
+                model_list(this.state.graph_id, this);
+                relation_list(this.state.graph_id, this);
+
+            });
     }
 
     addNodes(model_names) {
         //graph_nodes_by_models(['phoneA','phoneB'], this);
         //graph_nodes_by_models(['person'], this);
-        const graph_name = this.state.graph_name;
-        if(graph_name==='-') {
+        const graph_id = this.state.graph_id;
+        if(graph_id==='0') {
             alert('Необходимо выбрать Graph');
         }
         else {
-            if(model_names.length===0) {
+            if (model_names.length===0) {
                 alert('Необходимо определить хотя бы одну модель');
             } else {
-                graph_nodes_by_models(graph_name, model_names, this);
+                node_add(graph_id, model_names, this);
             }
-
         }
 
         /*
@@ -71,6 +83,7 @@ class GraphBuilder extends Component {
     }
 
     addRelations(relation_names) {
+
         const t0 = window.performance.now();
 
         if(relation_names.length===0) {
@@ -126,12 +139,31 @@ class GraphBuilder extends Component {
             edges: this.state.edges.concat(temp_edges),
             duration: t1 - t0,
         });
+
     }
 
-    clearNodes() {
-        this.setState({
-            nodes: [],
-        });
+    removeAllNodes() {
+        const graph_id = this.state.graph_id;
+        node_remove_all(graph_id, this);
+    }
+
+    redrawNodes() {
+        const graph_id = this.state.graph_id;
+        node_list(graph_id, this);
+    }
+
+
+    removeAllEdges() {
+        const graph_id = this.state.graph_id;
+        edge_remove_all(graph_id, this);
+    }
+    addEdges(relation_names) {
+        const graph_id = this.state.graph_id;
+        edge_add(graph_id, relation_names, this);
+    }
+    redrawEdges() {
+        const graph_id = this.state.graph_id;
+        edge_list(graph_id, this);
     }
 
 
@@ -277,6 +309,18 @@ class GraphBuilder extends Component {
     */
     render() {
         const graph_list = this.state.graph_list;
+
+
+        let groups = [];
+        if(this.state.model_list.length>0) {
+            this.state.model_list.forEach(model => {
+                if(model.is_group) {
+                    groups[model.name] = model.drawing
+                }
+            });
+        }
+        //this.state.model_list
+
         return (
             <div>
                 <div className="row">
@@ -292,7 +336,7 @@ class GraphBuilder extends Component {
                         <FormControl componentClass="select" name="selectGraph" onChange={this.selectGraph.bind(this)}>
                             <option>-</option>
                             {graph_list.map((attr) =>
-                                <option key={attr.name} value={attr.name}>
+                                <option key={attr.id} value={attr.id}>
                                     {attr.name} ({attr.graphdata_count}rows)
                                 </option>
                             )}
@@ -302,10 +346,20 @@ class GraphBuilder extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Button  bsStyle="warning" bsSize="small" onClick={() => this.clearNodes()}>Clear</Button>
+                        <Button  bsStyle="warning" bsSize="small" onClick={() => this.removeAllNodes()}>Remove All Nodes</Button>
+                        <Button  bsStyle="warning" bsSize="small" onClick={() => this.redrawNodes()}>Redraw nodes</Button>
                     </div>
                 </div>
-                <NodesLoader addNodes={this.addNodes} addRelations={this.addRelations}/>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <Button  bsStyle="warning" bsSize="small" onClick={() => this.removeAllEdges()}>Remove All Edges</Button>
+                        <Button  bsStyle="warning" bsSize="small" onClick={() => this.redrawEdges()}>Redraw edges</Button>
+                    </div>
+                </div>
+                <NodesLoader model_list={this.state.model_list}
+                             relation_list={this.state.relation_list}
+                             addNodes={this.addNodes}
+                             addRelations={this.addEdges}/>
 
                 <div className="row">
                     <div className="col-lg-12">
@@ -316,7 +370,9 @@ class GraphBuilder extends Component {
                         <div>
                         {
                             this.state.mode==='1' ? (
-                                <VisGraph Nodes={this.state.nodes} Edges={this.state.edges} NodeTypes={this.state.model_list} />
+                                <VisGraph Nodes={this.state.nodes}
+                                          Edges={this.state.edges}
+                                          Groups={groups} />
                             ) : (
                                 <ReactJson src={this.state.nodes} />
                             )

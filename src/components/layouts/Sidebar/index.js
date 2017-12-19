@@ -45,17 +45,17 @@ class Sidebar extends React.Component {
                     </li>
                     <li>
                         <a href="/bins/" >
-                            <i className="fa fa-table fa-fw" /> &nbsp;{strings.bins}
+                            <i className="fa fa-shopping-basket fa-fw" /> &nbsp;{strings.bins}
                         </a>
                     </li>
                     <li>
                         <a href="/graph-manager/" >
-                            <i className="fa fa-users fa-fw" /> &nbsp;{strings.GraphManager}
+                            <i className="fa fa-book fa-fw" /> &nbsp;{strings.GraphManager}
                         </a>
                     </li>
                     <li>
                         <a href="/graph-builder/" >
-                            <i className="fa fa-users fa-fw" /> &nbsp;{strings.GraphBuilder}
+                            <i className="fa fa-share-alt fa-fw" /> &nbsp;{strings.GraphBuilder}
                         </a>
                     </li>
                 </ul>

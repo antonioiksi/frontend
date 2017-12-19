@@ -12,7 +12,6 @@ class GraphModel extends React.Component {
         this.state = {
             error: '',
             loading: false,
-            model_list: [],
             drawing_list: [],
         }
 
@@ -22,16 +21,15 @@ class GraphModel extends React.Component {
 
     componentWillMount() {
         drawing_list(this);
-        this.setState({loading:true},model_list(this));
+        this.setState({loading:true});
     }
 
-    createModel(model_data) {
-        model_create(model_data, this);
-    }
 
 
     render() {
-        const graph_model = this.state.model_list;
+        const graph_model = this.props.model_list;
+
+
         return (
             <div>
                 <div className="row">
@@ -47,7 +45,11 @@ class GraphModel extends React.Component {
 
                 <div className="row">
                     <div className="col-lg-4">
-                        <GraphModelForm graph_list={this.props.graph_list} drawing_list={this.state.drawing_list} createModelFunction={this.createModel.bind(this)}/>
+                        {
+                        <GraphModelForm graph_id={this.props.graph_id}
+                                        drawing_list={this.state.drawing_list}
+                                        createModelFunction={this.props.createModelFunction}/>
+                        }
                     </div>
                     <div className="col-lg-8">
                         <Table striped bordered condensed hover>
@@ -82,8 +84,11 @@ class GraphModel extends React.Component {
 }
 
 GraphModelForm.PropTypes = {
-    graph_list: PropTypes.array,
+    graph_id: PropTypes.integer,
+    model_list: PropTypes.array,
     drawing_list: PropTypes.array,
+
+    createModelFunction: PropTypes.func,
 }
 
 export default GraphModel;

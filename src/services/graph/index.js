@@ -5,9 +5,7 @@ import store from '../../store';
 import {verifyToken} from "../session";
 import * as alarmActions from "../alarms/actions";
 
-
-
-export function graph_nodes_by_models(graph_name, model_names_array, sender) {
+export function edge_remove_all(graph_id, sender) {
     verifyToken();
     const session = store.getState().session;
     let token = session.tokens.access.value;
@@ -18,7 +16,121 @@ export function graph_nodes_by_models(graph_name, model_names_array, sender) {
         }
     }
 
-    axios.post(BUSINESS_SERVER_URL+'/graph/node/get/'+graph_name+'/', model_names_array, config)
+    axios.get(BUSINESS_SERVER_URL+'/graph/edge/remove-all/'+graph_id, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                edges: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+export function edge_add(graph_id, relation_names, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.post(BUSINESS_SERVER_URL+'/graph/edge/add/'+graph_id+'/', relation_names, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                edges: sender.state.edges.concat(response.data),
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+export function edge_list(graph_id, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/graph/edge/list/'+graph_id, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                edges: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+
+
+export function node_remove_all(graph_id, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/graph/node/remove-all/'+graph_id, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                nodes: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+export function node_add(graph_id, model_names_array, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.post(BUSINESS_SERVER_URL+'/graph/node/add/'+graph_id+'/', model_names_array, config)
         .then((response) => {
             sender.setState({
                 loading: false,
@@ -35,7 +147,7 @@ export function graph_nodes_by_models(graph_name, model_names_array, sender) {
         });
 }
 
-export function model_list(sender) {
+export function node_list(graph_id, sender) {
     verifyToken();
     const session = store.getState().session;
     let token = session.tokens.access.value;
@@ -46,7 +158,36 @@ export function model_list(sender) {
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL+'/graph/model/', config)
+    axios.get(BUSINESS_SERVER_URL+'/graph/node/list/'+graph_id, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                nodes: response.data,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
+
+export function model_list(graph_id, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/graph/model/for-graph/'+graph_id, config)
         .then((response) => {
             sender.setState({
                 loading: false,
@@ -64,7 +205,7 @@ export function model_list(sender) {
 }
 
 
-export function relation_list(sender) {
+export function relation_list(graph_id, sender) {
     verifyToken();
     const session = store.getState().session;
     let token = session.tokens.access.value;
@@ -75,7 +216,7 @@ export function relation_list(sender) {
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL+'/graph/relation/', config)
+    axios.get(BUSINESS_SERVER_URL+'/graph/relation/for-graph/'+graph_id, config)
         .then((response) => {
             sender.setState({
                 loading: false,

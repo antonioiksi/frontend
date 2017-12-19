@@ -4,13 +4,13 @@ import {strings} from "../../../../localization";
 import {graph_remove, graph_clear, graph_list} from "../../../../services/graph";
 import {graph_create, load_graph_data} from "../../../../services/graph/index";
 import csv from 'csv';
+import PropTypes from 'prop-types';
 
 class Graph extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             message: '',
-
             graph_list:[],
             error:'',
             form: {
@@ -39,6 +39,10 @@ class Graph extends React.Component {
         //alert('okay');
     }
 
+    activateGraph(graph_id) {
+        this.props.activateGraph(graph_id);
+    }
+
     resetGraph(graph) {
         let answer = window.confirm('Вы уверены что хотите очистить все данные из графа ' + graph.name + ' ?');
         if(answer) {
@@ -65,11 +69,21 @@ class Graph extends React.Component {
         reader.onload = () => {
             // http://csv.adaltas.com/parse/examples/
             csv.parse(reader.result, {columns: true}, (err, data) => {
-                //console.log(data);
-                load_graph_data(graph_name, data, sender);
+                if(err) {
+                    console.log(err.message);
+                    this.setState({message:err.message})
+                } else {
+                    console.log(data);
+                    load_graph_data(graph_name, data, sender);
+                }
+
+
             });
         };
-        reader.readAsBinaryString(files[0]);
+        //reader.readAsBinaryString(files[0]);
+        //reader.readAsBinaryString(files[0],'utf8');
+        //reader.readAsText(files[0],'CP1251');
+        reader.readAsText(files[0],'utf8');
         /*
         reader.readAsBinaryString(e[0]);
         let reader = new FileReader();
@@ -86,6 +100,8 @@ class Graph extends React.Component {
 
     render() {
         const graph_list = this.state.graph_list;
+
+        //TODO try change type=file to <Dropzone name={field.name} onDrop={onDrop} />
 
         return (
             <div>
@@ -121,6 +137,7 @@ class Graph extends React.Component {
                             <thead>
                             <tr>
                                 <th>#</th>
+                                <th>{strings.Active}</th>
                                 <th>{strings.Name}</th>
                                 <th>{strings.Rows}</th>
                                 <th>&#160;</th>
@@ -131,9 +148,13 @@ class Graph extends React.Component {
                                 graph_list.map((value, i) =>
                                     <tr key={i}>
                                         <td>{i+1}</td>
+                                        <td>{
+                                            value.id === this.props.active_graph_id ? ('*') : ('')
+                                        }</td>
                                         <td>{value.name}</td>
                                         <td>{value.graphdata_count}</td>
                                         <td>
+                                            <Button  bsStyle="danger" bsSize="small" onClick={() => this.activateGraph(value.id)}>{strings.Activate}</Button>&#160;
                                             <Button  bsStyle="danger" bsSize="small" onClick={() => this.resetGraph(value)}>{strings.Reset}</Button>&#160;
                                             <Button  bsStyle="danger" bsSize="small" onClick={() => this.removeGraph(value)}>{strings.Remove}</Button>&#160;
                                             <FormControl type="file" name={value.name} onChange={this.handleFileSelect} />
@@ -148,6 +169,10 @@ class Graph extends React.Component {
             </div>
         )
     }
+}
+
+Graph.PropTypes = {
+    active_graph_id: PropTypes.string,
 }
 
 export default Graph;

@@ -8,11 +8,12 @@ class GraphRelationForm extends React.Component {
         super(props);
 
         this.state = {
-            loading: false,
             error:'',
+            loading: false,
             form: {
                 from_fields:'',
                 to_fields:'',
+                comparators: '',
                 name:'',
             },
 
@@ -31,12 +32,14 @@ class GraphRelationForm extends React.Component {
 
     submitForm(event) {
         event.preventDefault();
-        let data = {
+        let relation_data = {
             ...this.state.form,
             from_fields: this.state.form.from_fields.split(','),
             to_fields: this.state.form.to_fields.split(','),
+            comparators: this.state.form.comparators.split(','),
+            graph: this.props.graph_id
         };
-        this.props.createRelationFunction(data, this);
+        this.props.createRelationFunction(relation_data, this);
     }
 
     render() {
@@ -57,16 +60,9 @@ class GraphRelationForm extends React.Component {
                             <Col lg={8}>
                                 <FormGroup controlId="formControlsText">
                                     <FormControl type="text" placeholder={strings.FillName} name="name" onChange={this.changeValue.bind(this)}/>
-                                    <FormControl componentClass="select" name="graph" onChange={this.changeValue.bind(this)} defaultValue="0">
-                                        <option disabled value="0">{strings.FillGraph}</option>
-                                        {graph_list.map((attr) =>
-                                            <option key={attr.name} value={attr.id}>
-                                                {attr.name}
-                                            </option>
-                                        )}
-                                    </FormControl>
-                                    <FormControl type="text" placeholder={strings.FillFields} name="from_fields" onChange={this.changeValue.bind(this)}/>
-                                    <FormControl type="text" placeholder={strings.FillFields} name="to_fields" onChange={this.changeValue.bind(this)}/>
+                                    <FormControl type="text" placeholder="from_fields" name="from_fields" onChange={this.changeValue.bind(this)}/>
+                                    <FormControl type="text" placeholder="to_fields" name="to_fields" onChange={this.changeValue.bind(this)}/>
+                                    <FormControl type="text" placeholder="comparators" name="comparators" onChange={this.changeValue.bind(this)}/>
                                 </FormGroup>
                             </Col>
                             <Col lg={3} lgOffset={1}>
@@ -85,6 +81,7 @@ class GraphRelationForm extends React.Component {
 }
 
 GraphRelationForm.PropTypes = {
+    graph_id: PropTypes.integer,
     graph_list: PropTypes.array,
     createRelationFunction: PropTypes.func.isRequired,
 }

@@ -69,6 +69,9 @@ export const strings = new LocalizedStrings({
         FillGraph: "Fill graph",
         FillDrawing: "Fill drawing",
         LoadCsv: "Load csv file",
+        Begin: "Begin",
+        End: "End",
+        Comparatos: "Comparatos",
     },
     ru: {
         PleaseSignIn: "Вход в систему",
@@ -138,6 +141,9 @@ export const strings = new LocalizedStrings({
         FillGraph: "Выберите граф",
         FillDrawing: "Выберите стиль отображения",
         LoadCsv: "Загрузить csv файл",
+        Begin: "Begin",
+        End: "End",
+        Comparatos: "Comparatos",
     }
 });
 

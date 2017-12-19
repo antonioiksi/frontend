@@ -8,9 +8,12 @@ import PropTypes from 'prop-types';
 class NodesLoader extends React.Component {
     constructor(props) {
         super(props);
+
+
+
         this.state = {
-            model_list:[],
-            relation_list:[],
+            //model_list:this.props.model_list,
+            //relation_list:this.props.relation_list,
             selected_model_names: [],
             selected_relation_names: [],
         }
@@ -21,8 +24,8 @@ class NodesLoader extends React.Component {
     }
 
     componentWillMount() {
-        model_list(this);
-        relation_list(this);
+
+
     }
 
     selectModels(models) {
@@ -47,21 +50,25 @@ class NodesLoader extends React.Component {
 
     render() {
         const model_options = [];
-        this.state.model_list.map((item) => {
-            let new_item = {
-                label: item.name,
-                value: item.name,
-            }
-            model_options.push(new_item);
-        });
+        if(this.props.model_list) {
+            this.props.model_list.map((item) => {
+                let new_item = {
+                    label: item.name,
+                    value: item.name,
+                }
+                model_options.push(new_item);
+            });
+        }
         const relation_options = [];
-        this.state.relation_list.map((item) => {
-            let new_item = {
-                label: item.name,
-                value: item.name,
-            }
-            relation_options.push(new_item);
-        });
+        if(this.props.relation_list) {
+            this.props.relation_list.map((item) => {
+                let new_item = {
+                    label: item.name,
+                    value: item.name,
+                }
+                relation_options.push(new_item);
+            });
+        }
 
         //alert(JSON.stringify(this.state.selected_model));
         //const model_options = [];
@@ -99,6 +106,9 @@ class NodesLoader extends React.Component {
 }
 
 NodesLoader.PropTypes = {
+    graph_id: PropTypes.string,
+    model_list: PropTypes.array,
+    relation_list: PropTypes.array,
     addNodes: PropTypes.func.isRequired,
     addRelations: PropTypes.func.isRequired,
 

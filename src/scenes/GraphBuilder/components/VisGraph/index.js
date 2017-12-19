@@ -102,14 +102,9 @@ class VisGraph extends Component {
                 edges: this.props.Edges,
             };
 
-            const Groups = {};
-            this.props.NodeTypes.forEach(type =>{
-                if(type.drawing!==null)
-                    Groups[type.name] = type.drawing.json;
-            });
 
             const options = {
-                groups: Groups,
+                groups: this.props.Groups,
             };
 
             const network = new vis.Network(containerFA, dataFA, options);
@@ -118,8 +113,11 @@ class VisGraph extends Component {
                 params.event = "[original event]";
 
                 if(params.nodes.length>0) {
+                    let json_object = _.findLast(nds, {'id': params.nodes[0]});
                     document.getElementById('eventSpan').innerHTML = '<h2>Info:</h2>' +
                         JSON.stringify(_.findLast(nds, {'id': params.nodes[0]}), null, 4);
+                    if (json_object.image)
+                        document.getElementById('eventSpan').innerHTML += '<img src="'+json_object.image+'"/>'
                 }
 
                 //alert(JSON.stringify(params, null, 4));
@@ -155,7 +153,7 @@ class VisGraph extends Component {
 VisGraph.PropTypes = {
     Nodes: PropTypes.array,
     Edges: PropTypes.array,
-    NodeTypes: PropTypes.array,
+    Groups: PropTypes.object,
 }
 
 export default VisGraph

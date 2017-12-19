@@ -14,7 +14,6 @@ class GraphModelForm extends React.Component {
             form: {
                 fields:'',
                 name:'',
-                graph: null,
                 drawing: null,
             },
 
@@ -45,6 +44,7 @@ class GraphModelForm extends React.Component {
         let model_data = {
             ...this.state.form,
             fields: this.state.form.fields.split(','),
+            graph: this.props.graph_id,
         };
         this.props.createModelFunction(model_data, this);
         //graph_create(graph_data, this);
@@ -74,14 +74,6 @@ class GraphModelForm extends React.Component {
                             <Col lg={8}>
                                 <FormGroup controlId="formControlsText">
                                     <FormControl type="text" placeholder={strings.FillName} name="name" onChange={this.changeValue.bind(this)}/>
-                                    <FormControl componentClass="select" name="graph" onChange={this.changeValue.bind(this)} defaultValue="0">
-                                        <option disabled value="0">{strings.FillGraph}</option>
-                                        {graph_list.map((attr) =>
-                                            <option key={attr.name} value={attr.id}>
-                                                {attr.name}
-                                            </option>
-                                        )}
-                                    </FormControl>
                                     <FormControl type="text" placeholder={strings.FillFields} name="fields" onChange={this.changeValue.bind(this)}/>
                                     <FormControl componentClass="select" name="drawing" onChange={this.changeValue.bind(this)} defaultValue="0">
                                         <option disabled value="0" >{strings.FillDrawing}</option>
@@ -111,7 +103,8 @@ class GraphModelForm extends React.Component {
 }
 
 GraphModelForm.PropTypes = {
-    graph_list: PropTypes.array,
+    graph_id: PropTypes.integer,
+    //graph_list: PropTypes.array,
     drawing_list: PropTypes.array,
     createModelFunction: PropTypes.func.isRequired,
 }
