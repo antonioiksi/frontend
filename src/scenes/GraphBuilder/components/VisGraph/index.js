@@ -105,7 +105,21 @@ class VisGraph extends Component {
 
             const options = {
                 groups: this.props.Groups,
+                nodes: {
+                    font:{color:'#333'},
+                },
+                edges: {
+                    color: 'lightgray',
+                    font: {
+                        size:10,
+                    },
+                },
+                physics: {
+                    enabled: false,
+                }
             };
+            console.log('options');
+            console.log(options);
 
             const network = new vis.Network(containerFA, dataFA, options);
 

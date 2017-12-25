@@ -7,6 +7,7 @@ import * as _ from "lodash";
 import ReactJson from 'react-json-view'
 import './style.css';
 import {
+    drawing_list,
     edge_add, edge_list,
     edge_remove_all, graph_list, node_add, node_list, node_remove_all, node_save,
     relation_list
@@ -24,11 +25,13 @@ class GraphBuilder extends Component {
             graph_id: '0',
             graph_list: [],
             model_list: [],
+            groups: {},
             relation_list: [],
             nodes: [],
             edges: [],
             mode: '1',
             duration: '',
+
         }
 
         this.handleSelect = this.handleSelect.bind(this);
@@ -45,6 +48,7 @@ class GraphBuilder extends Component {
 
     componentWillMount() {
         graph_list(this);
+        drawing_list(this);
     }
 
     selectGraph(event) {
@@ -311,15 +315,16 @@ class GraphBuilder extends Component {
         const graph_list = this.state.graph_list;
 
 
-        let groups = [];
+        let groups = {};
         if(this.state.model_list.length>0) {
             this.state.model_list.forEach(model => {
                 if(model.is_group) {
-                    groups[model.name] = model.drawing
+                    let draw = _.findLast( this.state.drawing_list, {'id': model.drawing});
+                    groups[model.name] = draw.json;
                 }
             });
         }
-        //this.state.model_list
+        console.log(groups);
 
         return (
             <div>
