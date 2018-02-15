@@ -1,12 +1,13 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {Button, FormControl, Table} from "react-bootstrap";
+import {Button, FormControl, Table, Form, Col, FormGroup} from "react-bootstrap";
 import {bin_items, item_load, bin_reset, item_delete, bin_to_graph} from "../../../../services/business";
 import ReactJson from 'react-json-view'
 import {user_bins, bin_activate} from "../../../../services/business";
 import {strings} from "../../../../localization";
 import DownloadFlatData from "../DownloadFlatData/index";
 import {graph_list} from "../../../../services/graph/index";
+import {bin_create} from "../../../../services/business/index";
 
 
 class UserBins extends React.Component {
@@ -15,13 +16,15 @@ class UserBins extends React.Component {
         super(props);
 
         this.state = {
+            loading: false,
             message: '',
             bin_items : [],
             bin_pk: null,
+            new_bin_name: '',
             item : {},
             graph_list: [],
             form: {
-                selectGraph:'',
+                selectGraph:''
             },
 
         }
@@ -31,6 +34,23 @@ class UserBins extends React.Component {
         user_bins();
         graph_list(this);
     }
+
+    changeName(event) {
+        //let fieldName = event.target.name;
+        let fleldVal = event.target.value;
+        this.setState({new_bin_name: fleldVal});
+    }
+
+    submitForm(event) {
+        event.preventDefault();
+        let new_bin_name = this.state.new_bin_name;
+        //graph_create(graph_data, this);
+        bin_create(new_bin_name, this);
+        alert('sss');
+        //
+        //alert('okay');
+    }
+
 
     handleReset(bin_pk) {
         let answer = window.confirm('Вы уверены что хотите очистить корзинку с ID '+bin_pk +' ?');
@@ -108,7 +128,23 @@ class UserBins extends React.Component {
                     </div>
                 </div>):('')}
                 <div className="row">
-                    <div className="col-lg-12">
+                    <div className="col-lg-4">
+                        <Form horizontal>
+                            <Col lg={8}>
+                                <FormGroup controlId="formControlsText">
+                                    <FormControl type="text" placeholder={strings.Name} name="name" onChange={this.changeName.bind(this)}/>
+                                </FormGroup>
+                            </Col>
+                            <Col lg={3} lgOffset={1}>
+                                <FormGroup>
+                                    <Button type="submit" bsSize="small" name="Add" onClick={this.submitForm.bind(this)}>
+                                        {strings.Save}
+                                    </Button>
+                                </FormGroup>
+                            </Col>
+                        </Form>
+                    </div>
+                    <div className="col-lg-8">
                         <Table striped bordered condensed hover>
                             <thead>
                             <tr>
@@ -140,7 +176,7 @@ class UserBins extends React.Component {
                         </Table>
 
                         <FormControl componentClass="select" name="selectGraph" onChange={this.selectGraph.bind(this)}>
-                            <option>-</option>
+                            <option>- выберите граф для загрузки -</option>
                             {graph_list.map((attr) =>
                                 <option key={attr.name} value={attr.id}>
                                     {attr.name}
