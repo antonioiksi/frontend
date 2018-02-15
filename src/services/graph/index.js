@@ -90,7 +90,6 @@ export function edge_list(graph_id, sender) {
 }
 
 
-
 export function node_remove_all(graph_id, sender) {
     verifyToken();
     const session = store.getState().session;

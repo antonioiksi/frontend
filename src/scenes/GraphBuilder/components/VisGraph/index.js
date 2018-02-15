@@ -115,7 +115,7 @@ class VisGraph extends Component {
                     },
                 },
                 physics: {
-                    enabled: false,
+                    enabled: true,
                 }
             };
             console.log('options');

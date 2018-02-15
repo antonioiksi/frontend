@@ -177,3 +177,24 @@ export function alias_list(sender) {
 
 }
 
+export function bin_get_active(sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/bin/get-active/', config)
+        .then(({data}) => {
+            sender.setState( { bin: data});
+        })
+        .catch( ( err ) => {
+            sender.setState( { bin: {}, error: JSON.stringify(err)});
+        });
+
+}
+

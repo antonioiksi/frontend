@@ -190,7 +190,6 @@ export function item_delete(sender, bin_pk, item_id)
 }
 
 
-
 export function bin_to_graph(bin_pk, graph_pk, sender)
 {
     verifyToken();
@@ -210,6 +209,32 @@ export function bin_to_graph(bin_pk, graph_pk, sender)
         })
         .catch( ( err ) => {
             //sender.setState();
+            store.dispatch(alarmsActions.update([err.message]));
+        });
+}
+
+
+export function bin_create(new_bin_name, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+    let bin_data = {
+        name: new_bin_name
+    };
+    axios.post(BUSINESS_SERVER_URL+'/bin/create/', bin_data, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                //graph_list: response.data,
+            });
+        })
+        .catch( ( err ) => {
             store.dispatch(alarmsActions.update([err.message]));
         });
 }

@@ -39,13 +39,13 @@ class Sidebar extends React.Component {
                         </a>
                     </li>
                     <li>
-                        <a href="/search/" >
-                            <i className="fa fa-search fa-fw" /> &nbsp;{strings.search}
+                        <a href="/bins/" >
+                            <i className="fa fa-shopping-basket fa-fw" /> &nbsp;{strings.bins}
                         </a>
                     </li>
                     <li>
-                        <a href="/bins/" >
-                            <i className="fa fa-shopping-basket fa-fw" /> &nbsp;{strings.bins}
+                        <a href="/search/" >
+                            <i className="fa fa-search fa-fw" /> &nbsp;{strings.search}
                         </a>
                     </li>
                     <li>

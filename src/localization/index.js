@@ -8,6 +8,7 @@ export const strings = new LocalizedStrings({
         dashboard: "Dashboard",
         search: "Search",
         StartSearch: "Start search",
+        CreateSearchQueue: "Create search queue",
         bins: "Bins",
         SignIn: "Sign In",
         Form: "Form",
@@ -72,6 +73,7 @@ export const strings = new LocalizedStrings({
         Begin: "Begin",
         End: "End",
         Comparatos: "Comparatos",
+        ActiveBin: "ActiveBin",
     },
     ru: {
         PleaseSignIn: "Вход в систему",
@@ -80,6 +82,7 @@ export const strings = new LocalizedStrings({
         dashboard: "Рабочий стол",
         search: "Поиск",
         StartSearch: "Начать поиск",
+        CreateSearchQueue: "Сформировать очередь запросов",
         bins: "Корзины запросов",
         SignIn: "Войти",
         Form: "Форма",
@@ -144,6 +147,7 @@ export const strings = new LocalizedStrings({
         Begin: "Begin",
         End: "End",
         Comparatos: "Comparatos",
+        ActiveBin: "Активная корзина",
     }
 });
 

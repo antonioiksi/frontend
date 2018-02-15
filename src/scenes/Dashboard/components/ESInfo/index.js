@@ -1,6 +1,8 @@
 import React from 'react';
 import {es_querystring} from "../../../../services/elasticsearch";
-import ReactJson from 'react-json-view'
+import ReactJson from 'react-json-view';
+import './esinfo.css';
+
 
 
 class ESInfo extends React.Component {
@@ -29,8 +31,16 @@ class ESInfo extends React.Component {
 
         return (
             <div>
+
                 {
-                    es_json!=null? (<ReactJson src={es_json} />) : ('')
+                    es_json!=null? (
+                        <div>
+
+                            <i className="fa fa-server fa-5x {es_json.cluster.status}"></i>
+                            <ReactJson src={es_json} />
+                        </div>
+
+                    ) : ('')
                 }
 
             </div>
