@@ -8,7 +8,7 @@ import SearchResult from "./components/SearchResult";
 import SearchFileUpload from "./components/SearchFileUpload";
 import {
     Panel, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, PageHeader, Modal,
-    FormGroup, FormControl
+    FormGroup, FormControl, Well
 } from "react-bootstrap";
 
 import SearchFormList from "./components/SearchFormList";
@@ -23,6 +23,7 @@ import SearchResultArray from "./components/SearchResultArray/index";
 import SearchFlatFileUpload from "./components/SearchFlatFileUpload/index";
 import {prepare_q1, prepare_q2} from "../../services/elastic/queries";
 import DownloadLink from "../../../node_modules/react-download-link/download-link";
+import {bin_get_active} from "../../services/elastic/index";
 
 const initQueryValues = [
     {
@@ -42,6 +43,7 @@ class Search extends Component {
     constructor(props) {
         super(props);
         this.state={
+            bin: '',
             loading:false,
             error:'',
             searchType:SEARCH_TYPES.FORM,
@@ -68,6 +70,7 @@ class Search extends Component {
 
     componentWillMount() {
         alias_list(this);
+        bin_get_active(this);
     }
 
     loadQuery(query) {
@@ -213,6 +216,11 @@ class Search extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
+                        <Well bsSize="small">{strings.ActiveBin} : {this.state.bin.name}</Well>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
                         {this.state.error!==''?(<Panel header="Ошибка" bsStyle="danger">
                             {this.state.error}
                         </Panel>):('')}
@@ -284,7 +292,7 @@ class Search extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleSearch()}>{strings.StartSearch}</Button>
+                        <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleSearch()}>{strings.CreateSearchQueue}</Button>
                     </div>
                 </div>
                 <SearchResultArray multiResult={this.state.multiResult} aliases={this.state.aliases} />

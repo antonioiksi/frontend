@@ -14,7 +14,9 @@ const Table_source = (props) => {
     const mapped_search = [];
     Object.keys(props.row._source).map(function(key) {
         let mapped_field =  _.keys(_.get(props.mapping,props.row._index+'.'+props.row._type+'.'+key+'.fields'));
-        if(mapped_field.length>0)
+        let value = props.row._source[key];
+        //if(mapped_field.length>0 && value.length>0)
+        if(mapped_field.length>0 && value.toString().length>0)
             mapped_search.push({[mapped_field]:props.row._source[key]});
     });
 
