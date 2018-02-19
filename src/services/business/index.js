@@ -214,6 +214,29 @@ export function bin_to_graph(bin_pk, graph_pk, sender)
 }
 
 
+export function bin_to_graph_extend(bin_pk, graph_pk, sender)
+{
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL + '/bin-graph/load-extend/' + bin_pk + '/' + graph_pk, config)
+        .then(({data}) => {
+            //store.dispatch(businessActions.user_bins(data));
+            sender.setState({message: data});
+        })
+        .catch( ( err ) => {
+            //sender.setState();
+            store.dispatch(alarmsActions.update([err.message]));
+        });
+}
+
 export function bin_create(new_bin_name, sender) {
     verifyToken();
     const session = store.getState().session;
