@@ -7,7 +7,7 @@ import {user_bins, bin_activate} from "../../../../services/business";
 import {strings} from "../../../../localization";
 import DownloadFlatData from "../DownloadFlatData/index";
 import {graph_list} from "../../../../services/graph/index";
-import {bin_create} from "../../../../services/business/index";
+import {bin_create, bin_to_graph_extend} from "../../../../services/business/index";
 
 
 class UserBins extends React.Component {
@@ -114,6 +114,17 @@ class UserBins extends React.Component {
         }
     }
 
+    loadToGraphAndExtend(bin_pk) {
+        let graph_pk = this.state.form.selectGraph;
+        if(graph_pk==='') {
+            alert('Необходимо выбрать Graph');
+        }
+        else {
+
+            bin_to_graph_extend(bin_pk, graph_pk, this);
+        }
+    }
+
 
     render() {
 
@@ -167,7 +178,8 @@ class UserBins extends React.Component {
                                             <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleReset(value.id)}>{strings.Reset}</Button>&#160;
                                             <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleLoad(value.id)}>{strings.Load}</Button>&#160;
                                             <Button  bsStyle="success" bsSize="small" onClick={() => this.handleActivate(value.name)}>{strings.Activate}</Button>&#160;
-                                            <Button  bsStyle="primary" bsSize="small" onClick={() => this.loadToGraph(value.id)}>{strings.Load} for graph</Button>
+                                            <Button  bsStyle="primary" bsSize="small" onClick={() => this.loadToGraph(value.id)}>{strings.Load} for graph</Button>&#160;
+                                            <Button  bsStyle="primary" bsSize="small" onClick={() => this.loadToGraphAndExtend(value.id)}>{strings.Load} for graph and extend</Button>
                                         </td>
                                     </tr>
                                 )
