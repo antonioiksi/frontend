@@ -61,9 +61,11 @@ class SearchResult extends React.Component {
     componentWillUnmount() {
         this.props.onRef(undefined)
     }
+
     method() {
         window.alert('do stuff'+ this.props.index);
     }
+
     openShowQueryModal() {
         this.setState({showQueryModal:true});
     }
@@ -96,7 +98,6 @@ class SearchResult extends React.Component {
         this.setState({
             textAreaValue: value,
         })
-
     }
 
     runQuery() {
