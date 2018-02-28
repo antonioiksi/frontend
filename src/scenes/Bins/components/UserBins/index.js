@@ -46,7 +46,7 @@ class UserBins extends React.Component {
         let new_bin_name = this.state.new_bin_name;
         //graph_create(graph_data, this);
         bin_create(new_bin_name, this);
-        alert('sss');
+        //alert('sss');
         //
         //alert('okay');
     }
