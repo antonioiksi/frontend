@@ -26,11 +26,13 @@ import DownloadLink from "../../../node_modules/react-download-link/download-lin
 import {bin_get_active} from "../../services/elastic/index";
 
 const initQueryValues = [
+/*
     {
         "speaker":"king",
         "play_name":"Henry",
         "text_entry":"walls table",
     }
+    */
 ]
 
 

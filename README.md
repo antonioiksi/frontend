@@ -8,3 +8,5 @@ If setting doesn't work you need to execute backend command
 ```
 ./manage.py loaddata elastic_settings
 ```
+
+work with graph's nodes
