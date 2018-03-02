@@ -12,3 +12,5 @@ If setting doesn't work you need to execute backend command
 work with graph's nodes
 
 work1
+
+work2
