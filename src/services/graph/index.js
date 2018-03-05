@@ -5,6 +5,33 @@ import store from '../../store';
 import {verifyToken} from "../session";
 import * as alarmActions from "../alarms/actions";
 
+export function graph_data_remove_item(graph_id, item_id, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    axios.get(BUSINESS_SERVER_URL+'/graph/remove-data-from-graph/'+graph_id+"/"+item_id, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+            });
+        })
+        .catch( ( thrown ) => {
+            let messages = [];
+            messages.push(JSON.stringify(thrown));
+            store.dispatch(alarmActions.update(messages));
+            sender.setState({
+                loading: false,
+            });
+        });
+}
+
 export function edge_remove_all(graph_id, sender) {
     verifyToken();
     const session = store.getState().session;

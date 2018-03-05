@@ -19,7 +19,7 @@ import NodesLoader from "./components/NodesLoader";
 class GraphBuilder extends Component {
 
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             graph_id: '0',
@@ -32,7 +32,7 @@ class GraphBuilder extends Component {
             mode: '1',
             duration: '',
 
-        }
+        };
 
         this.handleSelect = this.handleSelect.bind(this);
         this.addRelations = this.addRelations.bind(this);
@@ -41,9 +41,9 @@ class GraphBuilder extends Component {
         this.addNodes = this.addNodes.bind(this);
         this.redrawNodes = this.redrawNodes.bind(this);
 
-        this.removeAllEdges = this.removeAllEdges.bind(this)
+        this.removeAllEdges = this.removeAllEdges.bind(this);
         this.addEdges = this.addEdges.bind(this);
-        this.redrawEdges = this.redrawEdges.bind(this)
+        this.redrawEdges = this.redrawEdges.bind(this);
     }
 
     componentWillMount() {
@@ -375,9 +375,10 @@ class GraphBuilder extends Component {
                         <div>
                         {
                             this.state.mode==='1' ? (
-                                <VisGraph Nodes={this.state.nodes}
-                                          Edges={this.state.edges}
-                                          Groups={groups} />
+                                <VisGraph   graph_id={this.state.graph_id}
+                                            Nodes={this.state.nodes}
+                                            Edges={this.state.edges}
+                                            Groups={groups} />
                             ) : (
                                 <ReactJson src={this.state.nodes} />
                             )
