@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 
 import * as vis from "vis/index-network";
 import 'vis/dist/vis-network.min.css';
-import './style.css';
 import * as _ from "lodash";
 import DownloadLink from "../../../../../node_modules/react-download-link/download-link";
 import {strings} from "../../../../localization";
-import {Button} from "react-bootstrap";
+import {Button, Col, Form, FormControl, FormGroup} from "react-bootstrap";
 import {graph_data_remove_item} from "../../../../services/graph";
+import NodeView from "./components/NodeView";
+import GraphView from "./components/GraphView";
 
 
 var optionsFA = {
@@ -96,8 +97,18 @@ class VisGraph extends Component {
 
         this.state = {
             _id: '',
+            current_node: {},
         };
+        this.network = null;
+        this.setCurrentNode = this.setCurrentNode.bind(this);
 
+    }
+
+
+    setCurrentNode(current_node) {
+        this.setState({
+            current_node: current_node,
+        });
     }
 
     removeDataById() {
@@ -109,92 +120,29 @@ class VisGraph extends Component {
     }
 
     render() {
-        const nds = this.props.Nodes;
-
-        const containerFA = document.getElementById('mynetworkFA');
-        if (containerFA!=null) {
-            const dataFA = {
-                nodes: this.props.Nodes,
-                edges: this.props.Edges,
-            };
-
-
-            const options = {
-                groups: this.props.Groups,
-                nodes: {
-                    font:{color:'#333'},
-                },
-                edges: {
-                    color: 'lightgray',
-                    font: {
-                        size:10,
-                    },
-                },
-                physics: {
-                    enabled: true,
-                }
-            };
-            console.log('options');
-            console.log(options);
-
-            const network = new vis.Network(containerFA, dataFA, options);
-            network.sender = this;
-
-            network.on("click", function (params) {
-                params.event = "[original event]";
-
-                if(params.nodes.length>0) {
-
-                    let json_object = _.findLast(nds, {'id': params.nodes[0]});
-                    //alert(json_object._id);
-                    //this.sender.setState({_id: json_object._id});
-                    document.getElementById('_id').innerHTML = json_object._id;
-
-
-                    document.getElementById('eventSpan').innerHTML = '<h2>Info:</h2>' +
-                        JSON.stringify(_.findLast(nds, {'id': params.nodes[0]}), null, 4);
-                    // draw image
-                    if (json_object.image)
-                        document.getElementById('eventSpan').innerHTML += '<img src="'+json_object.image+'"/>'
-                }
-                //alert(JSON.stringify(params, null, 4));
-            });
-
-
-
-            network.on("afterDrawing", function (ctx) {
-                //var dataURL = ctx.canvas.toDataURL();
-                //document.getElementById('canvasImg').src = dataURL;
-                //document.getElementById('aaa').exportFile = dataURL;
-                //<img id="canvasImg" alt="Right click to save me!"/>
-
-            });
-        }
-
         return (
             <div>
                 <div className="row">
                     <div className="col-lg-8">
-                        <div id="mynetworkFA"/>
-
+                        <GraphView graph_id={this.props.graph_id}
+                                   Nodes={this.props.Nodes}
+                                   Edges={this.props.Edges}
+                                   Groups={this.props.Groups}
+                                   current_node={this.state.current_node}
+                                   setCurrentNode={this.setCurrentNode}/>
                     </div>
                     <div className="col-lg-4">
                         <div className="row">
-                            <div className="col-lg-8">
-                                Search string <div id="_id"></div>
+                            <div className="col-lg-12">
+                                <NodeView Node={this.state.current_node}/>
                             </div>
-                            <div className="col-lg-4">
+                            <div className="col-lg-12">
+                                <div id="_id"></div>
                                 <Button type="submit" bsSize="small" name="Remove"  onClick={() => this.removeDataById()}>
                                     {strings.Remove}
                                 </Button>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-sm-12">
-                                <pre id="eventSpan"></pre>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -208,6 +156,7 @@ VisGraph.PropTypes = {
     Nodes: PropTypes.array,
     Edges: PropTypes.array,
     Groups: PropTypes.object,
-}
 
-export default VisGraph
+};
+
+export default VisGraph;

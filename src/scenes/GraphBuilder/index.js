@@ -32,6 +32,7 @@ class GraphBuilder extends Component {
             mode: '1',
             duration: '',
 
+
         };
 
         this.handleSelect = this.handleSelect.bind(this);
@@ -44,12 +45,14 @@ class GraphBuilder extends Component {
         this.removeAllEdges = this.removeAllEdges.bind(this);
         this.addEdges = this.addEdges.bind(this);
         this.redrawEdges = this.redrawEdges.bind(this);
+
     }
 
     componentWillMount() {
         graph_list(this);
         drawing_list(this);
     }
+
 
     selectGraph(event) {
         //let fieldName = event.target.name;
@@ -378,7 +381,8 @@ class GraphBuilder extends Component {
                                 <VisGraph   graph_id={this.state.graph_id}
                                             Nodes={this.state.nodes}
                                             Edges={this.state.edges}
-                                            Groups={groups} />
+                                            Groups={groups}
+                                />
                             ) : (
                                 <ReactJson src={this.state.nodes} />
                             )
