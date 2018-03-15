@@ -5,8 +5,6 @@ import * as vis from "vis/index-network";
 import 'vis/dist/vis-network.min.css';
 import './style.css';
 import * as _ from "lodash";
-import {strings} from "../../../../../../localization";
-import {graph_data_remove_item} from "../../../../../../services/graph";
 
 
 var optionsFA = {
@@ -91,25 +89,21 @@ class GraphView extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
             _id: '',
-
+            nodes: [],
+            edges: [],
         };
         this.network = null;
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return this.props.current_node == nextProps.current_node;
+    componentWillMount() {
 
     }
 
-    removeDataById() {
-        //event.preventDefault();
-        //alert(document.getElementById('_id').innerHTML);
-        let _id = document.getElementById('_id').innerHTML;
-        //graph_data_remove_item(this.props.graph_id, this.state._id, this);
-        graph_data_remove_item(this.props.graph_id, _id, this);
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.current_node == nextProps.current_node;
     }
 
     render() {
@@ -132,25 +126,25 @@ class GraphView extends Component {
                     },
                 },
                 physics: {
-                    enabled: false,
-                }
+                    enabled: true,
+                },
+                layout: {randomSeed: 2},
+                interaction:{
+                    dragView: false,
+                    multiselect: true
+                },
             };
             console.log(`options:${JSON.stringify(options)}`);
-
             this.network = new vis.Network(containerFA, dataFA, options);
-            //const network = new vis.Network(containerFA, dataFA, options);
-            //network.sender = this;
             const parent = this;
             this.network.on("click", function (params) {
+                //alert(JSON.stringify(params, null, 4));
                 params.event = "[original event]";
-
                 if(params.nodes.length>0) {
-
                     let json_object = _.findLast(nds, {'id': params.nodes[0]});
                     //alert(json_object._id);
                     //this.sender.setState({_id: json_object._id});
-                    document.getElementById('_id').innerHTML = json_object._id;
-
+                    //document.getElementById('_id').innerHTML = json_object._id;
                     let current_node = _.findLast(nds, {'id': params.nodes[0]});
                     parent.props.setCurrentNode(current_node);
                     //parent.setState({current_node: current_node});
@@ -160,7 +154,6 @@ class GraphView extends Component {
                     //if (json_object.image)
                     //    document.getElementById('eventSpan').innerHTML += '<img src="'+json_object.image+'"/>'
                 }
-                //alert(JSON.stringify(params, null, 4));
             });
 
             this.network.on("afterDrawing", function (ctx) {
@@ -173,7 +166,9 @@ class GraphView extends Component {
 
         return (
             <div>
-                <div id="mynetworkFA"/>
+                <div className="row">
+                    <div id="mynetworkFA"/>
+                </div>
             </div>
         )
     }
