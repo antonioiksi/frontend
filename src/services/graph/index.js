@@ -360,10 +360,21 @@ export function graph_create(graph_data, sender) {
 
     axios.post(BUSINESS_SERVER_URL+'/graph/graph/', graph_data, config)
         .then((response) => {
-            sender.setState({
-                loading: false,
-                graph_list: response.data,
-            });
+
+            axios.get(BUSINESS_SERVER_URL+'/graph/graph/', config)
+                .then((response) => {
+                    sender.setState({
+                        loading: false,
+                        graph_list: response.data,
+                    });
+                }).catch(( thrown ) => {
+                    let messages = [];
+                    messages.push(JSON.stringify(thrown));
+                    store.dispatch(alarmActions.update(messages));
+                    sender.setState({
+                        loading: false,
+                    });
+                });
         })
         .catch( ( thrown ) => {
             let messages = [];
