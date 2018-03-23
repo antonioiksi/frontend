@@ -1,6 +1,8 @@
 import React from 'react'
 import axios from 'axios';
-import {ELASTICSEARCH_URL} from "../constants";
+import {BUSINESS_SERVER_URL, ELASTICSEARCH_URL} from "../constants";
+import {verifyToken} from "../session";
+import store from "../../store";
 
 
 export function es_querystring(queryname, querystring, sender) {
@@ -32,3 +34,40 @@ export function indices( sender)
 }
 
 //TODO добавить новую функциональнось
+export function es_info(sender)
+{
+
+    let newState = {};
+    axios.get(ELASTICSEARCH_URL+'/_cluster/health?format=json&pretty')
+        .then(({data}) => {
+            newState  = { cluster: data};
+            axios.get(ELASTICSEARCH_URL+'/_cat/count?format=json&pretty')
+                .then(({data}) => {
+                    newState  = { ...newState, count: data};
+                    axios.get(ELASTICSEARCH_URL+'/_cat/indices?format=json&pretty')
+                        .then(({data}) => {
+                            newState = {...newState, indices: data};
+                            axios.get(ELASTICSEARCH_URL+'/_aliases?format=json&pretty')
+                                .then(({data}) => {
+                                    newState = {...newState, aliases: data};
+                                    sender.setState( { es: newState});
+                                })
+                                .catch( ( err ) => {
+                                    sender.setState( { error: '_aliases'});
+                                });
+                        })
+                        .catch( ( err ) => {
+                            sender.setState( { error: '_cat/indices'});
+                        });
+
+
+
+                })
+                .catch( ( err ) => {
+                    sender.setState( { error: '_cat/count'});
+                });
+        })
+        .catch( ( err ) => {
+            sender.setState( { error: '/_cluster/health'});
+        });
+}

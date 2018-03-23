@@ -5,6 +5,7 @@ import {attributes, user_bins, query_templates} from "../../services/business";
 import {strings} from "../../localization/index";
 import {load_settings} from "../../services/settings/index";
 import ESInfo from "./components/ESInfo/index";
+import LastQueries from "./components/LastQueries";
 
 //TODO add some cool charts
 
@@ -30,7 +31,12 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-lg-3 col-md-6">
+                    <div className="col-lg-12">
+                        <LastQueries/>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
                         <ESInfo/>
                     </div>
                 </div>

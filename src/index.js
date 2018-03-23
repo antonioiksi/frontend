@@ -33,6 +33,8 @@ import GraphBuilder from "./scenes/GraphBuilder";
 import GraphManager from "./scenes/GraphManager";
 import GraphModel from "./scenes/GraphManager/components/GraphModel/index";
 import GraphRelation from "./scenes/GraphManager/components/GraphRelation/index";
+import ActiveBinDataPage from "./scenes/BinDataPage";
+import GraphDataPage from "./scenes/GraphDataPage";
 //import {loadState, saveState} from './localStorage';
 
 
@@ -88,6 +90,8 @@ ReactDOM.render(
                         <BackofficeRoute exact path="/settings/" component={Settings}/>
                         <BackofficeRoute exact path="/search/" component={Search}/>
                         <BackofficeRoute exact path="/bins/" component={Bins}/>
+                        <BackofficeRoute exact path="/active-bin-data/" component={ActiveBinDataPage}/>
+                        <BackofficeRoute exact path="/graph-data/" component={GraphDataPage}/>
                         <BackofficeRoute exact path="/graph-builder/" component={GraphBuilder}/>
                         <BackofficeRoute exact path="/graph-manager/" component={GraphManager}/>
                         <BackofficeRoute exact path="/graph-model/" component={GraphModel}/>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {Button, FormControl, Table, Form, Col, FormGroup} from "react-bootstrap";
+import {Button, FormControl, Table, Form, Col, FormGroup, Panel} from "react-bootstrap";
 import {bin_items, item_load, bin_reset, item_delete, bin_to_graph} from "../../../../services/business";
 import ReactJson from 'react-json-view'
 import {user_bins, bin_activate} from "../../../../services/business";
@@ -139,22 +139,6 @@ class UserBins extends React.Component {
                     </div>
                 </div>):('')}
                 <div className="row">
-                    <div className="col-lg-4">
-                        <Form horizontal>
-                            <Col lg={8}>
-                                <FormGroup controlId="formControlsText">
-                                    <FormControl type="text" placeholder={strings.Name} name="name" onChange={this.changeName.bind(this)}/>
-                                </FormGroup>
-                            </Col>
-                            <Col lg={3} lgOffset={1}>
-                                <FormGroup>
-                                    <Button type="submit" bsSize="small" name="Add" onClick={this.submitForm.bind(this)}>
-                                        {strings.Save}
-                                    </Button>
-                                </FormGroup>
-                            </Col>
-                        </Form>
-                    </div>
                     <div className="col-lg-8">
                         <Table striped bordered condensed hover>
                             <thead>
@@ -197,6 +181,26 @@ class UserBins extends React.Component {
                         </FormControl>
                         <br/><br/><br/>
                     </div>
+                    <div className="col-lg-4">
+                        <Panel>
+                            <h3>Форма создания корзины</h3>
+                            <Form horizontal>
+                                <Col lg={8}>
+                                    <FormGroup controlId="formControlsText">
+                                        <FormControl type="text" placeholder={strings.InputName} name="name" onChange={this.changeName.bind(this)}/>
+                                    </FormGroup>
+                                </Col>
+                                <Col lg={3} lgOffset={1}>
+                                    <FormGroup>
+                                        <Button type="submit" bsSize="small" name="Add" onClick={this.submitForm.bind(this)}>
+                                            {strings.Save}
+                                        </Button>
+                                    </FormGroup>
+                                </Col>
+                            </Form>
+                            </Panel>
+                    </div>
+
                 </div>
                 <div className="row">
                     <div className="col-lg-12">

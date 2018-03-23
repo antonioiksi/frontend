@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader, Table} from "react-bootstrap";
+import {Button, Col, ControlLabel, Form, FormControl, FormGroup, PageHeader, Panel, Table} from "react-bootstrap";
 import {strings} from "../../../../localization";
 import {graph_remove, graph_clear, graph_list} from "../../../../services/graph";
 import {graph_create, load_graph_data} from "../../../../services/graph/index";
@@ -105,65 +105,63 @@ class Graph extends React.Component {
 
         return (
             <div>
-                <div className="row">
-                    <div className="col-lg-12">
-                        <h3>{strings.Graph}</h3>
-                    </div>
-                </div>
                 {this.state.message!=='' ? (<div className="row">
                     <div className="col-lg-12">
                         {this.state.message}
                     </div>
                 </div>):('')}
                 <div className="row">
-                    <div className="col-lg-4">
-                        <Form horizontal>
-                            <Col lg={8}>
-                                <FormGroup controlId="formControlsText">
-                                    <FormControl type="text" placeholder={strings.Name} name="name" onChange={this.changeName.bind(this)}/>
-                                </FormGroup>
-                            </Col>
-                            <Col lg={3} lgOffset={1}>
-                                <FormGroup>
-                                    <Button type="submit" bsSize="small" name="Add" onClick={this.submitForm.bind(this)}>
-                                        {strings.Save}
-                                    </Button>
-                                </FormGroup>
-                            </Col>
-                        </Form>
-                    </div>
                     <div className="col-lg-8">
-                        <Table striped bordered condensed hover>
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>{strings.Active}</th>
-                                <th>{strings.Name}</th>
-                                <th>{strings.Rows}</th>
-                                <th>&#160;</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                graph_list.map((value, i) =>
-                                    <tr key={i}>
-                                        <td>{i+1}</td>
-                                        <td>{
-                                            value.id === this.props.active_graph_id ? ('*') : ('')
-                                        }</td>
-                                        <td>{value.name}</td>
-                                        <td>{value.graphdata_count}</td>
-                                        <td>
-                                            <Button  bsStyle="danger" bsSize="small" onClick={() => this.activateGraph(value.id)}>{strings.Activate}</Button>&#160;
-                                            <Button  bsStyle="danger" bsSize="small" onClick={() => this.resetGraph(value)}>{strings.Reset}</Button>&#160;
-                                            <Button  bsStyle="danger" bsSize="small" onClick={() => this.removeGraph(value)}>{strings.Remove}</Button>&#160;
-                                            <FormControl type="file" name={value.name} onChange={this.handleFileSelect} />
-                                        </td>
-                                    </tr>
-                                )
-                            }
-                            </tbody>
-                        </Table>
+                            <Table striped bordered condensed hover>
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>{strings.Active}</th>
+                                    <th>{strings.Name}</th>
+                                    <th>{strings.Rows}</th>
+                                    <th>&#160;</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    graph_list.map((value, i) =>
+                                        <tr key={i}>
+                                            <td>{i+1}</td>
+                                            <td>{
+                                                value.id === this.props.active_graph_id ? ('*') : ('')
+                                            }</td>
+                                            <td>{value.name}</td>
+                                            <td>{value.graphdata_count}</td>
+                                            <td>
+                                                <Button  bsStyle="danger" bsSize="small" onClick={() => this.activateGraph(value.id)}>{strings.Activate}</Button>&#160;
+                                                <Button  bsStyle="danger" bsSize="small" onClick={() => this.resetGraph(value)}>{strings.Reset}</Button>&#160;
+                                                <Button  bsStyle="danger" bsSize="small" onClick={() => this.removeGraph(value)}>{strings.Remove}</Button>&#160;
+                                                <FormControl type="file" name={value.name} onChange={this.handleFileSelect} />
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+                                </tbody>
+                            </Table>
+                    </div>
+                    <div className="col-lg-4">
+                        <Panel>
+                            <h3>Cозданить новую схему</h3>
+                            <Form horizontal>
+                                <Col lg={8}>
+                                    <FormGroup controlId="formControlsText">
+                                        <FormControl type="text" placeholder={strings.Name} name="name" onChange={this.changeName.bind(this)}/>
+                                    </FormGroup>
+                                </Col>
+                                <Col lg={3} lgOffset={1}>
+                                    <FormGroup>
+                                        <Button type="submit" bsSize="small" name="Add" onClick={this.submitForm.bind(this)}>
+                                            {strings.Save}
+                                        </Button>
+                                    </FormGroup>
+                                </Col>
+                            </Form>
+                        </Panel>
                     </div>
                 </div>
             </div>

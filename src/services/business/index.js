@@ -54,7 +54,7 @@ export function user_bins()
         headers: {
             'Authorization': 'Bearer ' + token
         }
-    }
+    };
 
     axios.get(BUSINESS_SERVER_URL + endPoints.user_bins, config)
         .then(({data}) => {
@@ -98,6 +98,65 @@ export function bin_activate(sender, bin_name)
             store.dispatch(alarmsActions.update([err.message]));
         });
 }
+
+
+export function bin_get_active(sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    };
+
+    axios.get(BUSINESS_SERVER_URL+'/bin/get-active/', config)
+        .then(({data}) => {
+            sender.setState( { bin: data});
+        })
+        .catch( ( err ) => {
+            sender.setState( { bin: {}, error: JSON.stringify(err)});
+        });
+}
+
+export function get_active_bin_with_items(sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    };
+
+    axios.get(BUSINESS_SERVER_URL+'/bin/get-active/', config)
+        .then((response) => {
+            let Bin = response.data;
+            let newState = { bin: Bin};
+            axios.get(BUSINESS_SERVER_URL + '/bin/item/list/'+Bin.id, config)
+                .then((response) => {
+                    newState = {...newState, bin_items: response.data};
+
+                    axios.get(BUSINESS_SERVER_URL + '/bin/list/', config)
+                        .then((response) => {
+                            newState = {...newState, bin_list: response.data};
+                            sender.setState( newState);
+                        })
+                        .catch((err) => {
+                            store.dispatch(alarmsActions.update([err.message]));
+                        });
+                })
+                .catch((err) => {
+                    store.dispatch(alarmsActions.update([err.message]));
+                });
+        })
+        .catch( ( err ) => {
+            store.dispatch(alarmsActions.update([err.message]));
+        });
+}
+
 
 export function bin_items(sender, bin_pk)
 {
@@ -179,14 +238,21 @@ export function item_delete(sender, bin_pk, item_id)
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL + endPoints.item_delete + item_id, config)
+    axios.get(BUSINESS_SERVER_URL + '/bin/item/delete/' + item_id, config)
         .then(({data}) => {
+            axios.get(BUSINESS_SERVER_URL + '/bin/item/list/'+bin_pk, config)
+                .then((response) => {
+                    sender.setState( { bin_items: response.data });
+                })
+                .catch((err) => {
+                    store.dispatch(alarmsActions.update([err.message]));
+                });
         })
         .catch( ( err ) => {
             //sender.setState();
             store.dispatch(alarmsActions.update([err.message]));
         });
-    item_load(sender, bin_pk);
+    //item_load(sender, bin_pk);
 }
 
 

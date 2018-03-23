@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 
 import SearchFormList from "./components/SearchFormList";
-import {attributes} from "../../services/business";
+import {attributes, bin_get_active, bin_reset, get_active_bin_with_items} from "../../services/business";
 
 import {alias_list, search_drill, search_simple} from "../../services/elastic";
 import SearchTable from "./components/SearchTable/index";
@@ -23,7 +23,6 @@ import SearchResultArray from "./components/SearchResultArray/index";
 import SearchFlatFileUpload from "./components/SearchFlatFileUpload/index";
 import {prepare_q1, prepare_q2} from "../../services/elastic/queries";
 import DownloadLink from "../../../node_modules/react-download-link/download-link";
-import {bin_get_active} from "../../services/elastic/index";
 
 const initQueryValues = [
 /*
@@ -46,6 +45,7 @@ class Search extends Component {
         super(props);
         this.state={
             bin: '',
+            bin_list:[],
             loading:false,
             error:'',
             searchType:SEARCH_TYPES.FORM,
@@ -72,7 +72,20 @@ class Search extends Component {
 
     componentWillMount() {
         alias_list(this);
-        bin_get_active(this);
+        //bin_get_active(this);
+        get_active_bin_with_items(this);
+    }
+
+    handleReset(bin_pk) {
+        let answer = window.confirm('Вы уверены что хотите очистить корзинку с ID '+bin_pk +' ?');
+        if(answer) {
+            bin_reset(bin_pk);
+        }
+    }
+
+    selectBin(event) {
+        let bin_id = event.target.value;
+        alert(bin_id);
     }
 
     loadQuery(query) {
@@ -193,6 +206,16 @@ class Search extends Component {
     }
 
     render() {
+        let bin_list = [];
+        let current_bin_id = this.state.bin.id;
+        this.state.bin_list.forEach((bin, index) => {
+            bin_list.push({
+                id: bin.id,
+                name: bin.name,
+            });
+        });
+
+
         const formsValues = [];
         this.state.multiQuery.forEach(
             function (query) {
@@ -214,6 +237,32 @@ class Search extends Component {
                 <div className="row">
                     <div className="col-lg-12">
                         <PageHeader>{strings.search}</PageHeader>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-4">
+                        <Panel>
+                            <h3>Выберите корзину</h3>
+                            <div className="row">
+                                <div className="col-lg-4">
+                                    <FormControl componentClass="select" name="selectBin" onChange={this.selectBin.bind(this)}>
+                                        <option>-</option>
+                                        {
+                                            bin_list.map((attr) =>
+                                                (current_bin_id === attr.id) ? (
+                                                    <option key={attr.id} value={attr.id}
+                                                            selected>{attr.name}</option>
+                                                ) : (
+                                                    <option key={attr.id} value={attr.id}>{attr.name}</option>
+                                                )
+                                            )}
+                                    </FormControl>
+                                </div>
+                                <div className="col-lg-6">
+                                    <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleReset(current_bin_id)}>{strings.Reset}</Button>
+                                </div>
+                            </div>
+                        </Panel>
                     </div>
                 </div>
                 <div className="row">
