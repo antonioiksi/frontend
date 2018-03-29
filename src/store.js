@@ -18,6 +18,10 @@ const store = createStore(
     compose(middleware, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()),
 );
 */
-const store = createStore(reducers, enhancer);
+const store = createStore(
+        reducers,
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), // to view redux store install ReduxDevTools
+        enhancer,
+    );
 
 export default store;

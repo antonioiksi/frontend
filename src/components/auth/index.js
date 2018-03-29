@@ -17,7 +17,6 @@ export const isAuth = () => {
 export const isAuthVerified = () => {
     const session = store.getState().session;
     if(session.tokens.access.value!=null)
-
         return true;
     else
         return false;

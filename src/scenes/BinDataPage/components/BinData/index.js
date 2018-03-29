@@ -39,11 +39,6 @@ class BinData extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className="col-lg-12 col-md-12">
-                        <Well bsSize="small">{strings.ActiveBin} : {this.props.Bin.name}</Well>
-                    </div>
-                </div>
-                <div className="row">
                     <div className="col-lg-12">
                         <Table striped bordered condensed hover>
                             <thead>
@@ -59,7 +54,7 @@ class BinData extends Component {
                                 this.props.BinItems.map((value, i) =>
                                     <tr key={i}>
                                         <td>{i+1}</td>
-                                        <td>{JSON.stringify( value.query.query.bool.should, null, 2)}</td>
+                                        <td>{JSON.stringify( value.query.jsonQuery, null, 2)}</td>
                                         <td>{ value.doc_count }</td>
                                         <td>
                                             <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleItemLoad(value.id)}>{strings.Load}</Button>&#160;

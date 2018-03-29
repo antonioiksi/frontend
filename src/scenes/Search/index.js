@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import ReactJson from 'react-json-view'
 import PropTypes from 'prop-types'
 
+import _ from 'lodash';
+
 import {CancelToken} from 'axios';
 
 import SearchResult from "./components/SearchResult";
@@ -23,6 +25,8 @@ import SearchResultArray from "./components/SearchResultArray/index";
 import SearchFlatFileUpload from "./components/SearchFlatFileUpload/index";
 import {prepare_q1, prepare_q2} from "../../services/elastic/queries";
 import DownloadLink from "../../../node_modules/react-download-link/download-link";
+import ActiveBinManager from "../../components/business/ActiveBinManager/index";
+import {Alert, AlertContainer, AlertList} from "react-bs-notifier";
 
 const initQueryValues = [
 /*
@@ -50,6 +54,8 @@ class Search extends Component {
             error:'',
             searchType:SEARCH_TYPES.FORM,
             multiQuery:initQueryValues,
+
+            multiJsonQuery:[],
             multiEsQuery:[],
             //multiQueryTemplate:initQueryTemplate,
             esQuery: {},
@@ -58,6 +64,17 @@ class Search extends Component {
             aliases: {},
             showModal: false,
             textAreaValue: '',
+            // TODO alerts !!!
+            alerts : [{
+                id: new Date().getTime(),
+                type: "info",
+                message: "Hello, world"
+            }, {
+                id: new Date().getTime(),
+                type: "success",
+                message: "Oh, hai"
+            }],
+
         };
 
         this.addValue = this.addValue.bind(this);
@@ -95,13 +112,17 @@ class Search extends Component {
     }
 
     loadEsQuery() {
+        const multiJsonQuery = [];
         const multiEsQuery = [];
+        const entityAttributeMapping =  this.props.entityAttributes;
         this.state.multiQuery.forEach(function(jsonQuery, index) {
             //console.log('forEach' + index + JSON.stringify(jsonQuery));
-            let esQ = prepare_q2(jsonQuery)
+            let esQ = prepare_q2(jsonQuery, entityAttributeMapping);
+            multiJsonQuery.push(jsonQuery);
             multiEsQuery.push(esQ);
         });
         this.setState({
+            multiJsonQuery: multiJsonQuery,
             multiEsQuery: multiEsQuery,
             textAreaValue : JSON.stringify(multiEsQuery, undefined, 4),
         });
@@ -153,7 +174,7 @@ class Search extends Component {
 
     handleSearch() {
         const that = this;
-
+        const  multiJsonQuery = this.state.multiJsonQuery;
         this.state.multiEsQuery.forEach(function(jsonEsQuery, index) {
 
             that.setState( prevState => ({
@@ -163,6 +184,7 @@ class Search extends Component {
                         //loading:true,
                         result:[],
                         esQuery: jsonEsQuery,
+                        jsonQuery: multiJsonQuery[index],
                     }
                 }
             }),
@@ -205,6 +227,18 @@ class Search extends Component {
         //multifield_search_match(this, jsonQuery);
     }
 
+    dismissAlert(obj) {
+        alert(JSON.stringify(obj, 2, null));
+        const deleteId  = obj.id;
+        this.setState(
+            {
+                alerts: _.filter(this.state.alerts, (current) => {
+                    return current.id !== deleteId;
+                })
+            }
+        );
+    }
+
     render() {
         let bin_list = [];
         let current_bin_id = this.state.bin.id;
@@ -241,33 +275,7 @@ class Search extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-4">
-                        <Panel>
-                            <h3>Выберите корзину</h3>
-                            <div className="row">
-                                <div className="col-lg-4">
-                                    <FormControl componentClass="select" name="selectBin" onChange={this.selectBin.bind(this)}>
-                                        <option>-</option>
-                                        {
-                                            bin_list.map((attr) =>
-                                                (current_bin_id === attr.id) ? (
-                                                    <option key={attr.id} value={attr.id}
-                                                            selected>{attr.name}</option>
-                                                ) : (
-                                                    <option key={attr.id} value={attr.id}>{attr.name}</option>
-                                                )
-                                            )}
-                                    </FormControl>
-                                </div>
-                                <div className="col-lg-6">
-                                    <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleReset(current_bin_id)}>{strings.Reset}</Button>
-                                </div>
-                            </div>
-                        </Panel>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-lg-12">
-                        <Well bsSize="small">{strings.ActiveBin} : {this.state.bin.name}</Well>
+                        <ActiveBinManager/>
                     </div>
                 </div>
                 <div className="row">
@@ -292,7 +300,7 @@ class Search extends Component {
                     <div className="col-lg-12">
                         {
                             this.state.searchType === SEARCH_TYPES.FORM &&
-                                <SearchFormList attrTypes={this.props.attrTypes}
+                                <SearchFormList attrTypes={this.props.entityAttributes}
                                                 formsValuesProp={formsValues}
                                                 loadFormsValues={this.loadFormsValues.bind(this)} />
                             || this.state.searchType === SEARCH_TYPES.FILE &&
@@ -346,7 +354,7 @@ class Search extends Component {
                         <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleSearch()}>{strings.CreateSearchQueue}</Button>
                     </div>
                 </div>
-                <SearchResultArray multiResult={this.state.multiResult} aliases={this.state.aliases} />
+                <SearchResultArray multiResult={this.state.multiResult} aliases={this.state.aliases} active_bin={this.props.active_bin}/>
             </div>
         )
     }
@@ -360,6 +368,8 @@ class Search extends Component {
 const mapStateToProps = function(store) {
     return {
         attrTypes: store.business.attributes,
+        entityAttributes: store.business.entity_attributes,
+        active_bin: _.findLast(store.business.user_bins, {'active': true}),
     };
 };
 

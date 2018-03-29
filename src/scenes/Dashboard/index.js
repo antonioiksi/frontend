@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PageHeader} from "react-bootstrap";
 import StatWidget from "../../components/widgets/StatWidget";
-import {attributes, user_bins, query_templates} from "../../services/business";
+import {attributes, user_bins, query_templates, entity_attributes} from "../../services/business";
 import {strings} from "../../localization/index";
 import {load_settings} from "../../services/settings/index";
 import ESInfo from "./components/ESInfo/index";
@@ -14,10 +14,13 @@ class Dashboard extends Component {
     render() {
         // prepera business model
         // load attributes for searching
+
         attributes();
-        user_bins();
+        entity_attributes();
+        //user_bins();
         query_templates();
         load_settings();
+
         //setLanguage(languageCode) - to force manually a particular language
         //getLanguage() - to get the current displayed language
         //getInterfaceLanguage() - to get the current device interface language

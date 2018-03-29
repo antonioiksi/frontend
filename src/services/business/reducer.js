@@ -12,6 +12,8 @@ export const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.BUSINESS_GET_ATTRIBUTES:
             return {...state, attributes: action.attributes};
+        case actionTypes.BUSINESS_GET_ENTITY_ATTRIBUTES:
+            return {...state, entity_attributes: action.entity_attributes};
         case actionTypes.BUSINESS_GET_USER_BINS:
             return {...state, user_bins: action.user_bins};
         case actionTypes.BUSINESS_GET_QUERY_TEMPLATES:

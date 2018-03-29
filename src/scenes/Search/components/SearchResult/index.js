@@ -102,12 +102,14 @@ class SearchResult extends React.Component {
 
     runQuery() {
         const that = this;
+        // TODO correct getting current bin id
+        const bin_id = this.props.active_bin.id; //_.findLast(this.props.user_bins, {'active': true});
         this.setState({
                 loading:true,
                 result:[],
             },
             () => {
-                this.axios_source = search_simple(that, this.state.esQuery);
+                this.axios_source = search_simple(that, bin_id, this.state.esQuery, this.props.jsonQuery);
             }
 
         );
@@ -219,9 +221,11 @@ SearchResult.PropTypes = {
     forceRun: PropTypes.boolean,
     index: PropTypes.number,
     esQuery: PropTypes.object,
+    jsonQuery: PropTypes.object,
     //jsonData: PropTypes.array,
     //loading: PropTypes.boolean,
     aliases: PropTypes.object,
+    active_bin: PropTypes.object.isRequired,
 };
 
 export default SearchResult;

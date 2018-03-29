@@ -39,7 +39,7 @@ import GraphDataPage from "./scenes/GraphDataPage";
 
 
 
-//TODO add loading and keepeng auth token, don't forget abandon free access in DajngoServer
+//TODO add loading and keepeng auth token, don't forget abandon free access in DjangoServer
 /*
 persistedState = loadState();
 const store = {

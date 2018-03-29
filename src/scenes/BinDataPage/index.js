@@ -3,6 +3,8 @@ import {Button, FormControl, PageHeader, Panel} from "react-bootstrap";
 import {strings} from "../../localization";
 import BinData from "./components/BinData";
 import {bin_reset, get_active_bin_with_items, item_delete} from "../../services/business";
+import ActiveBinManager from "../../components/business/ActiveBinManager";
+
 import {graph_data_list, graph_list} from "../../services/graph";
 
 //TODO add some cool charts
@@ -76,28 +78,7 @@ class BinDataPage extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-4">
-                        <Panel>
-                            <h3>Выберите корзину</h3>
-                            <div className="row">
-                                <div className="col-lg-6">
-                                    <FormControl componentClass="select" name="selectBin" onChange={this.selectBin.bind(this)}>
-                                        <option>-</option>
-                                        {
-                                            bin_list.map((attr) =>
-                                                (current_bin_id === attr.id) ? (
-                                                        <option key={attr.id} value={attr.id}
-                                                        selected>{attr.name}</option>
-                                                    ) : (
-                                                        <option key={attr.id} value={attr.id}>{attr.name}</option>
-                                                    )
-                                        )}
-                                    </FormControl>
-                                </div>
-                                <div className="col-lg-6">
-                                    <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleReset(current_bin_id)}>{strings.Reset}</Button>
-                                </div>
-                            </div>
-                        </Panel>
+                        <ActiveBinManager/>
                     </div>
                     <div className="col-lg-8">
                         <Panel>

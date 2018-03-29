@@ -39,7 +39,7 @@ const onRequestSuccess = (response) => {
             expiresIn: durationSec,
         },
         refresh: { value: response.data.refresh }
-    }
+    };
     if(response.data.hasOwnProperty('refresh'))
     {
         let decoded_refresh = jwt_decode(response.data.refresh);

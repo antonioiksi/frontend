@@ -6,15 +6,20 @@ import * as businessActions from '../business/actions';
 import * as alarmsActions from '../alarms/actions';
 import store from '../../store';
 import {verifyToken} from "../session";
+import * as alertsActions from "../alerts/actions";
+import _ from 'lodash';
 
 const endPoints = {
     attributes: '/attribute/list/',
+    entity_attribute: '/attribute/list-entity-attribute/',
+
     user_bins: '/bin/list/',
     bin_activate: '/bin/activate/',
     bin_items: '/bin/item/list/',
     item: '/bin/item/',
     bin_reset: '/bin/reset/',
     item_delete: '/bin/item/delete/',
+
     query_templates: '/elastic/query-template/list/',
     bin_to_graph: '/bin-graph/load/',
 };
@@ -25,6 +30,17 @@ export function attributes()
     axios.get(BUSINESS_SERVER_URL + endPoints.attributes)
         .then(({data}) => {
             store.dispatch(businessActions.attributes(data));
+        })
+        .catch( ( err ) => {
+            store.dispatch(alarmsActions.update([err.message]));
+        });
+}
+
+export function entity_attributes()
+{
+    axios.get(BUSINESS_SERVER_URL + endPoints.entity_attribute)
+        .then(({data}) => {
+            store.dispatch(businessActions.entity_attributes(data));
         })
         .catch( ( err ) => {
             store.dispatch(alarmsActions.update([err.message]));
@@ -55,13 +71,17 @@ export function user_bins()
             'Authorization': 'Bearer ' + token
         }
     };
-
-    axios.get(BUSINESS_SERVER_URL + endPoints.user_bins, config)
+    const url = BUSINESS_SERVER_URL + endPoints.user_bins;
+    axios.get( url, config)
         .then(({data}) => {
             store.dispatch(businessActions.user_bins(data));
         })
         .catch( ( err ) => {
-            store.dispatch(alarmsActions.update([err.message]));
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, корзинка НЕ активирована! " + err.message + " url:" + url + ".",
+            }));
         });
 
         /*
@@ -88,14 +108,26 @@ export function bin_activate(sender, bin_name)
             'Authorization': 'Bearer ' + token
         }
     }
-
-    axios.get(BUSINESS_SERVER_URL + endPoints.bin_activate + bin_name, config)
+    const url = BUSINESS_SERVER_URL + endPoints.bin_activate + bin_name;
+    axios.get( url, config)
         .then(({data}) => {
             store.dispatch(businessActions.user_bins(data));
+            sender.setState({
+                active_bin: _.findLast(sender.props.user_bins, {'active': true}),
+            })
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "success",
+                message: "Корзинка " + bin_name + " активирована!"
+            }));
+
         })
         .catch( ( err ) => {
-            //sender.setState();
-            store.dispatch(alarmsActions.update([err.message]));
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, корзинка НЕ активирована! " + err.message + " url:"+url+".",
+            }));
         });
 }
 
@@ -214,13 +246,21 @@ export function bin_reset(bin_pk)
             'Authorization': 'Bearer ' + token
         }
     }
-    axios.get(BUSINESS_SERVER_URL + endPoints.bin_reset + bin_pk, config)
+    const url = BUSINESS_SERVER_URL + endPoints.bin_reset + bin_pk;
+    axios.get(url, config)
         .then(({data}) => {
-            //sender.setState({item: data});
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "success",
+                message: "Корзинка очищена!"
+            }));
         })
         .catch( ( err ) => {
-            //sender.setState();
-            store.dispatch(alarmsActions.update([err.message]));
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, корзинка НЕ очищена! " + err.message + " url:"+url+".",
+            }));
         });
     user_bins();
 }
@@ -312,18 +352,62 @@ export function bin_create(new_bin_name, sender) {
         headers: {
             'Authorization': 'Bearer ' + token
         }
-    }
-    let bin_data = {
-        name: new_bin_name
     };
-    axios.post(BUSINESS_SERVER_URL+'/bin/create/', bin_data, config)
+    let bin_data = {
+        name: new_bin_name,
+        active: true,
+    };
+    const url = BUSINESS_SERVER_URL+'/bin/create/';
+    axios.post( url, bin_data, config)
         .then((response) => {
+            user_bins();
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "success",
+                message: "Корзинка " + new_bin_name + " создана и активирована!"
+            }));
             sender.setState({
-                loading: false,
-                //graph_list: response.data,
-            });
+                showModal:false
+            })
         })
         .catch( ( err ) => {
-            store.dispatch(alarmsActions.update([err.message]));
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, создания корзинки! " + err.message + " url:"+url+", data:" + JSON.stringify(bin_data, 2, null),
+            }));
+        });
+}
+
+export function bin_delete(sender, bin_id) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    };
+    const url = BUSINESS_SERVER_URL+'/bin/delete/' + bin_id;
+    axios.delete( url, config)
+        .then((response) => {
+            user_bins();
+            sender.setState({
+                active_bin: {},
+            })
+
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "success",
+                message: "Корзинка удалена!"
+            }));
+        })
+        .catch( ( err ) => {
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, удаления корзинки! " + err.message + " url:"+url,
+            }));
         });
 }

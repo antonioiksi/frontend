@@ -38,8 +38,10 @@ class SearchResultArray extends React.Component {
                                        jsonData={objMultiResult[index].result}
                                        loading={objMultiResult[index].loading}
                                        esQuery={objMultiResult[index].esQuery}
+                                       jsonQuery={objMultiResult[index].jsonQuery}
                                        aliases={this.props.aliases}
                                        onRef={ref => (this.children.push( ref))}
+                                       active_bin={this.props.active_bin}
                         />
                     )
                 }
@@ -51,6 +53,7 @@ class SearchResultArray extends React.Component {
 SearchResultArray.PropTypes = {
     multiResult: PropTypes.object,
     aliases: PropTypes.object,
+    active_bin: PropTypes.object.isRequired,
 };
 
 export default SearchResultArray;
