@@ -21,6 +21,7 @@
     "react-background-slideshow": "^1.0.1",
     "react-bootstrap": "^0.31.5",
     "react-bootstrap-table": "^4.1.1",
+    "react-bs-notifier": "^4.4.6",
     "react-dom": "^16.0.0",
     "react-download-link": "^2.0.0",
     "react-json-view": "^1.13.3",
