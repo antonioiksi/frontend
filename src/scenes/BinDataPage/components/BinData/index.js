@@ -54,7 +54,7 @@ class BinData extends Component {
                                 this.props.BinItems.map((value, i) =>
                                     <tr key={i}>
                                         <td>{i+1}</td>
-                                        <td>{JSON.stringify( value.query.jsonQuery, null, 2)}</td>
+                                        <td>{JSON.stringify( value.jsonQuery, null, 2)}</td>
                                         <td>{ value.doc_count }</td>
                                         <td>
                                             <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleItemLoad(value.id)}>{strings.Load}</Button>&#160;
