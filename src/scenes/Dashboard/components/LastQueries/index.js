@@ -1,58 +1,76 @@
 import React, {Component} from 'react'
 import {Button, Panel} from "react-bootstrap";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
+import {bin_activate, user_bin_items} from "../../../../services/business";
+import _ from 'lodash';
+import {Redirect} from "react-router-dom";
 
 //TODO add some cool charts
+
 
 
 class LastQueries extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            user_bin_items: [],
+            redirect_to_search: false,
+            redirect_to_active_bin_data: false,
+        };
 
-        this.ActionOne = this.ActionOne.bind(this);
+        this.cellButtons = this.cellButtons.bind(this);
+        //this.ActivateBinThenGoToTheData = this.ActivateBinThenGoToTheData.bind(this);
     }
 
-    ActionOne(cell, row) {
+    componentWillMount() {
+        const sender = this;
+        user_bin_items(sender);
+    }
+
+    ActivateBinThenGoToSearch(cell, row, rowIndex) {
+        bin_activate(row.bin_id).then(
+            this.setState({
+                redirect_to_search: true,
+            })
+        );
+        //alert('hi');
+    }
+    ActivateBinThenGoToTheData(cell, row, rowIndex) {
+        bin_activate(row.bin_id);
+        this.setState({
+            redirect_to_active_bin_data: true,
+        })
+    }
+
+    cellButtons(cell, row, enumObject, rowIndex) {
         return (
             <div>
-                <a href={'/active-bin-data/'}><Button bsStyle="primary">Просмотр данных</Button></a>&#160;&#160;
-                <a href={'/active-bin-data/'}><Button bsStyle="primary">Найти еще</Button></a>&#160;&#160;
+                <button type="button" onClick={()=> this.ActivateBinThenGoToTheData(cell, row, rowIndex)}>Click me { rowIndex} </button>
+                <Button bsStyle="primary" onClick={() => this.ActivateBinThenGoToSearch(cell, row, rowIndex)}>Просмотр данных</Button>&#160;&#160;
+
+                <a href={'/active-bin-data/'+cell}><Button bsStyle="primary">Найти еще</Button></a>&#160;&#160;
             </div>
         )
     }
 
     render() {
-        const listData = [
-            {
-                index: 1,
-                bin: 'Корзинка 1',
-                bin_id: 1,
-                query: 'ФИО: Петров, год рождения: 1980, email:asdasdasd@google.com',
-                result_count: '50',
-            },
-            {
-                index: 2,
-                bin: 'Корзинка 2',
-                bin_id: 2,
-                query: 'Телефон: 2452353255',
-                result_count: '50',
-            },
-            {
-                index: 3,
-                bin: 'Корзинка 1',
-                bin_id: 1,
-                query: 'Телефон: 678768676787',
-                result_count: '50',
-            },
-            {
-                index: 4,
-                bin: 'Корзинка 3',
-                bin_id: 3,
-                query: 'ФИО: Сидоров',
-                result_count: '50',
-            },
-        ];
+        if (this.state.redirect_to_search) {
+            return (<Redirect to="/search/"/>)
+        }
+        if (this.state.redirect_to_active_bin_data) {
+            return (<Redirect to="/active-bin-data/"/>)
+        }
+
+        const listData = _.transform( this.state.user_bin_items, (result, value, key) => {
+            result.push({
+                id: value.id,
+                bin_id: value.bin.id,
+                bin_name: value.bin.name,
+                jsonQuery: JSON.stringify( value.jsonQuery, 2, null),
+                doc_count: value.doc_count,
+            });
+        });
 
         const options = {
             sizePerPage: 10,
@@ -77,11 +95,11 @@ class LastQueries extends Component {
                                 Последние запросы
                             </h3>
                             <BootstrapTable data={ listData } options={options} striped hover condensed>
-                                <TableHeaderColumn isKey dataField='index' >Корзинка</TableHeaderColumn>
-                                <TableHeaderColumn dataField='bin'  dataSort={ true }>Корзинка</TableHeaderColumn>
-                                <TableHeaderColumn dataField='query' tdStyle={{whiteSpace:'normal'}}  dataSort={ true }>Запрос</TableHeaderColumn>
-                                <TableHeaderColumn dataField='result_count' headerAlign='center' dataAlign='right' width='100' >Найдено</TableHeaderColumn>
-                                <TableHeaderColumn dataField='action' dataFormat={this.ActionOne} export={ false } >Action</TableHeaderColumn>
+                                <TableHeaderColumn isKey dataField='id' >Корзинка</TableHeaderColumn>
+                                <TableHeaderColumn dataField='bin_name'  dataSort={ true }>Корзинка</TableHeaderColumn>
+                                <TableHeaderColumn dataField='jsonQuery' tdStyle={{whiteSpace:'normal'}}  dataSort={ true }>Запрос</TableHeaderColumn>
+                                <TableHeaderColumn dataField='doc_count' headerAlign='center' dataAlign='right' width='100' >Найдено</TableHeaderColumn>
+                                <TableHeaderColumn dataField='button' dataFormat={this.cellButtons} export={ false } >Action</TableHeaderColumn>
                             </BootstrapTable>
                         </Panel>
                     </div>
