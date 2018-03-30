@@ -111,7 +111,6 @@ class SearchResult extends React.Component {
             () => {
                 this.axios_source = search_simple(that, bin_id, this.state.esQuery, this.props.jsonQuery);
             }
-
         );
     }
 
