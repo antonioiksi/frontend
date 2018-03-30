@@ -13,7 +13,6 @@ class ActiveBinManager extends Component {
         super(props);
 
         this.state={
-            active_bin: _.findLast(this.props.user_bins, {'active': true}),
             showModal: false,
             textValue: "",
         };
@@ -29,7 +28,7 @@ class ActiveBinManager extends Component {
         const bin = _.findLast(this.props.user_bins, {'id': parseInt(fleldVal)});
         if (bin) {
             const sender = this;
-            bin_activate( sender, bin.name);
+            bin_activate( bin.id);
         }
 
         //console.log(value);
@@ -37,18 +36,18 @@ class ActiveBinManager extends Component {
     }
 
     clearBin() {
-        let answer = window.confirm('Вы уверены что хотите удалить все данные из корзинки ' + this.state.active_bin.name + ' ?');
+        let answer = window.confirm('Вы уверены что хотите удалить все данные из корзинки ' + this.props.active_bin.name + ' ?');
         if(answer) {
-            bin_reset(this.state.active_bin.id);
+            bin_reset(this.props.active_bin.id);
 
         }
     }
 
     deleteBin() {
-        let answer = window.confirm('Вы уверены что хотите удалить корзинку ' + this.state.active_bin.name + ' ?');
+        let answer = window.confirm('Вы уверены что хотите удалить корзинку ' + this.props.active_bin.name + ' ?');
         if(answer) {
             const sender = this;
-            bin_delete(sender, this.state.active_bin.id);
+            bin_delete(sender, this.props.active_bin.id);
         }
     }
 
@@ -127,6 +126,8 @@ class ActiveBinManager extends Component {
 const mapStateToProps = function(store) {
     return {
         user_bins: store.business.user_bins,
+        // TODO after removing bin work incorrect - needs to fix
+        active_bin: _.findLast(store.business.user_bins, {'active': true}),
     };
 };
 
