@@ -97,7 +97,7 @@ export function user_bins()
         );*/
 }
 
-export function bin_activate(sender, bin_name)
+export function bin_activate(bin_id)
 {
     verifyToken();
     const session = store.getState().session;
@@ -108,19 +108,15 @@ export function bin_activate(sender, bin_name)
             'Authorization': 'Bearer ' + token
         }
     }
-    const url = BUSINESS_SERVER_URL + endPoints.bin_activate + bin_name;
+    const url = BUSINESS_SERVER_URL + endPoints.bin_activate + bin_id;
     axios.get( url, config)
         .then(({data}) => {
             store.dispatch(businessActions.user_bins(data));
-            sender.setState({
-                active_bin: _.findLast(sender.props.user_bins, {'active': true}),
-            })
             store.dispatch(alertsActions.add({
                 id: new Date().getTime(),
                 type: "success",
-                message: "Корзинка " + bin_name + " активирована!"
+                message: "Корзинка " + bin_id + " активирована!"
             }));
-
         })
         .catch( ( err ) => {
             store.dispatch(alertsActions.add({
@@ -411,3 +407,35 @@ export function bin_delete(sender, bin_id) {
             }));
         });
 }
+
+
+export function user_bin_items(sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    };
+    const url = BUSINESS_SERVER_URL+'/bin/user-items/';
+    axios.get( url, config)
+        .then((response) => {
+            user_bins();
+            sender.setState({
+                user_bin_items: response.data,
+            });
+        })
+        .catch( ( err ) => {
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, загрузки последних запросов! " + err.message + " url:"+url,
+            }));
+        });
+}
+
+
+
+
