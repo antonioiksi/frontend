@@ -1,13 +1,10 @@
 import React, {Component} from 'react'
 import {Button, FormControl, PageHeader, Panel} from "react-bootstrap";
 import {strings} from "../../localization";
-import BinData from "./components/BinData";
 import {bin_reset, get_active_bin_with_items, item_delete} from "../../services/business";
 import ActiveBinManager from "../../components/business/ActiveBinManager";
+import BinData from "../../components/business/BinData";
 
-import {graph_data_list, graph_list} from "../../services/graph";
-
-//TODO add some cool charts
 
 class BinDataPage extends Component {
 
@@ -94,7 +91,7 @@ class BinDataPage extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12 col-md-12">
-                        <BinData Bin={this.state.bin} BinItems={this.state.bin_items} removeBinItem={this.removeBinItem}/>
+                        <BinData/>
                     </div>
                 </div>
             </div>
