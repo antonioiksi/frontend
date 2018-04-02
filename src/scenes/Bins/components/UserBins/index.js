@@ -65,13 +65,7 @@ class UserBins extends React.Component {
     }
 
     handleLoad(bin_pk) {
-        //console.log('bin_pk' + bin_pk);
         bin_items(this, bin_pk)
-        /*this.setState({
-                values: this.state.values.filter((_,i) => i !== removeId)
-            },
-            () => {this.props.changeFormValues(this.props.index, this.state.values)}
-        );*/
     }
 
     handleActivate(bin_pk) {
@@ -160,7 +154,9 @@ class UserBins extends React.Component {
                                         <td>{value.items_count}</td>
                                         <td>
                                             <Button  bsStyle="danger" bsSize="small" onClick={() => this.handleReset(value.id)}>{strings.Reset}</Button>&#160;
+
                                             <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleLoad(value.id)}>{strings.Load}</Button>&#160;
+
                                             <Button  bsStyle="success" bsSize="small" onClick={() => this.handleActivate(value.name)}>{strings.Activate}</Button>&#160;
                                             <Button  bsStyle="primary" bsSize="small" onClick={() => this.loadToGraph(value.id)}>{strings.Load} for graph</Button>&#160;
                                             <Button  bsStyle="primary" bsSize="small" onClick={() => this.loadToGraphAndExtend(value.id)}>{strings.Load} for graph and extend</Button>
