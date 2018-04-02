@@ -97,7 +97,7 @@ export function user_bins()
         );*/
 }
 
-export function bin_activate(bin_id)
+export function bin_activate(bin_id, sender=null, new_state)
 {
     verifyToken();
     const session = store.getState().session;
@@ -117,6 +117,10 @@ export function bin_activate(bin_id)
                 type: "success",
                 message: "Корзинка " + bin_id + " активирована!"
             }));
+            if (sender) {
+                sender.setState(new_state);
+            }
+
         })
         .catch( ( err ) => {
             store.dispatch(alertsActions.add({
@@ -198,13 +202,17 @@ export function bin_items(sender, bin_pk)
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL + endPoints.bin_items + bin_pk, config)
+    const url = BUSINESS_SERVER_URL + endPoints.bin_items + bin_pk;
+    axios.get( url, config)
         .then(({data}) => {
             sender.setState({bin_items: data, bin_pk:bin_pk});
         })
         .catch( ( err ) => {
-            //sender.setState();
-            store.dispatch(alarmsActions.update([err.message]));
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, получения данных для корзинки:"  + err.message + " url:"+url,
+            }));
         });
 }
 
@@ -436,6 +444,32 @@ export function user_bin_items(sender) {
         });
 }
 
+export function bin_items_data(bin_id, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    };
+    const url = BUSINESS_SERVER_URL+'/bin/'+bin_id+'/items/data';
+    axios.get( url, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+                bin_items_data: response.data,
+            });
+        })
+        .catch( ( err ) => {
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, загрузки последних запросов! " + err.message + " url:"+url,
+            }));
+        });
+}
 
 
 
