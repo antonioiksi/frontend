@@ -56,6 +56,10 @@ const onRequestSuccess = (response) => {
 
 const onRequestFailed = (exception) => {
     //let non_field_errors = response.data.non_field_errors;
+    if(!exception.response) {
+        clearSession();
+        throw exception;
+    }
     const data = exception.response.data;
     //console.log(errors);
     //store.dispatch( actionCreators.fail(errors));
@@ -102,7 +106,10 @@ export const verifyToken = () => {
         .then((response)=> console.log('verified!'))
         .catch((error) => {
             const messages = [];
-            messages.push(JSON.stringify(error.response.data));
+            if(error.response) {
+                messages.push(JSON.stringify(error.response.data));
+            }
+
             store.dispatch(alarmActions.update(messages));
             clearSession();
             throw error;

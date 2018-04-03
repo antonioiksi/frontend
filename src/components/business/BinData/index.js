@@ -13,6 +13,7 @@ import {strings} from "../../../localization";
 import _ from "lodash";
 import {bin_items, bin_items_data} from "../../../services/business";
 import {connect} from "react-redux";
+import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
 
 
 const VIEW_MODES = {TABLE:'table', TABLE_EXPORT: 'table_export', JSON:'json', };
@@ -51,12 +52,14 @@ class BinData extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const sender = this;
-        if (this.props.active_bin.id !== nextProps.active_bin.id) {
-            this.setState({
-                loading: true,
-            }, () => {
-                bin_items_data(this.props.active_bin.id, sender);
-            })
+        if(this.props.active_bin) {
+            if (this.props.active_bin.id !== nextProps.active_bin.id) {
+                this.setState({
+                    loading: true,
+                }, () => {
+                    bin_items_data(this.props.active_bin.id, sender);
+                })
+            }
         }
     }
 
@@ -70,6 +73,17 @@ class BinData extends React.Component {
                 />
             )
         }
+        let table_data = [];
+        this.state.bin_items_data.forEach((item, index) => {
+            let table_item = {};
+            table_item['_source'] = JSON.stringify( item._source, null, 4);
+            table_item['_data_system_source'] = JSON.stringify( item._data_system_source, null, 4);
+            table_item['_first_level_source'] = JSON.stringify( item._first_level_source, null, 4);
+            table_item['_id'] = item._id;
+            table_data.push(table_item);
+        });
+
+        const options = [];
 
         return (
             <div>
@@ -96,9 +110,26 @@ class BinData extends React.Component {
                             <SearchTableExport jsonData={this.state.result} aliases={this.props.aliases}/>
                             || <ReactJson src={this.state.result}  />
                             */
-                            JSON.stringify(this.state.bin_items_data, null, 4)
+                            //JSON.stringify(this.state.bin_items_data, null, 4)
 
                         }
+                        <BootstrapTable data={ table_data } options={options} striped hover condensed>
+                            <TableHeaderColumn isKey dataField='_id' width="10%">Ид</TableHeaderColumn>
+                            <TableHeaderColumn dataField='_first_level_source' headerAlign='center'>Данные верхнего уровня</TableHeaderColumn>
+                            <TableHeaderColumn dataField='_data_system_source' headerAlign='center'>Данные поисковой системы</TableHeaderColumn>
+                            <TableHeaderColumn dataField='_source' headerAlign='center'>Исходные данные</TableHeaderColumn>
+                            {
+                                /*
+
+                            <TableHeaderColumn dataField='datetime'  dataSort={ true }>Время</TableHeaderColumn>
+                            <TableHeaderColumn dataField='bin_name'  dataSort={ true }>Корзинка</TableHeaderColumn>
+                            <TableHeaderColumn dataField='jsonQuery' tdStyle={{whiteSpace:'normal'}}  dataSort={ true }>Запрос</TableHeaderColumn>
+                            <TableHeaderColumn dataField='doc_count' headerAlign='center' dataAlign='right' width='100' >Найдено</TableHeaderColumn>
+                            <TableHeaderColumn dataField='button' dataFormat={this.cellButtons} export={ false } >Action</TableHeaderColumn>
+
+                                 */
+                            }
+                        </BootstrapTable>
                     </div>
                 </div>
             </div>

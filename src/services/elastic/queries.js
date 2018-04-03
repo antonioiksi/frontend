@@ -8,12 +8,13 @@ const query_body = {
             should: []
         }
     },
+    /*
     highlight : {
         encoder: 'html',
         fields : {
             comment : {}
         }
-    }
+    }*/
 }
 const query_string_default = {
     default: {
@@ -120,7 +121,10 @@ export function prepare_q2( jsonQuery, entityAttributeMapping) {
 
     let queryBody = JSON.parse(JSON.stringify(query_body));
     queryBody.query.bool.should = queryItems;
-    queryBody.highlight.fields = {[fields[0]]:{}};
+    if(queryBody.highlight) {
+        queryBody.highlight.fields = {[fields[0]]:{}};
+    }
+
 
 
     //console.log(queryBody);

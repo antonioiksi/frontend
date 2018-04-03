@@ -32,7 +32,7 @@ export function search_simple( sender, bin_id, esQuery, jsonQuery, cancelToken)
         esQuery: esQuery,
         jsonQuery: jsonQuery,
     };
-    const url = BUSINESS_SERVER_URL+'/elastic-bin/mapped-search/' + bin_id;
+    const url = BUSINESS_SERVER_URL+'/data-bin-loader/elastic/' + bin_id;
     axios.post( url, query, config)
         .then((response) => {
             //console.log('axios' + index + JSON.stringify(jsonQuery));

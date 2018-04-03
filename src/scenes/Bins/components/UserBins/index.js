@@ -32,7 +32,7 @@ class UserBins extends React.Component {
 
     componentWillMount() {
         user_bins();
-        //graph_list(this);
+        graph_list(this);
     }
 
     changeName(event) {
