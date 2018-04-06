@@ -40,9 +40,9 @@ class SearchResult extends React.Component {
             loading:false,
             showQueryModal: false,
             editQueryModal: false,
-            textAreaValue: JSON.stringify(props.esQuery, undefined, 4),
+            textAreaValue: JSON.stringify(props.jsonQuery, undefined, 4),
 
-            esQuery: props.esQuery,
+            jsonQuery: props.jsonQuery,
             result:[],
         }
 
@@ -56,7 +56,8 @@ class SearchResult extends React.Component {
     }
 
     componentDidMount() {
-        this.props.onRef(this)
+        this.props.onRef(this);
+        this.runQuery();
     }
     componentWillUnmount() {
         this.props.onRef(undefined)
@@ -82,7 +83,7 @@ class SearchResult extends React.Component {
         try {
             const temp = JSON.parse(this.state.textAreaValue);
             this.setState({
-                esQuery: temp,
+                jsonQuery: temp,
                 editQueryModal:false
             })
         }
@@ -109,7 +110,7 @@ class SearchResult extends React.Component {
                 result:[],
             },
             () => {
-                this.axios_source = search_simple(that, bin_id, this.state.esQuery, this.props.jsonQuery);
+                this.axios_source = search_simple(that, bin_id, this.props.jsonQuery);
             }
         );
     }
@@ -164,7 +165,7 @@ class SearchResult extends React.Component {
                                 <Modal.Title>{strings.ShowQuery}</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <ReactJson src={this.state.esQuery}  />
+                                <ReactJson src={this.state.jsonQuery}  />
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button onClick={this.closeShowQueryModal}>Close</Button>
@@ -219,7 +220,6 @@ class SearchResult extends React.Component {
 SearchResult.PropTypes = {
     forceRun: PropTypes.boolean,
     index: PropTypes.number,
-    esQuery: PropTypes.object,
     jsonQuery: PropTypes.object,
     //jsonData: PropTypes.array,
     //loading: PropTypes.boolean,

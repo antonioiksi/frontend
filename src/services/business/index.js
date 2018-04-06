@@ -472,4 +472,89 @@ export function bin_items_data(bin_id, sender) {
 }
 
 
+// LOADERS
+export function load_json(bin_id, json_data, sender) {
 
+    try {
+        if (!Array.isArray(json_data))
+            JSON.parse(json_data);
+    } catch (err) {
+        sender.setState({
+            loading: false,
+        }, () => {
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, проверки JSON! " + err.message,
+            }));
+        });
+        return null;
+    }
+
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    };
+    const url = BUSINESS_SERVER_URL+'/data-bin-loader/json/'+bin_id;
+    axios.post( url, json_data, config)
+        .then((response) => {
+            sender.setState({
+                loading: false,
+            }, () => {
+                store.dispatch(alertsActions.add({
+                    id: new Date().getTime(),
+                    type: "success",
+                    message: "Загружен(о) " + response.data["data"].length + " объект(ов)"
+                }));
+            });
+        })
+        .catch( ( err ) => {
+            sender.setState({
+                loading: false,
+            }, () => {
+                store.dispatch(alertsActions.add({
+                    id: new Date().getTime(),
+                    type: "danger",
+                    message: "Ошибка, загрузки данных! " + err.message + " url:"+url,
+                }));
+            });
+        });
+}
+
+
+
+
+export function item_data_remove(bin_id, keys, sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    };
+    const url = BUSINESS_SERVER_URL+'/bin/items/data/remove/';
+    axios.post( url, keys, config)
+        .then((response) => {
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "success",
+                message: "Объект(ы) успешно удален(ы)"
+            }));
+
+            bin_items_data(bin_id, sender);
+        })
+        .catch( ( err ) => {
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, удаления! " + err.message + " url:"+url,
+            }));
+        });
+}

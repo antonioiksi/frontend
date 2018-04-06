@@ -31,9 +31,10 @@ class SearchFormList extends React.Component {
             newValues,
             ...this.state.formsValues.slice(indexForm + 1)
         ];
-        this.setState(
-            {formsValues: newFormsValues}
-        );
+        this.setState({formsValues: newFormsValues},
+            () => {
+                this.props.loadFormsValues(this.state.formsValues);
+            });
 
     }
 
@@ -58,6 +59,8 @@ class SearchFormList extends React.Component {
 
         this.setState({
             formsValues: newFormsValues
+        }, () => {
+            this.props.loadFormsValues(this.state.formsValues);
         });
     }
 
@@ -98,7 +101,8 @@ class SearchFormList extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Button  bsStyle="primary" bsSize="small" onClick={() => this.handleAddForm()}>{strings.AddNewForm}</Button> <Button  bsStyle="warning" bsSize="small" onClick={() => this.handleLoadFormsValues()}>{strings.LoadFormsValues}</Button>
+                        <Button  bsStyle="primary" bsSize="small" onClick={() => this.handleAddForm()}>{strings.AddNewForm}</Button>
+
                     </div>
                 </div>
             </div>

@@ -28,6 +28,8 @@ import DownloadLink from "../../../node_modules/react-download-link/download-lin
 import ActiveBinManager from "../../components/business/ActiveBinManager/index";
 import {Alert, AlertContainer, AlertList} from "react-bs-notifier";
 
+import './style.css';
+
 const initQueryValues = [
 /*
     {
@@ -174,8 +176,8 @@ class Search extends Component {
 
     handleSearch() {
         const that = this;
-        const  multiJsonQuery = this.state.multiJsonQuery;
-        this.state.multiEsQuery.forEach(function(jsonEsQuery, index) {
+        //const  multiJsonQuery = this.state.multiJsonQuery;
+        this.state.multiQuery.forEach(function(jsonQuery, index) {
 
             that.setState( prevState => ({
                 multiResult: {
@@ -183,8 +185,8 @@ class Search extends Component {
                     [index] : {
                         //loading:true,
                         result:[],
-                        esQuery: jsonEsQuery,
-                        jsonQuery: multiJsonQuery[index],
+                        //esQuery: jsonEsQuery,
+                        jsonQuery: jsonQuery,
                     }
                 }
             }),
@@ -320,38 +322,7 @@ class Search extends Component {
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <Panel header={strings.Query} bsStyle="success">
-                            <Button  bsStyle="primary" bsSize="small" onClick={() => this.loadEsQuery()}>LoadEsQuery</Button>
-                            <Button  bsStyle="primary" bsSize="small" onClick={() => this.handleShowModal()}>{strings.ShowQuery}</Button>&#160;
-                            <DownloadLink
-                                filename="query.json"
-                                label={strings.DownloadQuery}
-                                exportFile={() => JSON.stringify( this.state.multiEsQuery, undefined, 4)} />
-                            <Modal show={this.state.showModal} onHide={this.closeShowModal}>
-                                <Modal.Header closeButton>
-                                    <Modal.Title>{strings.ShowQuery}</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <FormGroup>
-                                        <FormControl
-                                            style={{height: '200px'}}
-                                            componentClass="textarea"
-                                            value={this.state.textAreaValue}
-                                            onChange={this.handleChangeTextArea}
-                                        />
-                                    </FormGroup>
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <Button onClick={this.closeShowModal}>Close</Button>
-                                </Modal.Footer>
-                            </Modal>
-                            <ReactJson src={this.state.multiEsQuery} />
-                        </Panel>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-lg-12">
-                        <Button  bsStyle="primary" bsSize="large" onClick={() => this.handleSearch()}>{strings.CreateSearchQueue}</Button>
+                        <Button  bsStyle="info" bsSize="large" className="wideButton" onClick={() => this.handleSearch()}>Поиск</Button>
                     </div>
                 </div>
                 <SearchResultArray multiResult={this.state.multiResult} aliases={this.state.aliases} active_bin={this.props.active_bin}/>

@@ -9,6 +9,8 @@ class SearchResultArray extends React.Component {
         super(props);
         this.children = [];
         this.runAllQueries = this.runAllQueries.bind(this);
+
+
     }
 
     runAllQueries() {
@@ -37,7 +39,6 @@ class SearchResultArray extends React.Component {
                                        index={index}
                                        jsonData={objMultiResult[index].result}
                                        loading={objMultiResult[index].loading}
-                                       esQuery={objMultiResult[index].esQuery}
                                        jsonQuery={objMultiResult[index].jsonQuery}
                                        aliases={this.props.aliases}
                                        onRef={ref => (this.children.push( ref))}

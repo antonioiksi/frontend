@@ -146,7 +146,7 @@ class Graph extends React.Component {
                     </div>
                     <div className="col-lg-4">
                         <Panel>
-                            <h3>Cозданить новую схему</h3>
+                            <h3>Cоздать новую схему</h3>
                             <Form horizontal>
                                 <Col lg={8}>
                                     <FormGroup controlId="formControlsText">

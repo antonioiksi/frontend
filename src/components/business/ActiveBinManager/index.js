@@ -6,7 +6,7 @@ import * as alertsActions from "../../../services/alerts/actions";
 import store from "../../../store";
 import _ from 'lodash';
 import {bin_activate, bin_create, bin_delete, bin_reset} from "../../../services/business";
-
+import './style.css'
 
 class ActiveBinManager extends Component {
     constructor(props) {
@@ -16,6 +16,7 @@ class ActiveBinManager extends Component {
             showModal: false,
             textValue: "",
         };
+
         this.showModal = this.showModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.changeText = this.changeText.bind(this);
@@ -76,31 +77,46 @@ class ActiveBinManager extends Component {
     }
 
     render() {
+        const location = window.location.href;
+
+
         const user_bins = this.props.user_bins;
         const current_bin_id = 0;
 
         return(
             <Panel>
-                <h3>Выберите корзину</h3>
+                <h3>Работа с корзиной</h3>
                 <div className="row">
                     <div className="col-lg-4">
-                        <FormControl componentClass="select" name="selectBin" onChange={this.selectBin.bind(this)}>
-                            <option>-</option>
-                            {
-                                user_bins.map((bin) =>
-                                    (bin.active) ? (
-                                        <option key={bin.id} value={bin.id}
-                                                selected>{bin.name}</option>
-                                    ) : (
-                                        <option key={bin.id} value={bin.id}>{bin.name}</option>
-                                    )
-                                )}
-                        </FormControl>
+                        <FormGroup>
+                            <ControlLabel>Активная корзина</ControlLabel>
+                            <FormControl componentClass="select" name="selectBin" onChange={this.selectBin.bind(this)}>
+                                <option>-</option>
+                                {
+                                    user_bins.map((bin) =>
+                                        (bin.active) ? (
+                                            <option key={bin.id} value={bin.id}
+                                                    selected>{bin.name}</option>
+                                        ) : (
+                                            <option key={bin.id} value={bin.id}>{bin.name}</option>
+                                        )
+                                    )}
+                            </FormControl>
+                        </FormGroup>
                     </div>
-                    <div className="col-lg-8">
-                        <Button  bsStyle="danger" bsSize="small" onClick={() => this.clearBin()}>{strings.Reset}</Button>&#160;
-                        <Button  bsStyle="danger" bsSize="small" onClick={() => this.deleteBin()}>Удалить корзинку</Button>&#160;
-                        <Button  bsStyle="primary" bsSize="small" onClick={() => this.showModal()}>Создать новую корзинку</Button>&#160;
+                    <div className="col-lg-8 down">
+                        <Button  bsStyle="warning" bsSize="small" onClick={() => this.clearBin()}>Очистить</Button>&#160;
+                        <Button  bsStyle="danger" bsSize="small" onClick={() => this.deleteBin()}>Удалить</Button>&#160;
+                        <Button  bsStyle="success" bsSize="small" onClick={() => this.showModal()}>Создать</Button>&#160;
+                        {
+                            location.match('active-bin-data') &&
+                                <a href="/search/"><Button  bsStyle="info" bsSize="small">Поиск</Button></a>
+                        }
+                        {
+                            location.match('search') &&
+                                <a href="/active-bin-data/"><Button  bsStyle="primary" bsSize="small">Данные</Button></a>
+                        }
+
                         <Modal show={this.state.showModal} onHide={this.closeModal}>
                             <Modal.Header closeButton>
                                 <Modal.Title>Создание новой корзинки</Modal.Title>

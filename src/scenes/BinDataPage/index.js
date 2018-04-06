@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
-import {Button, FormControl, PageHeader, Panel} from "react-bootstrap";
+import {Button, ButtonToolbar, FormControl, PageHeader, Panel, ToggleButton, ToggleButtonGroup} from "react-bootstrap";
 import {strings} from "../../localization";
 import {bin_reset, get_active_bin_with_items, item_delete} from "../../services/business";
 import ActiveBinManager from "../../components/business/ActiveBinManager";
 import BinData from "../../components/business/BinData";
+import BinDataLoader from "../../components/business/BinDataLoader";
+
+
 
 
 class BinDataPage extends Component {
@@ -78,15 +81,7 @@ class BinDataPage extends Component {
                         <ActiveBinManager/>
                     </div>
                     <div className="col-lg-8">
-                        <Panel>
-                            <h3>Действия с данными</h3>
-                            <div className="row">
-                                <div className="col-lg-12">
-                                    <Button  bsStyle="success" bsSize="small" onClick={this.loadCSV}>{strings.LoadCsv}</Button>&#160;&#160;
-                                    <a href="/search"><Button  bsStyle="primary" bsSize="small">Перейти к поиску</Button></a>
-                                </div>
-                            </div>
-                        </Panel>
+                        <BinDataLoader/>
                     </div>
                 </div>
                 <div className="row">

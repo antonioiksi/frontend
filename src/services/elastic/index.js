@@ -11,7 +11,7 @@ import * as alertsActions from "../alerts/actions";
 
 
 
-export function search_simple( sender, bin_id, esQuery, jsonQuery, cancelToken)
+export function search_simple( sender, bin_id, jsonQuery, cancelToken)
 {
     verifyToken();
     const session = store.getState().session;
@@ -29,7 +29,6 @@ export function search_simple( sender, bin_id, esQuery, jsonQuery, cancelToken)
     }
 
     let query = {
-        esQuery: esQuery,
         jsonQuery: jsonQuery,
     };
     const url = BUSINESS_SERVER_URL+'/data-bin-loader/elastic/' + bin_id;
@@ -94,7 +93,7 @@ export function search_simple( sender, bin_id, esQuery, jsonQuery, cancelToken)
                 store.dispatch(alertsActions.add({
                     id: new Date().getTime(),
                     type: "danger",
-                    message: "Ошибка, выполнения запроса! url:"+url + "data:" + JSON.stringify(esQuery,2,null) + "error: " + JSON.stringify(thrown,2,null),
+                    message: "Ошибка, выполнения запроса! url:"+url + "data:" + JSON.stringify(jsonQuery,2,null) + "error: " + JSON.stringify(thrown,2,null),
                 }));
 
                 sender.setState({
