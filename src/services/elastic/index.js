@@ -17,6 +17,8 @@ export function search_simple( sender, bin_id, jsonQuery, cancelToken)
     const session = store.getState().session;
     let token = session.tokens.access.value;
 
+    //axios.defaults.httpAgent = new http.Agent({ keepalive: true, maxSockets: 10, keepAliveMsecs: 3000000})
+
 
     let source = axios.CancelToken.source();
     let config = {

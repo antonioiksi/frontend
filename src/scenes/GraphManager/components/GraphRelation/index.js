@@ -1,6 +1,6 @@
 import React from 'react';
 import {strings} from "../../../../localization/index";
-import {PageHeader, Table} from "react-bootstrap";
+import {PageHeader, Panel, Table} from "react-bootstrap";
 import {relation_list, relation_create} from "../../../../services/graph/index";
 import GraphRelationForm from "./components/GraphRelationForm/index";
 import PropTypes from 'prop-types';
@@ -27,11 +27,6 @@ class GraphRelation extends React.Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-lg-4">
-                        <GraphRelationForm  graph_id={this.props.graph_id}
-                                            graph_list={this.props.graph_list}
-                                            createRelationFunction={this.props.createRelationFunction}/>
-                    </div>
                     <div className="col-lg-8">
                         <Table striped bordered condensed hover>
                             <thead>
@@ -57,6 +52,14 @@ class GraphRelation extends React.Component {
                             }
                             </tbody>
                         </Table>
+                    </div>
+                    <div className="col-lg-4">
+                        <Panel>
+                            <h3>Определить новую связь</h3>
+                            <GraphRelationForm  graph_id={this.props.graph_id}
+                                                graph_list={this.props.graph_list}
+                                                createRelationFunction={this.props.createRelationFunction}/>
+                        </Panel>
                     </div>
                 </div>
             </div>

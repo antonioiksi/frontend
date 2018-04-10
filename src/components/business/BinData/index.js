@@ -57,8 +57,9 @@ class BinData extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         const sender = this;
-        if(this.props.active_bin) {
-            if (this.props.active_bin.id !== nextProps.active_bin.id) {
+        //if(this.props.active_bin && nextProps.active_bin) {
+        if(nextProps.active_bin) {
+            if (typeof this.props.active_bin === "undefined" || this.props.active_bin.id !== nextProps.active_bin.id) {
                 this.setState({
                     loading: true,
                 }, () => {
@@ -93,12 +94,20 @@ class BinData extends React.Component {
 
     formatEntityAttribute(cell, row) {
         let res = "";
-        const jsonCell = JSON.parse(cell);
-        this.props.entity_attributes.forEach((item) => {
-            let value = jsonCell[item.name];
-            if (value)
-                res += format("<b>{}</b>: {}<br/>", item.title, value.join(','));
-        });
+        try {
+            const jsonCell = JSON.parse(cell);
+            this.props.entity_attributes.forEach((item) => {
+                let value = jsonCell[item.name];
+                if (value) {
+                    if (Array.isArray(value))
+                        res += format("<b>{}</b>: {}<br/>", item.title, value.join(','));
+                    else
+                        res += format("<b>{}</b>: {}<br/>", item.title, value);
+                }
+            });
+        } catch(ex) {
+            console.log(ex.message);
+        }
         return res;
     }
 
@@ -128,6 +137,7 @@ class BinData extends React.Component {
         let table_data = [];
         this.state.bin_items_data.forEach((item, index) => {
             let table_item = {};
+
             table_item['_source'] = JSON.stringify( item._source, null, 4);
             //table_item['_data_system_source'] = JSON.stringify( item._data_system_source, null, 4);
             table_item['_first_level_source'] = JSON.stringify( item._first_level_source, null, 4);
@@ -135,6 +145,11 @@ class BinData extends React.Component {
             table_item['_id'] = item._id;
             table_item['_aliase'] = item._aliase;
             table_item['key'] = item._item_id + '_' + item._id;
+            if(item._json_query)
+                table_item['_json_query'] = JSON.stringify( item._json_query.jsonQuery);  //JSON.stringify( item._json_query, null, 4)
+            else
+                table_item['_json_query'] = "";
+
             table_data.push(table_item);
         });
 
@@ -166,8 +181,9 @@ class BinData extends React.Component {
                         <BootstrapTable selectRow={ selectRowProp } data={ table_data } options={ options } striped search condensed deleteRow={ true }>
                             <TableHeaderColumn isKey dataField='key' width="10%">Ид</TableHeaderColumn>
                             <TableHeaderColumn dataField='_aliase' headerAlign='center'>Таблица</TableHeaderColumn>
-                            <TableHeaderColumn dataField='_first_level_source' headerAlign='center' filter={ {type: 'TextFilter', delay: 1000} } filterFormatted={true} dataFormat={this.formatEntityAttribute} >Данные верхнего уровня</TableHeaderColumn>
-                            <TableHeaderColumn dataField='_source' headerAlign='center' filter={ {type: 'TextFilter', delay: 1000} } filterFormatted={true} dataFormat={this.formatSource} >Исходные данные</TableHeaderColumn>
+                            <TableHeaderColumn dataField='_json_query' headerAlign='center' filterFormatted={true} dataFormat={this.formatEntityAttribute} >Запрос</TableHeaderColumn>
+                            <TableHeaderColumn dataField='_first_level_source' headerAlign='center' filter={ {type: 'TextFilter', delay: 500} } filterFormatted={true} dataFormat={this.formatEntityAttribute} >Данные верхнего уровня</TableHeaderColumn>
+                            <TableHeaderColumn dataField='_source' headerAlign='center' filter={ {type: 'TextFilter', delay: 500} } filterFormatted={true} dataFormat={this.formatSource} >Исходные данные</TableHeaderColumn>
                         </BootstrapTable>
                     </div>
                 </div>

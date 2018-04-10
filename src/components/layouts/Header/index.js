@@ -9,6 +9,7 @@ import Sidebar from "../Sidebar";
 import {strings} from "../../../localization";
 
 import logo from './logo.svg';
+import {APP_TITLE} from "../../../services/constants";
 //const logo = require('./logo.svg');
 
 export const Header = () => {
@@ -17,8 +18,8 @@ export const Header = () => {
             <Navbar fluid={true}  style={ {margin: 0} }>
                 <Brand>
             <span>
-                <img src={logo} className="App-logo" alt="Frontend" title="Frontend" />
-              <span>&nbsp;Frontend</span>
+                <img src={logo} className="App-logo" alt={APP_TITLE} title={APP_TITLE} />
+              <span>&nbsp;{APP_TITLE}</span>
                 <button type="button" className="navbar-toggle" onClick={() => {toggleMenu();}} style={{position: 'absolute', right: 0, top: 0}}>
                   <span className="sr-only">Toggle navigation</span>
                   <span className="icon-bar"></span>

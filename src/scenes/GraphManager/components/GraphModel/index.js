@@ -1,6 +1,6 @@
 import React from 'react';
 import {strings} from "../../../../localization/index";
-import {PageHeader, Table} from "react-bootstrap";
+import {PageHeader, Panel, Table} from "react-bootstrap";
 import {drawing_list, model_list, model_create} from "../../../../services/graph/index";
 import GraphModelForm from "./components/GraphModelForm";
 import PropTypes from 'prop-types';
@@ -44,13 +44,6 @@ class GraphModel extends React.Component {
                 </div>):('')}
 
                 <div className="row">
-                    <div className="col-lg-4">
-                        {
-                        <GraphModelForm graph_id={this.props.graph_id}
-                                        drawing_list={this.state.drawing_list}
-                                        createModelFunction={this.props.createModelFunction}/>
-                        }
-                    </div>
                     <div className="col-lg-8">
                         <Table striped bordered condensed hover>
                             <thead>
@@ -76,6 +69,14 @@ class GraphModel extends React.Component {
                             }
                             </tbody>
                         </Table>
+                    </div>
+                    <div className="col-lg-4">
+                        <Panel>
+                            <h3>Добавить новый объект</h3>
+                            <GraphModelForm graph_id={this.props.graph_id}
+                                            drawing_list={this.state.drawing_list}
+                                            createModelFunction={this.props.createModelFunction}/>
+                        </Panel>
                     </div>
                 </div>
             </div>

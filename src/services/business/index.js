@@ -8,6 +8,8 @@ import store from '../../store';
 import {verifyToken} from "../session";
 import * as alertsActions from "../alerts/actions";
 import _ from 'lodash';
+import format from 'string-format';
+
 
 const endPoints = {
     attributes: '/attribute/list/',
@@ -109,18 +111,21 @@ export function bin_activate(bin_id, sender=null, new_state)
         }
     }
     const url = BUSINESS_SERVER_URL + endPoints.bin_activate + bin_id;
-    axios.get( url, config)
+    axios.put( url, {}, config)
         .then(({data}) => {
-            store.dispatch(businessActions.user_bins(data));
+            let bin = data
             store.dispatch(alertsActions.add({
                 id: new Date().getTime(),
                 type: "success",
-                message: "Корзинка " + bin_id + " активирована!"
+                message: format("Корзинка {} активирована!", bin.name)
             }));
+
+            user_bins();
+            //store.dispatch(businessActions.user_bins(data));
+
             if (sender) {
                 sender.setState(new_state);
             }
-
         })
         .catch( ( err ) => {
             store.dispatch(alertsActions.add({
@@ -364,11 +369,13 @@ export function bin_create(new_bin_name, sender) {
     const url = BUSINESS_SERVER_URL+'/bin/create/';
     axios.post( url, bin_data, config)
         .then((response) => {
+            let new_bin = response.data
+            bin_activate(new_bin.id, null, null);
             user_bins();
             store.dispatch(alertsActions.add({
                 id: new Date().getTime(),
                 type: "success",
-                message: "Корзинка " + new_bin_name + " создана и активирована!"
+                message: "Корзинка " + new_bin_name + " создана!"
             }));
             sender.setState({
                 showModal:false
@@ -397,9 +404,11 @@ export function bin_delete(sender, bin_id) {
     axios.delete( url, config)
         .then((response) => {
             user_bins();
+            /*
             sender.setState({
                 active_bin: {},
             })
+            */
 
             store.dispatch(alertsActions.add({
                 id: new Date().getTime(),

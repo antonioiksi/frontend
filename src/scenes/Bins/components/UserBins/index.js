@@ -69,7 +69,7 @@ class UserBins extends React.Component {
     }
 
     handleActivate(bin_pk) {
-        bin_activate(this, bin_pk)
+        bin_activate(bin_pk)
     }
 
 
