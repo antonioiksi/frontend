@@ -63,7 +63,9 @@ class BinData extends React.Component {
                 this.setState({
                     loading: true,
                 }, () => {
-                    bin_items_data(this.props.active_bin.id, sender);
+
+                    //bin_items_data(this.props.active_bin.id, sender);
+                    bin_items_data(nextProps.active_bin.id, sender);
                 })
             }
         }

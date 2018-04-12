@@ -49,14 +49,7 @@ class Sidebar extends React.Component {
                         </a>
                     </li>
                     <li>
-                        <a href="/graph-manager/" >
-                            <i className="fa fa-book fa-fw" /> &nbsp;{strings.GraphManager}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/graph-data/" >
-                            <i className="fa fa-table fa-fw" /> &nbsp;{strings.GraphData}
-                        </a>
+                        <a href="/graph-data/" ><i className="fa fa-table fa-fw" /> &nbsp;{strings.GraphData}</a>
                     </li>
                     <li>
                         <a href="/graph-builder/" >
@@ -69,6 +62,11 @@ class Sidebar extends React.Component {
                     <li>
                         <a href="/bins/" >
                             <i className="fa fa-shopping-basket fa-fw" /> &nbsp;{strings.bins}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/graph-manager/" >
+                            <i className="fa fa-book fa-fw" /> &nbsp;{strings.GraphManager}
                         </a>
                     </li>
                 </ul>

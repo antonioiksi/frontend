@@ -7,7 +7,7 @@ import store from '../../store';
 import {verifyToken} from "../session";
 import {user_bins} from "../business";
 import * as alertsActions from "../alerts/actions";
-
+import http from 'http'
 
 
 
@@ -25,6 +25,8 @@ export function search_simple( sender, bin_id, jsonQuery, cancelToken)
         headers: {
             'Authorization': 'Bearer ' + token
         },
+        //httpAgent: new http.Agent({ keepAlive: true, maxSockets: 5000 }),
+        //maxRedirects: 10,
         cancelToken: source.token,
         //cancelToken: cancelToken,
         timeout: 300 * 1000, //number millisec, = 5 min

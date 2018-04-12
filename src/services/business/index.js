@@ -9,6 +9,7 @@ import {verifyToken} from "../session";
 import * as alertsActions from "../alerts/actions";
 import _ from 'lodash';
 import format from 'string-format';
+import {graph_data_list} from "../graph";
 
 
 const endPoints = {
@@ -341,15 +342,39 @@ export function bin_to_graph_extend(bin_pk, graph_pk, sender)
         }
     }
 
-    axios.get(BUSINESS_SERVER_URL + '/bin-graph/load-extend/' + bin_pk + '/' + graph_pk, config)
-        .then(({data}) => {
-            //store.dispatch(businessActions.user_bins(data));
-            sender.setState({message: data});
+    const url1 = BUSINESS_SERVER_URL + '/graph/clear/' + graph_pk
+    axios.get( url1, config)
+        .then((response) => {
+
+            const url2 = BUSINESS_SERVER_URL + '/bin-graph/load/' + bin_pk + '/' + graph_pk
+            axios.get( url2, config)
+                .then(({data}) => {
+
+                    store.dispatch(alertsActions.add({
+                        id: new Date().getTime(),
+                        type: "success",
+                        message: "Данные из корзинки загружены на сехму !"
+                    }));
+                    graph_data_list(graph_pk, sender);
+
+                })
+                .catch( ( err ) => {
+                    store.dispatch(alertsActions.add({
+                        id: new Date().getTime(),
+                        type: "danger",
+                        message: "Ошибка, загрузки данных из корзинки на схему " + err.message + " url:" + url2,
+                    }));
+                });
+
         })
-        .catch( ( err ) => {
-            //sender.setState();
-            store.dispatch(alarmsActions.update([err.message]));
+        .catch((err) => {
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка, удаления данных со схемы " + graph_pk + " " + err.message + " url:" + url1,
+            }));
         });
+
 }
 
 export function bin_create(new_bin_name, sender) {

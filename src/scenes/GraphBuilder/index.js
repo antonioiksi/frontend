@@ -13,6 +13,7 @@ import {
     relation_list
 } from "../../services/graph/index";
 import NodesLoader from "./components/NodesLoader";
+import GraphData from "./components/GraphData";
 
 //TODO add some cool charts
 
@@ -29,13 +30,11 @@ class GraphBuilder extends Component {
             relation_list: [],
             nodes: [],
             edges: [],
-            mode: '1',
             duration: '',
 
 
         };
 
-        this.handleSelect = this.handleSelect.bind(this);
         this.addRelations = this.addRelations.bind(this);
 
         this.removeAllNodes = this.removeAllNodes.bind(this);
@@ -172,19 +171,6 @@ class GraphBuilder extends Component {
         const graph_id = this.state.graph_id;
         edge_list(graph_id, this);
     }
-
-
-    /**
-     * Select tabs item
-     * @param eventKey
-     */
-    handleSelect(eventKey) {
-        //event.preventDefault();
-        this.setState({mode:eventKey});
-        //alert(`selected ${eventKey}`);
-    }
-
-
 
 
 
@@ -336,8 +322,16 @@ class GraphBuilder extends Component {
                         <PageHeader>{strings.GraphBuilder} {this.state.duration}</PageHeader>
                     </div>
                 </div>
+                {
+                    /*
 
-
+                <div className="row">
+                    <div className="col-lg-12">
+                        <GraphData/>
+                    </div>
+                </div>
+*/
+                }
                 <div className="row">
                     <div className="col-lg-12">
                         <ControlLabel>{strings.Graph}</ControlLabel>
@@ -352,6 +346,9 @@ class GraphBuilder extends Component {
                         <br/>
                     </div>
                 </div>
+                {
+                    /*
+
                 <div className="row">
                     <div className="col-lg-12">
                         <Button  bsStyle="warning" bsSize="small" onClick={() => this.removeAllNodes()}>Remove All Nodes</Button>
@@ -364,30 +361,25 @@ class GraphBuilder extends Component {
                         <Button  bsStyle="warning" bsSize="small" onClick={() => this.redrawEdges()}>Redraw edges</Button>
                     </div>
                 </div>
-                <NodesLoader model_list={this.state.model_list}
-                             relation_list={this.state.relation_list}
-                             addNodes={this.addNodes}
-                             addRelations={this.addEdges}/>
 
+                     */
+                }
                 <div className="row">
                     <div className="col-lg-12">
-                        <Nav bsStyle="tabs" justified activeKey={this.state.mode} onSelect={this.handleSelect}>
-                            <NavItem eventKey="1" title="Item1">Graph</NavItem>
-                            <NavItem eventKey="2" title="Item2">Table</NavItem>
-                        </Nav>
-                        <div>
-                        {
-                            this.state.mode==='1' ? (
-                                <VisGraph   graph_id={this.state.graph_id}
-                                            Nodes={this.state.nodes}
-                                            Edges={this.state.edges}
-                                            Groups={groups}
-                                />
-                            ) : (
-                                <ReactJson src={this.state.nodes} />
-                            )
-                        }
-                        </div>
+                        <NodesLoader model_list={this.state.model_list}
+                                     relation_list={this.state.relation_list}
+                                     addNodes={this.addNodes}
+                                     addRelations={this.addEdges}/>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <br/><br/>
+                        <VisGraph   graph_id={this.state.graph_id}
+                                    Nodes={this.state.nodes}
+                                    Edges={this.state.edges}
+                                    Groups={groups}
+                        />
                     </div>
                 </div>
             </div>

@@ -31,9 +31,6 @@ class ActiveBinManager extends Component {
             const sender = this;
             bin_activate( bin.id);
         }
-
-        //console.log(value);
-        //alert('selectBin');
     }
 
     clearBin() {

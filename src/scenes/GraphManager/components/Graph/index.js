@@ -5,12 +5,13 @@ import {graph_remove, graph_clear, graph_list} from "../../../../services/graph"
 import {graph_create, load_graph_data} from "../../../../services/graph/index";
 import csv from 'csv';
 import PropTypes from 'prop-types';
+import _ from "lodash";
 
 class Graph extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            message: '',
+            active_graph: null,
             graph_list:[],
             error:'',
             form: {
@@ -35,12 +36,12 @@ class Graph extends React.Component {
         event.preventDefault();
         let graph_data = this.state.form;
         graph_create(graph_data, this);
-        //
-        //alert('okay');
     }
 
     activateGraph(graph_id) {
-        this.props.activateGraph(graph_id);
+        const active_graph = _.findLast(this.state.graph_list, {'id': graph_id})
+        this.setState({active_graph: active_graph})
+        this.props.setActivateGraph(active_graph);
     }
 
     resetGraph(graph) {
@@ -116,9 +117,9 @@ class Graph extends React.Component {
                                 <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>{strings.Active}</th>
-                                    <th>{strings.Name}</th>
-                                    <th>{strings.Rows}</th>
+                                    <th>Название</th>
+                                    <th>Активная</th>
+                                    <th>Загружено объектов</th>
                                     <th>&#160;</th>
                                 </tr>
                                 </thead>
@@ -127,16 +128,19 @@ class Graph extends React.Component {
                                     graph_list.map((value, i) =>
                                         <tr key={i}>
                                             <td>{i+1}</td>
-                                            <td>{
-                                                value.id === this.props.active_graph_id ? ('*') : ('')
-                                            }</td>
                                             <td>{value.name}</td>
+                                            <td>{ this.state.active_graph &&
+                                                    value.id === this.state.active_graph.id ? <i className="fa fa-check-square-o" aria-hidden="true"></i> : ''}</td>
                                             <td>{value.graphdata_count}</td>
                                             <td>
-                                                <Button  bsStyle="danger" bsSize="small" onClick={() => this.activateGraph(value.id)}>{strings.Activate}</Button>&#160;
-                                                <Button  bsStyle="danger" bsSize="small" onClick={() => this.resetGraph(value)}>{strings.Reset}</Button>&#160;
+                                                <Button  bsStyle="primary" bsSize="small" onClick={() => this.activateGraph(value.id)}>Выбрать</Button>&#160;
+                                                <Button  bsStyle="warning" bsSize="small" onClick={() => this.resetGraph(value)}>{strings.Reset}</Button>&#160;
                                                 <Button  bsStyle="danger" bsSize="small" onClick={() => this.removeGraph(value)}>{strings.Remove}</Button>&#160;
+                                                {
+                                                    /*
                                                 <FormControl type="file" name={value.name} onChange={this.handleFileSelect} />
+                                                     */
+                                                }
                                             </td>
                                         </tr>
                                     )
@@ -155,7 +159,7 @@ class Graph extends React.Component {
                                 </Col>
                                 <Col lg={3} lgOffset={1}>
                                     <FormGroup>
-                                        <Button type="submit" bsSize="small" name="Add" onClick={this.submitForm.bind(this)}>
+                                        <Button type="submit" bsSize="small" bsStyle="success" name="Add" onClick={this.submitForm.bind(this)}>
                                             {strings.Save}
                                         </Button>
                                     </FormGroup>
@@ -170,7 +174,8 @@ class Graph extends React.Component {
 }
 
 Graph.PropTypes = {
-    active_graph_id: PropTypes.string,
+    active_graph: PropTypes.object,
+    setActivateGraph: PropTypes.func,
 }
 
 export default Graph;

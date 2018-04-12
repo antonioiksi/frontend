@@ -1,18 +1,17 @@
 import React, {Component} from 'react'
 import {Button, ControlLabel, FormControl, FormGroup, PageHeader, Panel} from "react-bootstrap";
-import {strings} from "../../localization";
-import {graph_clear, graph_data_list, graph_list, model_list, relation_list} from "../../services/graph";
+import {strings} from "../../../../localization";
+import {graph_clear, graph_data_list, graph_list, model_list, relation_list} from "../../../../services/graph";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
-import {bin_to_graph_extend, get_active_bin_with_items} from "../../services/business";
+import {bin_to_graph_extend, get_active_bin_with_items} from "../../../../services/business";
 import _ from "lodash";
 import {connect} from "react-redux";
 import {ScaleLoader} from "react-spinners";
 import {Redirect} from "react-router-dom";
-import format from 'string-format'
 
 //TODO add some cool charts
 
-class GraphDataPage extends Component {
+class GraphData extends Component {
 
     constructor(props) {
         super(props);
@@ -25,13 +24,10 @@ class GraphDataPage extends Component {
             graph_list: [],
             graph_data: [],
 
-            redirect_to_graph_builder: false,
         };
         this.selectBin = this.selectBin.bind(this)
         this.selectGraph = this.selectGraph.bind(this)
         this.loadGraphData = this.loadGraphData.bind(this)
-
-        this.formatEntityAttribute = this.formatEntityAttribute.bind(this);
     }
 
     componentWillMount() {
@@ -77,38 +73,6 @@ class GraphDataPage extends Component {
         }
     }
 
-    formatEntityAttribute(cell, row) {
-        let res = "";
-        try {
-            const jsonCell = JSON.parse(cell);
-            this.props.entity_attributes.forEach((item) => {
-                let value = jsonCell[item.name];
-                if (value) {
-                    if (Array.isArray(value))
-                        res += format("<b>{}</b>: {}<br/>", item.title, value.join(','));
-                    else
-                        res += format("<b>{}</b>: {}<br/>", item.title, value);
-                }
-            });
-        } catch(ex) {
-            console.log(ex.message);
-        }
-        return res;
-    }
-
-    formatSource(cell, row) {
-        let res = "";
-        const jsonCell = JSON.parse(cell);
-
-        Object.keys(jsonCell).sort().forEach((key) => {
-            let value = jsonCell[key];
-            if (value)
-                res += format("<b>{}</b>: {}, ", key, value);
-        });
-        return res;
-    }
-
-
     render() {
         if (this.state.redirect_to_graph_builder) {
             return (<Redirect to="/graph-builder/"/>)
@@ -130,19 +94,9 @@ class GraphDataPage extends Component {
         const graph_list = this.state.graph_list;
         let arr_graph_data = []; //this.state.graph_data;
         this.state.graph_data.forEach((value, index) => {
-
-            let first_level_data = {}
-            this.props.entity_attributes.forEach((ent_attr) => {
-                let ent_val = value.data[ent_attr.name]
-                if(ent_val)
-                    first_level_data[ent_attr.name] = ent_val
-            })
-
-
             arr_graph_data.push({
                 id: value.id,
                 data: JSON.stringify(value.data, null, 2),
-                first_level_data: JSON.stringify( first_level_data),
             })
         });
 
@@ -152,11 +106,6 @@ class GraphDataPage extends Component {
 
         return (
             <div>
-                <div className="row">
-                    <div className="col-lg-12">
-                        <PageHeader>{strings.GraphData}</PageHeader>
-                    </div>
-                </div>
                 <div className="row">
                     <div className="col-lg-6">
                         <Panel>
@@ -199,17 +148,20 @@ class GraphDataPage extends Component {
                         </Panel>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-lg-12">
-                        <Panel>
-                            <BootstrapTable data={ arr_graph_data } options={options} search striped hover condensed>
-                                <TableHeaderColumn isKey dataField='id' width='5%' dataSort={ true }>Id</TableHeaderColumn>
-                                <TableHeaderColumn dataField='first_level_data' tdStyle={{whiteSpace:'normal'}} filterFormatted={true} dataFormat={this.formatEntityAttribute} width='30%' >Поисковые атрибуты</TableHeaderColumn>
-                                <TableHeaderColumn dataField='data' tdStyle={{whiteSpace:'normal'}} filterFormatted={true} dataFormat={this.formatSource} width='65%' >Исходные данные</TableHeaderColumn>
-                            </BootstrapTable>
-                        </Panel>
+                {
+                    /*
+                    <div className="row">
+                        <div className="col-lg-12">
+                            <Panel>
+                                <BootstrapTable data={ arr_graph_data } options={options} search striped hover condensed>
+                                    <TableHeaderColumn isKey dataField='id' width='10%' dataSort={ true }>Id</TableHeaderColumn>
+                                    <TableHeaderColumn dataField='data' tdStyle={{whiteSpace:'normal'}} width='90%' >Тело документа</TableHeaderColumn>
+                                </BootstrapTable>
+                            </Panel>
+                        </div>
                     </div>
-                </div>
+                    */
+                }
             </div>
         )
     }
@@ -224,4 +176,4 @@ const mapStateToProps = function(store) {
 };
 
 
-export default connect(mapStateToProps)(GraphDataPage);
+export default connect(mapStateToProps)(GraphData);

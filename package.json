@@ -9,6 +9,8 @@
     "create-react-class": "^15.6.2",
     "csv": "^2.0.0",
     "font-awesome": "^4.7.0",
+    "http": "0.0.0",
+    "https": "^1.0.0",
     "jquery": "^3.2.1",
     "json2csv": "^3.11.5",
     "jsonschema": "^1.2.0",

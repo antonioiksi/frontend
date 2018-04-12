@@ -1,7 +1,8 @@
 import React from 'react';
-import {Button, Col, Form, FormControl, FormGroup} from "react-bootstrap";
+import {Button, Col, ControlLabel, Form, FormControl, FormGroup} from "react-bootstrap";
 import {strings} from "../../../../../../localization";
 import PropTypes from 'prop-types';
+import './style.css'
 
 class GraphRelationForm extends React.Component {
     constructor(props) {
@@ -11,10 +12,10 @@ class GraphRelationForm extends React.Component {
             error:'',
             loading: false,
             form: {
+                name:'',
                 from_fields:'',
                 to_fields:'',
                 comparators: '',
-                name:'',
             },
 
         }
@@ -39,14 +40,11 @@ class GraphRelationForm extends React.Component {
             comparators: this.state.form.comparators.split(','),
             graph: this.props.graph_id
         };
-        this.props.createRelationFunction(relation_data, this);
+
+        this.props.createRelationFunction(relation_data);
     }
 
     render() {
-        let graph_list = this.props.graph_list;
-        if (!graph_list)
-            graph_list = [];
-
         return (
             <div>
                 {this.state.message!=='' ? (<div className="row">
@@ -58,19 +56,25 @@ class GraphRelationForm extends React.Component {
                     <div className="col-lg-12">
                         <Form horizontal>
                             <Col lg={8}>
-                                <FormGroup controlId="formControlsText">
+                                <FormGroup controlId="name">
                                     <FormControl type="text" placeholder={strings.FillName} name="name" onChange={this.changeValue.bind(this)}/>
+                                </FormGroup>
+                                <FormGroup controlId="from_fields">
                                     <FormControl type="text" placeholder="from_fields" name="from_fields" onChange={this.changeValue.bind(this)}/>
+                                </FormGroup>
+                                <FormGroup controlId="to_fields">
                                     <FormControl type="text" placeholder="to_fields" name="to_fields" onChange={this.changeValue.bind(this)}/>
-                                    <FormControl type="text" placeholder="comparators" name="comparators" onChange={this.changeValue.bind(this)}/>
+                                </FormGroup>
+                                <FormGroup controlId="comparators">
+                                    <FormControl componentClass="select" placeholder="comparators" name="comparators" onChange={this.changeValue.bind(this)}>
+                                        <option selected disabled>Выберите тип сравнения</option>
+                                        <option value="equal">полное совпадения</option>
+                                        <option value="include">частичное вхождение</option>
+                                    </FormControl>
                                 </FormGroup>
                             </Col>
                             <Col lg={3} lgOffset={1}>
-                                <FormGroup>
-                                    <Button type="submit" bsSize="small" name="Add" onClick={this.submitForm.bind(this)}>
-                                        {strings.Save}
-                                    </Button>
-                                </FormGroup>
+                                <Button type="submit" bsSize="small" bsStyle="success" name="Add" onClick={this.submitForm.bind(this)}>{strings.Save}</Button>
                             </Col>
                         </Form>
                     </div>
@@ -82,7 +86,6 @@ class GraphRelationForm extends React.Component {
 
 GraphRelationForm.PropTypes = {
     graph_id: PropTypes.integer,
-    graph_list: PropTypes.array,
     createRelationFunction: PropTypes.func.isRequired,
 }
 

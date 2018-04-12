@@ -46,7 +46,7 @@ class GraphModelForm extends React.Component {
             fields: this.state.form.fields.split(','),
             graph: this.props.graph_id,
         };
-        this.props.createModelFunction(model_data, this);
+        this.props.createModelFunction(model_data);
         //graph_create(graph_data, this);
         //
         //alert('okay');
@@ -87,7 +87,7 @@ class GraphModelForm extends React.Component {
                             </Col>
                             <Col lg={3} lgOffset={1}>
                                 <FormGroup>
-                                    <Button type="submit" bsSize="small" name="Add" onClick={this.submitForm.bind(this)}>
+                                    <Button type="submit" bsSize="small" bsStyle="success" name="Add" onClick={this.submitForm.bind(this)}>
                                         {strings.Save}
                                     </Button>
                                 </FormGroup>

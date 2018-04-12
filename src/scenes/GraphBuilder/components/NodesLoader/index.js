@@ -70,32 +70,26 @@ class NodesLoader extends React.Component {
             });
         }
 
-        //alert(JSON.stringify(this.state.selected_model));
-        //const model_options = [];
         return (
             <div>
                 <div className="row">
                     <div className="col-lg-6">
                         <div className="row">
-                            <div className="col-lg-12">
+                            <div className="col-lg-10">
                                 <MultiSelectField options={model_options} select={this.selectModels}/>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <Button  bsStyle="warning" bsSize="small" onClick={() => this.loadNodesForModels()}>Load nodes</Button>
+                            <div className="col-lg-2">
+                                <Button  bsStyle="info" bsSize="small" onClick={() => this.loadNodesForModels()}>Показать объекты</Button>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-6">
                         <div className="row">
-                            <div className="col-lg-12">
+                            <div className="col-lg-10">
                                 <MultiSelectField options={relation_options} select={this.selectRelations}/>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <Button  bsStyle="warning" bsSize="small" onClick={() => this.loadEdgesForRelations()}>Load relations</Button>
+                            <div className="col-lg-2">
+                                <Button  bsStyle="info" bsSize="small" onClick={() => this.loadEdgesForRelations()}>Показать связи</Button>
                             </div>
                         </div>
                     </div>
