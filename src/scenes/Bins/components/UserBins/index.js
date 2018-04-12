@@ -103,7 +103,7 @@ class UserBins extends React.Component {
                             </thead>
                             <tbody>
                             {
-                                this.props.user_bins.map((value, i) =>
+                                this.props.user_bins.map( (value, i) =>
                                     <tr key={i}>
                                         <td>{i+1}</td>
                                         <td>{value.name}</td>
