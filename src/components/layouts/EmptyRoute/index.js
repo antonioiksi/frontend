@@ -10,7 +10,11 @@ export const EmptyRoute =  ({component:Component, ...rest}) => {
         <Route {...rest} render={matchProps => (
 
             <div className="EmptyLayout">
-                <BackgroundSlideshow images={[ image1, image2 ]} />
+                {
+                    /*
+                    <BackgroundSlideshow images={[ image1, image2 ]} />
+                     */
+                }
                 <Component {...matchProps}/>
             </div>
 
