@@ -15,9 +15,10 @@ let sessionTimeout = null;
 // create scheduler to refresh token
 const setSessionTimeout = (duration) => {
     clearTimeout(sessionTimeout);
+    let delaySec = duration - SESSION_TIMEOUT_THRESHOLD
     sessionTimeout = setTimeout(
         refreshToken, // eslint-disable-line no-use-before-define
-        (duration - SESSION_TIMEOUT_THRESHOLD) * 1000
+        delaySec * 1000
     );
 };
 
@@ -29,6 +30,7 @@ const clearSession = () => {
 
 
 const onRequestSuccess = (response) => {
+    console.log(response.data)
     let decoded_access = jwt_decode(response.data.access);
     let durationSec = decoded_access.exp - Date.now()/1000;
 
@@ -38,7 +40,7 @@ const onRequestSuccess = (response) => {
             //type: decoded_access.token_type,
             expiresIn: durationSec,
         },
-        refresh: { value: response.data.refresh }
+        //refresh: { value: response.data.refresh }
     };
     if(response.data.hasOwnProperty('refresh'))
     {
@@ -50,8 +52,9 @@ const onRequestSuccess = (response) => {
         }
     }
     store.dispatch(sessionActions.update({ tokens, user: {id:decoded_access.user_id} }));
-    //setSessionTimeout(durationSec);
+    setSessionTimeout(durationSec);
 };
+
 
 
 const onRequestFailed = (exception) => {
@@ -90,7 +93,7 @@ export const refreshToken = () => {
         return Promise.reject();
     }
 
-    return api.refresh(session.tokens.refresh)
+    return api.refresh(session.tokens.refresh.value)
         .then(onRequestSuccess)
         .catch(onRequestFailed);
 };
