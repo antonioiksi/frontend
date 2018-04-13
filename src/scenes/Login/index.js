@@ -42,7 +42,7 @@ class Login extends Component {
 
 const mapStateToProps = function(store) {
     return {
-        userId: store.session.user.id,
+        userId: store.session.user ? store.session.user.id : null,
         errors: store.alarms.messages,
     };
 };
