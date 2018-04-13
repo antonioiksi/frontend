@@ -8,6 +8,7 @@ import {Panel} from "react-bootstrap";
 import {connect} from "react-redux";
 import {strings} from "../../localization";
 import './style.css';
+import {APP_TITLE} from "../../services/constants";
 
 class Login extends Component {
 
@@ -26,7 +27,7 @@ class Login extends Component {
         return (
             <div className="col-md-4 col-md-offset-4 login-form">
                 <div className="text-center">
-                    <h1 className="login-brand-text">Frontend</h1>
+                    <h1 className="login-brand-text">{ APP_TITLE }</h1>
                     {/*<h3 className="text-muted">Created by <a href="http://startreact.com">StartReact.com</a> team</h3>*/}
                 </div>
 
