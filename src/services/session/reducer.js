@@ -22,9 +22,19 @@ export const initialState = {
 export const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SESSION_UPDATE:
-            return {
-                ...action.session,
-            };
+
+            if(action.session.tokens.refresh) {
+                return {
+                    ...action.session
+                }
+            } else {
+                return {
+                    ...state,
+                    tokens: {
+                        ...state.tokens, access: action.session.tokens.access
+                    }
+                }
+            }
         default:
             return state;
     }
