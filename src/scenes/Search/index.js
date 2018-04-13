@@ -276,7 +276,7 @@ class Search extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-lg-4">
+                    <div className="col-lg-7">
                         <ActiveBinManager/>
                     </div>
                 </div>
