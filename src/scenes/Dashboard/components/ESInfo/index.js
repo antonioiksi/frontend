@@ -1,10 +1,9 @@
 import React from 'react';
-import {es_info, es_querystring} from "../../../../services/elasticsearch";
-import ReactJson from 'react-json-view';
 import './esinfo.css';
-import {Alert, Badge, Col, Label, Panel, Row} from "react-bootstrap";
+import {Label, Panel} from "react-bootstrap";
 import {BootstrapTable, TableHeaderColumn} from "react-bootstrap-table";
-import {HashLoader, ScaleLoader} from "react-spinners";
+import {HashLoader} from "react-spinners";
+import {info} from "../../../../services/elastic";
 
 
 
@@ -20,14 +19,7 @@ class ESInfo extends React.Component {
 
     componentWillMount() {
 
-        //es_querystring('aliases','/_aliases',this);
-        //es_querystring('count','/_cat/count',this);
-        //es_querystring('cluster','/_cluster/health',this);
-        //es_querystring('tasks','/_cat/tasks',this);
-        //es_querystring('indices','/_cat/indices',this);
-        //es_querystring('segments','/_cat/segments',this);
-        //es_querystring('repositories','/_cat/repositories',this);
-        es_info(this);
+        info(this)
     }
 
     render() {

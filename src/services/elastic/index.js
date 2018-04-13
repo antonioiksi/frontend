@@ -202,6 +202,32 @@ export function alias_list(sender) {
 }
 
 
+export function info(sender) {
+    verifyToken();
+    const session = store.getState().session;
+    let token = session.tokens.access.value;
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    }
+
+    const url = BUSINESS_SERVER_URL+'/elastic/info/'
+    axios.get( url, config)
+        .then(({data}) => {
+            sender.setState( { es: data});
+        })
+        .catch( ( err ) => {
+            store.dispatch(alertsActions.add({
+                id: new Date().getTime(),
+                type: "danger",
+                message: "Ошибка получения данных о ElasticSearch, url:"+ url + " err:" + err.message,
+            }));
+        });
+}
+
+
 
 
 
