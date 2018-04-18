@@ -1,23 +1,37 @@
-#This is a pilot react app as backoffice site
+# Installation guide for Florizel frontend
 
-Before starting project change IP for backend server and elasticsearch server
+## Requirements
+Install node v6.11
+
+
+## Clone project
+`
+git clone -b v2.0.1 http://git-server.depart9.gvc/second-lab/florizel-frontend.git
+`
+
+## Rebuild all node modules
+
+```
+cd florizel-frontend
+npm rebuild
+```
+
+## Setup backend IP
+Change IP address for backend and auth server
 `/src/services/constants.js`
 
-
-If setting doesn't work you need to execute backend command
+## Start frontend
 ```
-./manage.py loaddata elastic_settings
+npm start
 ```
 
-work with graph's nodes
+or install as service
 
-work1
-
-work2
-
-work3
-
-work4
+  
 
 
-work5
+
+
+
+
+
