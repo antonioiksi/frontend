@@ -10,16 +10,19 @@ import {strings} from "../../../../localization";
 
 function PrepareJSON(content) {
     let arr = content.split("\n");
-
-    let phoneArr = [];
-    arr.forEach(function(phone) {
-        let phoneJson = {};
-        if(phone.length>0) {
-            phoneJson.phone = phone;
-            phoneArr.push(phoneJson);
+    let keys = arr[0].split(";");
+    let result = [];
+    arr.slice(1).forEach(function(values) {
+        if(values.length>0) {
+            let row = values.split(";");
+            let searchDict = {};
+            for (var i=0; i < row.length; i++){
+                searchDict[keys[i]] = row[i];
+            }
+            result.push(searchDict);
         }
     });
-    return phoneArr;
+    return result;
 }
 
 function FieldGroup({ id, label, help, ...props }) {
