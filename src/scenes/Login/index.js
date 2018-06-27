@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 //import { connect } from 'react-redux';
 
 import Form from './components/Form'
-import {isAuth} from "../../components/auth";
 import {Redirect} from "react-router-dom";
 import {Panel} from "react-bootstrap";
 import {connect} from "react-redux";
@@ -14,7 +13,6 @@ class Login extends Component {
 
     constructor(props) {
         super(props);
-
     }
 
     render() {
