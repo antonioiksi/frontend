@@ -1,4 +1,4 @@
-# Installation guide for Florizel frontend
+# Installation guide for Frontend
 
 ## Requirements
 Install node v6.11
